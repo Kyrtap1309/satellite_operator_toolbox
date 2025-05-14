@@ -170,12 +170,12 @@ def calculate():
     
     # Calculate passes
     passes_gs1 = find_satellite_passes(tle_line1, tle_line2, tle_name, 
-                                         gs1_lat, gs1_lon, gs1_elev, 
-                                         start_time, end_time, min_el)
+                                       gs1_lat, gs1_lon, gs1_elev, 
+                                       start_time, end_time, min_el)
     
     passes_gs2 = find_satellite_passes(tle_line1, tle_line2, tle_name, 
-                                          gs2_lat, gs2_lon, gs2_elev, 
-                                          start_time, end_time, min_el)
+                                       gs2_lat, gs2_lon, gs2_elev, 
+                                       start_time, end_time, min_el)
     
     common_windows = find_common_visibility_windows(passes_gs1, passes_gs2)
     
@@ -242,7 +242,13 @@ def calculate():
                           gs2_passes=formatted_gs2,
                           common_windows=formatted_common,
                           timeline_data=json.dumps(timeline_data),
-                          date=date)
+                          date=date,
+                          gs1_lat=gs1_lat,
+                          gs1_lon=gs1_lon,
+                          gs1_elev=gs1_elev,
+                          gs2_lat=gs2_lat,
+                          gs2_lon=gs2_lon,
+                          gs2_elev=gs2_elev)
 
 if __name__ == '__main__':
     app.run(debug=True)
