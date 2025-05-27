@@ -1,7 +1,7 @@
 import logging
 from typing import Any
 
-import requests
+import requests  # type: ignore
 
 from config import Config
 from models.satellite import TLEData

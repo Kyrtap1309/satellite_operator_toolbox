@@ -1,8 +1,8 @@
 import logging
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional
 
-from skyfield.api import EarthSatellite, Topos, load, utc
+from skyfield.api import EarthSatellite, Topos, load, utc  # type: ignore
 
 from models.satellite import (
     GroundStation,
@@ -202,7 +202,7 @@ class SatelliteService:
                 error=f"Error comparing TLE data: {e}",
             )
 
-    def _parse_epoch(self, epoch_str: str) -> datetime:
+    def _parse_epoch(self, epoch_str: str) -> Optional[datetime]:
         """Parse epoch with multiple format support."""
         if not epoch_str:
             return None

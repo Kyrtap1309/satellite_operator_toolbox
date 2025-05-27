@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime, timedelta
-from typing import Any
+from typing import Any, Optional
 
 import requests
 
@@ -14,7 +14,7 @@ class SpaceTrackService:
     def __init__(self, config: Config):
         self.config = config
         self.base_url = config.SPACETRACK_BASE_URL
-        self.session = None
+        self.session: Optional[requests.Session] = None
         self.logger = logging.getLogger(__name__)
 
     def authenticate(self) -> bool:
@@ -58,10 +58,20 @@ class SpaceTrackService:
             self.logger.error(f"Authentication failed: {e}")
             return False
 
+    def _ensure_authenticated(self) -> requests.Session:
+        """Ensure we have an authenticated session."""
+        if self.session is None:
+            if not self.authenticate():
+                raise Exception("Authentication failed")
+
+        if self.session is None:
+            raise Exception("Failed to create session")
+
+        return self.session
+
     def fetch_tle_history(self, norad_id: str, days_back: int = 30) -> list[TLEData]:
         """Fetch historical TLE data."""
-        if not self.authenticate():
-            raise Exception("Authentication failed")
+        session = self._ensure_authenticated()
 
         try:
             end_date = datetime.now()
@@ -78,7 +88,7 @@ class SpaceTrackService:
                 f"format/json"
             )
 
-            response = self.session.get(query_url, timeout=30)
+            response = session.get(query_url, timeout=30)
             response.raise_for_status()
             data = response.json()
 
@@ -93,8 +103,7 @@ class SpaceTrackService:
 
     def get_latest_tle_age(self, norad_id: str) -> dict[str, Any]:
         """Get age information for latest TLE."""
-        if not self.authenticate():
-            raise Exception("Authentication failed")
+        session = self._ensure_authenticated()
 
         try:
             query_url = (
@@ -103,7 +112,7 @@ class SpaceTrackService:
                 f"format/json"
             )
 
-            response = self.session.get(query_url, timeout=30)
+            response = session.get(query_url, timeout=30)
             response.raise_for_status()
             data = response.json()
 
@@ -116,7 +125,7 @@ class SpaceTrackService:
             self.logger.error(f"Failed to get TLE age: {e}")
             raise
 
-    def _parse_tle_history(self, data: list[dict]) -> list[TLEData]:
+    def _parse_tle_history(self, data: list[dict[str, Any]]) -> list[TLEData]:
         """Parse TLE history data."""
         tle_list = []
 
@@ -156,7 +165,7 @@ class SpaceTrackService:
 
         return tle_list
 
-    def _calculate_tle_age(self, tle_data: dict) -> dict[str, Any]:
+    def _calculate_tle_age(self, tle_data: dict[str, Any]) -> dict[str, Any]:
         """Calculate TLE age information."""
         epoch_str = tle_data.get("EPOCH")
         if not epoch_str:
@@ -190,7 +199,7 @@ class SpaceTrackService:
         raise ValueError(f"Could not parse epoch: {epoch_str}")
 
     @staticmethod
-    def _safe_float(value, default: float = 0.0) -> float:
+    def _safe_float(value: Any, default: float = 0.0) -> float:
         """Safely convert value to float."""
         try:
             return float(value) if value is not None else default
@@ -198,14 +207,14 @@ class SpaceTrackService:
             return default
 
     @staticmethod
-    def _safe_int(value, default: int = 0) -> int:
+    def _safe_int(value: Any, default: int = 0) -> int:
         """Safely convert value to int."""
         try:
             return int(value) if value is not None else default
         except (ValueError, TypeError):
             return default
 
-    def __del__(self):
+    def __del__(self) -> None:
         """Clean up session."""
         if self.session:
             self.session.close()
