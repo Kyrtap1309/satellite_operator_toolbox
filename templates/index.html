@@ -13,9 +13,18 @@
             <div class="col-md-10">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-white">
-                        <h2 class="text-center mb-0">Satellite Pass Calculator</h2>
+                        <h2 class="text-center mb-0">Satellite Operator Tools</h2>
                     </div>
                     <div class="card-body">
+                        <ul class="nav nav-tabs mb-4">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="{{ url_for('index') }}">Pass Calculator</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('position') }}">Position Calculator</a>
+                            </li>
+                        </ul>
+                        
                         <form action="{{ url_for('calculate') }}" method="post">
                             <div class="row mb-4">
                                 <div class="col-md-12">

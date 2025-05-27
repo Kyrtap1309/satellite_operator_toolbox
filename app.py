@@ -107,6 +107,26 @@ class SatelliteTracker:
                     common_windows.append(common_window)
         
         return sorted(common_windows, key=lambda x: x['rise_time_utc'])
+    
+    @staticmethod
+    def calculate_position(tle_line1: str, tle_line2: str, tle_name: str, time_str: str) -> dict[str, Any]:
+        ts = load.timescale()
+        satellite = EarthSatellite(tle_line1, tle_line2, tle_name, ts)
+
+        time_dt = datetime.strptime(time_str, '%Y-%m-%d %H:%M:%S').replace(tzinfo=utc)
+        t = ts.from_datetime(time_dt)
+
+        geocentric = satellite.at(t)
+
+        subpoint = geocentric.subpoint()
+
+        return {
+            'time_utc': time_str,
+            'latitude': round(subpoint.latitude.degrees, 6),
+            'longitude': round(subpoint.longitude.degrees, 6),
+            'elevation': round(subpoint.elevation.m, 2),  # height in meters
+            'satellite_name': tle_name
+        }
 
 class DataFormatter:
     @staticmethod
@@ -268,6 +288,50 @@ def calculate():
                           gs2_lat=gs2_lat,
                           gs2_lon=gs2_lon,
                           gs2_elev=gs2_elev)
+
+
+@app.route('/position')
+def position():
+    """Render the satellite position calculator page."""
+    now = datetime.now()
+    default_date = now.strftime('%Y-%m-%d')
+    default_time = now.strftime('%H:%M:%S')
+
+    default_time_hm = default_time.rsplit(':', 1)[0]
+
+    return render_template('position_calculator.html',
+                           tle_name=Config.SATELLITE_NAME,
+                           tle_line1=Config.SATELLITE_TLE_LINE1,
+                           tle_line2=Config.SATELLITE_TLE_LINE2,
+                           default_date=default_date,
+                           default_time=default_time_hm)
+
+
+@app.route('/calculate_position', methods=['POST'])
+def calculate_position():
+    """Calculate and display the satellite position."""
+
+    form_data = request.form
+
+    tle_name = form_data.get('tle_name', Config.SATELLITE_NAME)
+    tle_line1 = form_data.get('tle_line1', Config.SATELLITE_TLE_LINE1)
+    tle_line2 = form_data.get('tle_line2', Config.SATELLITE_TLE_LINE2)
+
+    date = form_data.get('date')
+    time = form_data.get('time')
+
+    datetime_str = f"{date} {time}:00"
+
+    tracker = SatelliteTracker()
+    position_data = tracker.calculate_position(tle_line1, tle_line2, tle_name, datetime_str)
+
+    return render_template('position_calculator.html',
+                           tle_name=tle_name,
+                           tle_line1=tle_line1,
+                           tle_line2=tle_line2,
+                           default_date=date,
+                           default_time=time,
+                           position_data=position_data)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
