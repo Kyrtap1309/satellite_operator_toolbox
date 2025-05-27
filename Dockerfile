@@ -25,6 +25,9 @@ COPY . .
 
 RUN python -c "from skyfield.api import load; load('de421.bsp')"
 
+# Create logs directory
+RUN mkdir -p logs
+
 EXPOSE 1309
 
 CMD ["python", "app.py"]

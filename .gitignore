@@ -1,2 +1,5 @@
 /.venv
 de421.bsp
+.env
+logs/
+*.log

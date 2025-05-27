@@ -1,11 +1,16 @@
 services:
   satellite-pass-calculator:
     build: .
+    env_file:
+      - .env
     ports:
       - "1309:5000"
     environment:
       - FLASK_APP=app.py
       - FLASK_ENV=production
+      - SPACETRACK_USERNAME=${SPACETRACK_USERNAME}
+      - SPACETRACK_PASSWORD=${SPACETRACK_PASSWORD}
     volumes:
       - ./static:/app/static
+      - ./logs:/app/logs  
     restart: unless-stopped
