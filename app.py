@@ -1,8 +1,9 @@
 from skyfield.api import Topos, load, EarthSatellite, utc
 from datetime import datetime, timedelta
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 import pandas as pd
 import json
+import requests
 
 from typing import Any
 
@@ -127,6 +128,137 @@ class SatelliteTracker:
             'elevation': round(subpoint.elevation.m, 2),  # height in meters
             'satellite_name': tle_name
         }
+
+    @staticmethod
+    def fetch_tle_from_celestrak(norad_id: str) -> dict[str, Any]:
+        """Fetch current TLE data from CelesTrak for a given NORAD ID using both JSON and TLE endpoints."""
+        try:
+            # CelesTrak API endpoints
+            json_url = f"https://celestrak.org/NORAD/elements/gp.php?CATNR={norad_id}&FORMAT=json"
+            tle_url = f"https://celestrak.org/NORAD/elements/gp.php?CATNR={norad_id}&FORMAT=TLE"
+            
+            # Fetch JSON data for orbital parameters
+            json_response = requests.get(json_url, timeout=10)
+            json_response.raise_for_status()
+            
+            json_data = json_response.json()
+            if not json_data:
+                return {"error": f"No satellite data found for NORAD ID: {norad_id}"}
+            
+            # Extract satellite data from JSON
+            sat_data = json_data[0]
+            
+            # Fetch TLE format data for the actual TLE lines
+            tle_response = requests.get(tle_url, timeout=10)
+            tle_response.raise_for_status()
+            
+            tle_data = tle_response.text.strip()
+            if not tle_data:
+                return {"error": f"No TLE data found for NORAD ID: {norad_id}"}
+            
+            # Parse TLE data (3 lines: name, line1, line2)
+            lines = tle_data.split('\n')
+            if len(lines) < 3:
+                return {"error": "Invalid TLE format received"}
+            
+            satellite_name = lines[0].strip()
+            tle_line1 = lines[1].strip()
+            tle_line2 = lines[2].strip()
+            
+            # Combine data from both sources
+            return {
+                # Basic identification
+                "norad_id": sat_data.get("NORAD_CAT_ID"),
+                "satellite_name": satellite_name,  # From TLE format (more reliable)
+                
+                # TLE lines (from TLE endpoint)
+                "tle_line1": tle_line1,
+                "tle_line2": tle_line2,
+                
+                # Orbital parameters (from JSON endpoint - more precise)
+                "epoch": sat_data.get("EPOCH"),
+                "mean_motion": sat_data.get("MEAN_MOTION"),
+                "eccentricity": sat_data.get("ECCENTRICITY"),
+                "inclination": sat_data.get("INCLINATION"),
+                "ra_of_asc_node": sat_data.get("RA_OF_ASC_NODE"),
+                "arg_of_pericenter": sat_data.get("ARG_OF_PERICENTER"),
+                "mean_anomaly": sat_data.get("MEAN_ANOMALY"),
+                
+                # Additional metadata (from JSON endpoint)
+                "classification": sat_data.get("CLASSIFICATION_TYPE"),
+                "intl_designator": sat_data.get("INTLDES"),
+                "element_set_no": sat_data.get("ELEMENT_SET_NO"),
+                "rev_at_epoch": sat_data.get("REV_AT_EPOCH"),
+                "bstar": sat_data.get("BSTAR"),
+                "mean_motion_dot": sat_data.get("MEAN_MOTION_DOT"),
+                "mean_motion_ddot": sat_data.get("MEAN_MOTION_DDOT"),
+                
+                # Calculated fields
+                "period_minutes": round(1440 / float(sat_data.get("MEAN_MOTION", 1)), 2) if sat_data.get("MEAN_MOTION") else None,
+                "apogee_km": None,  # Would need additional calculation
+                "perigee_km": None,  # Would need additional calculation
+            }
+            
+        except requests.exceptions.RequestException as e:
+            return {"error": f"Failed to fetch TLE data: {str(e)}"}
+        except (KeyError, IndexError, ValueError) as e:
+            return {"error": f"Error parsing TLE data: {str(e)}"}
+    
+    @staticmethod
+    def fetch_tle_history_from_spacetrack(norad_id: str, days_back: int = 30) -> list[dict[str, Any]]:
+        """
+        Placeholder for Space-Track.org TLE history.
+        Note: This requires authentication with Space-Track.org
+        For now, returns a mock response indicating authentication needed.
+        """
+        return [{
+            "error": "Space-Track.org authentication required",
+            "message": f"To fetch TLE history for NORAD ID {norad_id}, you need to implement Space-Track.org authentication.",
+            "suggestion": "Consider using the Space-Track.org API with proper credentials for historical TLE data."
+        }]
+    
+    @staticmethod
+    def compare_tle_elements(tle1: dict[str, Any], tle2: dict[str, Any]) -> dict[str, Any]:
+        """Compare two TLE datasets and highlight differences."""
+        if "error" in tle1 or "error" in tle2:
+            return {"error": "Cannot compare TLE data due to fetch errors"}
+        
+        comparison = {
+            "epoch_diff_days": 0,
+            "mean_motion_diff": 0,
+            "inclination_diff": 0,
+            "eccentricity_diff": 0,
+            "changes": []
+        }
+        
+        try:
+            # Compare epochs
+            epoch1 = datetime.strptime(tle1.get("epoch", ""), "%Y-%m-%dT%H:%M:%S.%f")
+            epoch2 = datetime.strptime(tle2.get("epoch", ""), "%Y-%m-%dT%H:%M:%S.%f")
+            comparison["epoch_diff_days"] = abs((epoch1 - epoch2).days)
+            
+            # Compare orbital elements
+            if tle1.get("mean_motion") and tle2.get("mean_motion"):
+                comparison["mean_motion_diff"] = abs(float(tle1["mean_motion"]) - float(tle2["mean_motion"]))
+                
+            if tle1.get("inclination") and tle2.get("inclination"):
+                comparison["inclination_diff"] = abs(float(tle1["inclination"]) - float(tle2["inclination"]))
+                
+            if tle1.get("eccentricity") and tle2.get("eccentricity"):
+                comparison["eccentricity_diff"] = abs(float(tle1["eccentricity"]) - float(tle2["eccentricity"]))
+            
+            # Track significant changes
+            if comparison["mean_motion_diff"] > 0.001:
+                comparison["changes"].append("Significant mean motion change detected")
+            if comparison["inclination_diff"] > 0.01:
+                comparison["changes"].append("Inclination change detected")
+            if comparison["eccentricity_diff"] > 0.0001:
+                comparison["changes"].append("Eccentricity change detected")
+                
+        except (ValueError, TypeError) as e:
+            comparison["error"] = f"Error comparing TLE data: {str(e)}"
+        
+        return comparison
 
 class DataFormatter:
     @staticmethod
@@ -332,6 +464,73 @@ def calculate_position():
                            default_date=date,
                            default_time=time,
                            position_data=position_data)
+
+
+@app.route('/tle-viewer')
+def tle_viewer():
+    """Render the TLE history viewer page."""
+    return render_template('tle_viewer.html',
+                           norad_id="25544",  # Default to ISS
+                           days_back=30)
+
+
+@app.route('/fetch_tle_data', methods=['POST'])
+def fetch_tle_data():
+    """Fetch and display TLE data for a given NORAD ID."""
+    form_data = request.form
+    
+    norad_id = form_data.get('norad_id', '25544')
+    days_back = int(form_data.get('days_back', 30))
+    
+    tracker = SatelliteTracker()
+    
+    # Fetch current TLE
+    current_tle = tracker.fetch_tle_from_celestrak(norad_id)
+    
+    # Fetch TLE history (placeholder for now)
+    tle_history = tracker.fetch_tle_history_from_spacetrack(norad_id, days_back)
+    
+    # If we have valid current TLE and could implement history comparison
+    comparison = None
+    if not current_tle.get("error") and len(tle_history) > 1 and not tle_history[0].get("error"):
+        comparison = tracker.compare_tle_elements(current_tle, tle_history[0])
+    
+    return render_template('tle_viewer.html',
+                           norad_id=norad_id,
+                           days_back=days_back,
+                           current_tle=current_tle,
+                           tle_history=tle_history,
+                           comparison=comparison)
+
+
+@app.route('/import_tle/<norad_id>')
+def import_tle(norad_id):
+    """Import TLE data and redirect to the pass calculator with the data populated."""
+    tracker = SatelliteTracker()
+    tle_data = tracker.fetch_tle_from_celestrak(norad_id)
+    
+    if tle_data.get("error"):
+        return redirect(url_for('index', error=f"Failed to import TLE for NORAD ID {norad_id}: {tle_data['error']}"))
+    
+    tomorrow = datetime.now() + timedelta(days=1)
+    default_date = tomorrow.strftime('%Y-%m-%d')
+    
+    return render_template('index.html',
+                          success=f"TLE data imported for {tle_data['satellite_name']}",
+                          gs1_name=Config.STATION1_NAME,
+                          gs1_lat=Config.STATION1_LAT,
+                          gs1_lon=Config.STATION1_LON,
+                          gs1_elev=Config.STATION1_ELEV,
+                          gs2_name=Config.STATION2_NAME,
+                          gs2_lat=Config.STATION2_LAT,
+                          gs2_lon=Config.STATION2_LON,
+                          gs2_elev=Config.STATION2_ELEV,
+                          min_el=Config.MIN_ELEVATION,
+                          default_date=default_date,
+                          tle_name=tle_data['satellite_name'],
+                          tle_line1=tle_data['tle_line1'],
+                          tle_line2=tle_data['tle_line2'])
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

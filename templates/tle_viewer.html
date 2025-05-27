@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TLE History Viewer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .tle-card {
+            transition: all 0.3s ease;
+        }
+        .tle-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .tle-line {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            background-color: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+            word-break: break-all;
+        }
+        .diff-highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .element-changed {
+            color: #856404;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-11">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="text-center mb-0">TLE History Viewer</h2>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs mb-4">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('index') }}">Pass Calculator</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('position') }}">Position Calculator</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="{{ url_for('tle_viewer') }}">TLE Viewer</a>
+                            </li>
+                        </ul>
+                        
+                        <form action="{{ url_for('fetch_tle_data') }}" method="post" id="tleForm">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="norad_id">NORAD Catalog ID</label>
+                                        <input type="text" class="form-control" id="norad_id" name="norad_id" 
+                                               value="{{ norad_id }}" placeholder="e.g., 25544 (ISS)" required>
+                                        <small class="form-text text-muted">Enter the NORAD catalog number of the satellite</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="days_back">Historical Range (days)</label>
+                                        <select class="form-control" id="days_back" name="days_back">
+                                            <option value="7" {{ 'selected' if days_back == 7 else '' }}>Last 7 days</option>
+                                            <option value="30" {{ 'selected' if days_back == 30 else '' }}>Last 30 days</option>
+                                            <option value="90" {{ 'selected' if days_back == 90 else '' }}>Last 90 days</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center mb-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Fetch TLE Data</button>
+                            </div>
+                        </form>
+                        
+                        {% if current_tle %}
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <h4 class="text-center">Current TLE Data</h4>
+                                <hr>
+                            </div>
+                            
+                            {% if current_tle.error %}
+                            <div class="col-md-12">
+                                <div class="alert alert-danger">
+                                    <strong>Error:</strong> {{ current_tle.error }}
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="col-md-12">
+                                <div class="card tle-card mb-4">
+                                    <div class="card-header bg-success text-white">
+                                        <h5 class="mb-0">{{ current_tle.satellite_name }} (NORAD: {{ current_tle.norad_id }})</h5>
+                                        <small>Epoch: {{ current_tle.epoch }} | Element Set: {{ current_tle.element_set_no }} | Classification: {{ current_tle.classification }}</small>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <h6>TLE Data (Raw Format):</h6>
+                                                <div class="tle-line mb-2" style="background-color: #e9ecef; font-weight: bold; border-left-color: #28a745;">{{ current_tle.satellite_name }}</div>
+                                                <div class="tle-line mb-2">{{ current_tle.tle_line1 }}</div>
+                                                <div class="tle-line">{{ current_tle.tle_line2 }}</div>
+                                                
+                                                <div class="mt-3">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="copyTLE()">
+                                                        📋 Copy TLE to Clipboard
+                                                    </button>
+                                                    <a href="{{ url_for('import_tle', norad_id=current_tle.norad_id) }}" 
+                                                       class="btn btn-sm btn-success">
+                                                        📥 Import to Pass Calculator
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h6>Basic Orbital Elements:</h6>
+                                                <table class="table table-sm">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><strong>Inclination:</strong></td>
+                                                            <td>{{ "%.4f"|format(current_tle.inclination) }}°</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Mean Motion:</strong></td>
+                                                            <td>{{ "%.8f"|format(current_tle.mean_motion) }} rev/day</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Orbital Period:</strong></td>
+                                                            <td>{{ current_tle.period_minutes }} minutes</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Eccentricity:</strong></td>
+                                                            <td>{{ "%.7f"|format(current_tle.eccentricity) }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>RAAN:</strong></td>
+                                                            <td>{{ "%.4f"|format(current_tle.ra_of_asc_node) }}°</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Arg of Perigee:</strong></td>
+                                                            <td>{{ "%.4f"|format(current_tle.arg_of_pericenter) }}°</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Mean Anomaly:</strong></td>
+                                                            <td>{{ "%.4f"|format(current_tle.mean_anomaly) }}°</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h6>Satellite Information:</h6>
+                                                <table class="table table-sm">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><strong>NORAD ID:</strong></td>
+                                                            <td>{{ current_tle.norad_id }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Int'l Designator:</strong></td>
+                                                            <td>{{ current_tle.intl_designator }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Classification:</strong></td>
+                                                            <td>{{ current_tle.classification }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Element Set #:</strong></td>
+                                                            <td>{{ current_tle.element_set_no }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Revolution #:</strong></td>
+                                                            <td>{{ current_tle.rev_at_epoch }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Epoch:</strong></td>
+                                                            <td>{{ current_tle.epoch[:19] }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h6>Perturbation Data:</h6>
+                                                <table class="table table-sm">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><strong>BSTAR Drag:</strong></td>
+                                                            <td>{{ current_tle.bstar }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Mean Motion Dot:</strong></td>
+                                                            <td>{{ current_tle.mean_motion_dot }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Mean Motion DDot:</strong></td>
+                                                            <td>{{ current_tle.mean_motion_ddot }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Data Source:</strong></td>
+                                                            <td>CelesTrak</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Format:</strong></td>
+                                                            <td>GP (General Perturbations)</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        
+                        {% if tle_history %}
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <h4 class="text-center">TLE History</h4>
+                                <hr>
+                            </div>
+                            
+                            {% for tle in tle_history %}
+                            {% if tle.error %}
+                            <div class="col-md-12">
+                                <div class="alert alert-warning">
+                                    <strong>{{ tle.error }}</strong><br>
+                                    {% if tle.message %}{{ tle.message }}{% endif %}
+                                    {% if tle.suggestion %}<br><em>{{ tle.suggestion }}</em>{% endif %}
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="col-md-6">
+                                <div class="card tle-card mb-3">
+                                    <div class="card-header bg-info text-white">
+                                        <h6 class="mb-0">{{ tle.satellite_name }}</h6>
+                                        <small>Epoch: {{ tle.epoch }}</small>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="tle-line mb-2">{{ tle.tle_line1 }}</div>
+                                        <div class="tle-line">{{ tle.tle_line2 }}</div>
+                                        <div class="mt-2">
+                                            <small class="text-muted">
+                                                Mean Motion: {{ tle.mean_motion }} | 
+                                                Inclination: {{ tle.inclination }}°
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        {% if comparison %}
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <h4 class="text-center">TLE Comparison</h4>
+                                <hr>
+                            </div>
+                            <div class="col-md-12">
+                                {% if comparison.error %}
+                                <div class="alert alert-warning">{{ comparison.error }}</div>
+                                {% else %}
+                                <div class="card">
+                                    <div class="card-header bg-warning text-dark">
+                                        <h6 class="mb-0">Element Changes Detected</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <table class="table table-sm">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><strong>Epoch Difference:</strong></td>
+                                                            <td>{{ comparison.epoch_diff_days }} days</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Mean Motion Δ:</strong></td>
+                                                            <td>{{ "%.6f"|format(comparison.mean_motion_diff) }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Inclination Δ:</strong></td>
+                                                            <td>{{ "%.4f"|format(comparison.inclination_diff) }}°</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong>Eccentricity Δ:</strong></td>
+                                                            <td>{{ "%.7f"|format(comparison.eccentricity_diff) }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>Significant Changes:</h6>
+                                                {% if comparison.changes %}
+                                                <ul class="list-unstyled">
+                                                    {% for change in comparison.changes %}
+                                                    <li><span class="badge bg-warning text-dark">{{ change }}</span></li>
+                                                    {% endfor %}
+                                                </ul>
+                                                {% else %}
+                                                <p class="text-muted">No significant changes detected</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% if current_tle and not current_tle.error %}
+    <script>
+    function copyTLE() {
+        const tleText = `{{ current_tle.satellite_name }}
+{{ current_tle.tle_line1 }}
+{{ current_tle.tle_line2 }}`;
+        
+        navigator.clipboard.writeText(tleText).then(function() {
+            alert('TLE data copied to clipboard!');
+        }, function(err) {
+            console.error('Could not copy text: ', err);
+        });
+    }
+    </script>
+    {% else %}
+    <script>
+    function copyTLE() {
+        alert('No TLE data available to copy');
+    }
+    </script>
+    {% endif %}
+</body>
+</html>
