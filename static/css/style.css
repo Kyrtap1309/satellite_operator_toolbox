@@ -1,69 +1,70 @@
 body {
-    background-color: #f8f9fa;
+  background-color: #f8f9fa;
 }
 
 .card {
-    border-radius: 10px;
-    overflow: hidden;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .card-header {
-    border-radius: 0 !important;
+  border-radius: 0 !important;
 }
 
-.timeline-container, .map-container {
-    background-color: white;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    height: 350px;
+.timeline-container,
+.map-container {
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  height: 350px;
 }
 
 #visualization {
-    height: 300px;
+  height: 300px;
 }
 
 #map {
-    height: 300px;
-    width: 100%;
-    border-radius: 4px;
+  height: 300px;
+  width: 100%;
+  border-radius: 4px;
 }
 
 /* Timeline styling */
 .gs1-pass {
-    background-color: rgba(0, 123, 255, 0.6);
-    border-color: #0056b3;
+  background-color: rgba(0, 123, 255, 0.6);
+  border-color: #0056b3;
 }
 
 .gs2-pass {
-    background-color: rgba(40, 167, 69, 0.6);
-    border-color: #1e7e34;
+  background-color: rgba(40, 167, 69, 0.6);
+  border-color: #1e7e34;
 }
 
 .common-window {
-    background-color: rgba(220, 53, 69, 0.6);
-    border-color: #c82333;
-    color: white;
-    font-weight: bold;
+  background-color: rgba(220, 53, 69, 0.6);
+  border-color: #c82333;
+  color: white;
+  font-weight: bold;
 }
 
 .vis-timeline {
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
 }
 
 .vis-item {
-    border-width: 2px;
+  border-width: 2px;
 }
 
 .vis-time-axis .vis-text {
-    color: #495057;
+  color: #495057;
 }
 
 .vis-item .vis-item-content {
-    padding: 5px;
+  padding: 5px;
 }
 
 table {
-    font-size: 14px;
+  font-size: 14px;
 }

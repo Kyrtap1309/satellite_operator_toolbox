@@ -1,201 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Satellite Position Calculator</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    
+
     <!-- Add map styles -->
     <style>
-        .map-container {
-            height: 400px;
-            width: 100%;
-            position: relative;
-            border-radius: 4px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            border: 1px solid #ddd;
-        }
+      .map-container {
+        height: 400px;
+        width: 100%;
+        position: relative;
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ddd;
+      }
 
-        #position-map {
-            height: 100%;
-            width: 100%;
-            z-index: 1;
-        }
+      #position-map {
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h2 class="text-center mb-0">Satellite Position Calculator</h2>
+      <div class="row justify-content-center">
+        <div class="col-md-10">
+          <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+              <h2 class="text-center mb-0">Satellite Position Calculator</h2>
+            </div>
+            <div class="card-body">
+              <ul class="nav nav-tabs mb-4">
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('index') }}"
+                    >Pass Calculator</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" href="{{ url_for('position') }}"
+                    >Position Calculator</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('tle_viewer') }}"
+                    >TLE Viewer</a
+                  >
+                </li>
+              </ul>
+
+              <form
+                action="{{ url_for('calculate_position') }}"
+                method="post"
+                id="positionForm"
+              >
+                <div class="row mb-4">
+                  <div class="col-md-12">
+                    <h4>Satellite TLE Data</h4>
+                    <hr />
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group mb-3">
+                      <label for="tle_name">Satellite Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="tle_name"
+                        name="tle_name"
+                        value="{{ tle_name }}"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group mb-3">
+                      <label for="tle_line1">TLE Line 1</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="tle_line1"
+                        name="tle_line1"
+                        value="{{ tle_line1 }}"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group mb-3">
+                      <label for="tle_line2">TLE Line 2</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="tle_line2"
+                        name="tle_line2"
+                        value="{{ tle_line2 }}"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-4">
+                  <div class="col-md-12">
+                    <h4>Time</h4>
+                    <hr />
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group mb-3">
+                      <label for="date">Date</label>
+                      <input
+                        type="date"
+                        class="form-control"
+                        id="date"
+                        name="date"
+                        value="{{ default_date }}"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group mb-3">
+                      <label for="time">Time (UTC)</label>
+                      <input
+                        type="time"
+                        class="form-control"
+                        id="time"
+                        name="time"
+                        value="{{ default_time }}"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-center mb-4">
+                  <button type="submit" class="btn btn-primary btn-lg">
+                    Calculate Position
+                  </button>
+                </div>
+              </form>
+
+              {% if position_data %}
+              <div class="row mt-4">
+                <div class="col-md-12">
+                  <h4 class="text-center">Satellite Position Results</h4>
+                  <hr />
+                </div>
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                      <h5 class="mb-0">
+                        {{ position_data.satellite_name }} at {{
+                        position_data.time_utc }}
+                      </h5>
                     </div>
                     <div class="card-body">
-                        <ul class="nav nav-tabs mb-4">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('index') }}">Pass Calculator</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" href="{{ url_for('position') }}">Position Calculator</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('tle_viewer') }}">TLE Viewer</a>
-                            </li>
-                        </ul>
-                        
-                        <form action="{{ url_for('calculate_position') }}" method="post" id="positionForm">
-                            <div class="row mb-4">
-                                <div class="col-md-12">
-                                    <h4>Satellite TLE Data</h4>
-                                    <hr>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group mb-3">
-                                        <label for="tle_name">Satellite Name</label>
-                                        <input type="text" class="form-control" id="tle_name" name="tle_name" value="{{ tle_name }}" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="form-group mb-3">
-                                        <label for="tle_line1">TLE Line 1</label>
-                                        <input type="text" class="form-control" id="tle_line1" name="tle_line1" value="{{ tle_line1 }}" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group mb-3">
-                                        <label for="tle_line2">TLE Line 2</label>
-                                        <input type="text" class="form-control" id="tle_line2" name="tle_line2" value="{{ tle_line2 }}" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mb-4">
-                                <div class="col-md-12">
-                                    <h4>Time</h4>
-                                    <hr>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label for="date">Date</label>
-                                        <input type="date" class="form-control" id="date" name="date" value="{{ default_date }}" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label for="time">Time (UTC)</label>
-                                        <input type="time" class="form-control" id="time" name="time" value="{{ default_time }}" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="text-center mb-4">
-                                <button type="submit" class="btn btn-primary btn-lg">Calculate Position</button>
-                            </div>
-                        </form>
-                        
-                        {% if position_data %}
-                        <div class="row mt-4">
-                            <div class="col-md-12">
-                                <h4 class="text-center">Satellite Position Results</h4>
-                                <hr>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-header bg-secondary text-white">
-                                        <h5 class="mb-0">{{ position_data.satellite_name }} at {{ position_data.time_utc }}</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <table class="table table-bordered">
-                                            <tbody>
-                                                <tr>
-                                                    <th>Latitude</th>
-                                                    <td>{{ position_data.latitude }}°</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Longitude</th>
-                                                    <td>{{ position_data.longitude }}°</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Elevation</th>
-                                                    <td>{{ position_data.elevation }} meters</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="map-container">
-                                    <div id="position-map"></div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %}
-                        
-                        <div class="text-center mt-4">
-                            <a href="{{ url_for('index') }}" class="btn btn-outline-primary">Back to Pass Calculator</a>
-                        </div>
+                      <table class="table table-bordered">
+                        <tbody>
+                          <tr>
+                            <th>Latitude</th>
+                            <td>{{ position_data.latitude }}°</td>
+                          </tr>
+                          <tr>
+                            <th>Longitude</th>
+                            <td>{{ position_data.longitude }}°</td>
+                          </tr>
+                          <tr>
+                            <th>Elevation</th>
+                            <td>{{ position_data.elevation }} meters</td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
+                  </div>
                 </div>
+                <div class="col-md-6">
+                  <div class="map-container">
+                    <div id="position-map"></div>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+
+              <div class="text-center mt-4">
+                <a href="{{ url_for('index') }}" class="btn btn-outline-primary"
+                  >Back to Pass Calculator</a
+                >
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
 
     {% if position_data %}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize the map with proper sizing
-            const map = L.map('position-map', {
-                center: [{{ position_data.latitude }}, {{ position_data.longitude }}],
-                zoom: 3,
-                zoomControl: true,
-                scrollWheelZoom: true
-            });
-            
-            // Add OpenStreetMap tiles
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-            
-            // Create a custom satellite icon
-            const satelliteIcon = L.divIcon({
-                className: 'satellite-marker',
-                html: '<div style="width: 16px; height: 16px; background-color: #ff4500; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 8px rgba(255, 69, 0, 0.6);"></div>',
-                iconSize: [16, 16],
-                iconAnchor: [8, 8]
-            });
-            
-            // Add marker for satellite position
-            const satelliteMarker = L.marker([{{ position_data.latitude }}, {{ position_data.longitude }}], {
-                icon: satelliteIcon
-            }).addTo(map)
-              .bindPopup("<b>{{ position_data.satellite_name }}</b><br>Lat: {{ position_data.latitude }}°<br>Lon: {{ position_data.longitude }}°<br>Alt: {{ (position_data.elevation/1000)|round(1) }} km")
-              .openPopup();
-            
-            // Add satellite footprint circle (approximate coverage area)
-            const footprintRadius = Math.min({{ position_data.elevation * 0.5 }}, 2000000); // Approximate coverage
-            
-            const footprint = L.circle([{{ position_data.latitude }}, {{ position_data.longitude }}], {
-                color: '#ff4500',
-                fillColor: 'rgba(255, 69, 0, 0.1)',
-                fillOpacity: 0.2,
-                radius: footprintRadius,
-                weight: 2
-            }).addTo(map);
-            
-            // Force map to resize and invalidate size after a short delay
-            setTimeout(function() {
-                map.invalidateSize();
-            }, 100);
-        });
+      document.addEventListener('DOMContentLoaded', function() {
+          // Initialize the map with proper sizing
+          const map = L.map('position-map', {
+              center: [{{ position_data.latitude }}, {{ position_data.longitude }}],
+              zoom: 3,
+              zoomControl: true,
+              scrollWheelZoom: true
+          });
+
+          // Add OpenStreetMap tiles
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              maxZoom: 19,
+              attribution: '© OpenStreetMap contributors'
+          }).addTo(map);
+
+          // Create a custom satellite icon
+          const satelliteIcon = L.divIcon({
+              className: 'satellite-marker',
+              html: '<div style="width: 16px; height: 16px; background-color: #ff4500; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 8px rgba(255, 69, 0, 0.6);"></div>',
+              iconSize: [16, 16],
+              iconAnchor: [8, 8]
+          });
+
+          // Add marker for satellite position
+          const satelliteMarker = L.marker([{{ position_data.latitude }}, {{ position_data.longitude }}], {
+              icon: satelliteIcon
+          }).addTo(map)
+            .bindPopup("<b>{{ position_data.satellite_name }}</b><br>Lat: {{ position_data.latitude }}°<br>Lon: {{ position_data.longitude }}°<br>Alt: {{ (position_data.elevation/1000)|round(1) }} km")
+            .openPopup();
+
+          // Add satellite footprint circle (approximate coverage area)
+          const footprintRadius = Math.min({{ position_data.elevation * 0.5 }}, 2000000); // Approximate coverage
+
+          const footprint = L.circle([{{ position_data.latitude }}, {{ position_data.longitude }}], {
+              color: '#ff4500',
+              fillColor: 'rgba(255, 69, 0, 0.1)',
+              fillOpacity: 0.2,
+              radius: footprintRadius,
+              weight: 2
+          }).addTo(map);
+
+          // Force map to resize and invalidate size after a short delay
+          setTimeout(function() {
+              map.invalidateSize();
+          }, 100);
+      });
     </script>
     {% endif %}
-</body>
+  </body>
 </html>
