@@ -136,11 +136,25 @@ class SpaceTrackService:
                     round(1440 / mean_motion, 2) if mean_motion > 0 else None
                 )
 
+                # Ensure TLE lines are properly formatted
+                tle_line1 = entry.get("TLE_LINE1", "").strip()
+                tle_line2 = entry.get("TLE_LINE2", "").strip()
+
+                # Validate TLE line lengths (should be exactly 69 characters)
+                if len(tle_line1) != 69:
+                    self.logger.warning(
+                        f"TLE Line 1 has incorrect length: {len(tle_line1)} (expected 69)"
+                    )
+                if len(tle_line2) != 69:
+                    self.logger.warning(
+                        f"TLE Line 2 has incorrect length: {len(tle_line2)} (expected 69)"
+                    )
+
                 tle_data = TLEData(
                     norad_id=entry.get("NORAD_CAT_ID", ""),
                     satellite_name=entry.get("OBJECT_NAME", ""),
-                    tle_line1=entry.get("TLE_LINE1", ""),
-                    tle_line2=entry.get("TLE_LINE2", ""),
+                    tle_line1=tle_line1,
+                    tle_line2=tle_line2,
                     epoch=entry.get("EPOCH", ""),
                     mean_motion=mean_motion,
                     eccentricity=self._safe_float(entry.get("ECCENTRICITY")),

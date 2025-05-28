@@ -23,6 +23,13 @@
             border-left: 4px solid #007bff;
             word-break: break-all;
         }
+        .tle-line .btn {
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+        .tle-line:hover .btn {
+            opacity: 1;
+        }
         .diff-highlight {
             background-color: #fff3cd;
             padding: 2px 4px;
@@ -107,12 +114,26 @@
                                             <div class="col-md-12 mb-3">
                                                 <h6>TLE Data (Raw Format):</h6>
                                                 <div class="tle-line mb-2" style="background-color: #e9ecef; font-weight: bold; border-left-color: #28a745;">{{ current_tle.satellite_name }}</div>
-                                                <div class="tle-line mb-2">{{ current_tle.tle_line1 }}</div>
-                                                <div class="tle-line">{{ current_tle.tle_line2 }}</div>
+                                                
+                                                <div class="tle-line mb-2 position-relative">
+                                                    {{ current_tle.tle_line1 }}
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 m-1" 
+                                                            onclick="copyToClipboard('{{ current_tle.tle_line1|e }}', 'TLE Line 1')">
+                                                        📋
+                                                    </button>
+                                                </div>
+                                                
+                                                <div class="tle-line position-relative">
+                                                    {{ current_tle.tle_line2 }}
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 m-1" 
+                                                            onclick="copyToClipboard('{{ current_tle.tle_line2|e }}', 'TLE Line 2')">
+                                                        📋
+                                                    </button>
+                                                </div>
                                                 
                                                 <div class="mt-3">
-                                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="copyTLE()">
-                                                        📋 Copy TLE to Clipboard
+                                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="copyFullTLE('{{ current_tle.satellite_name|e }}', '{{ current_tle.tle_line1|e }}', '{{ current_tle.tle_line2|e }}')">
+                                                        📋 Copy Complete TLE
                                                     </button>
                                                     <a href="{{ url_for('import_tle', norad_id=current_tle.norad_id) }}" 
                                                        class="btn btn-sm btn-success">
@@ -259,8 +280,31 @@
                                         <small>Epoch: {{ tle.epoch[:19] }} | Element Set: {{ tle.element_set_no or 'N/A' }}</small>
                                     </div>
                                     <div class="card-body">
-                                        <div class="tle-line mb-2" style="font-size: 0.8em;">{{ tle.tle_line1 }}</div>
-                                        <div class="tle-line mb-2" style="font-size: 0.8em;">{{ tle.tle_line2 }}</div>
+                                        <div class="tle-line mb-2 position-relative" style="font-size: 0.8em;">
+                                            {{ tle.tle_line1 }}
+                                            <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0" 
+                                                    style="font-size: 0.7em; padding: 2px 6px;" 
+                                                    onclick="copyToClipboard('{{ tle.tle_line1|e }}', 'TLE Line 1')">
+                                                📋
+                                            </button>
+                                        </div>
+                                        <div class="tle-line mb-2 position-relative" style="font-size: 0.8em;">
+                                            {{ tle.tle_line2 }}
+                                            <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0" 
+                                                    style="font-size: 0.7em; padding: 2px 6px;" 
+                                                    onclick="copyToClipboard('{{ tle.tle_line2|e }}', 'TLE Line 2')">
+                                                📋
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="mb-2">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" 
+                                                    style="font-size: 0.8em;" 
+                                                    onclick="copyFullTLE('{{ tle.satellite_name|e }}', '{{ tle.tle_line1|e }}', '{{ tle.tle_line2|e }}')">
+                                                📋 Copy Complete TLE
+                                            </button>
+                                        </div>
+                                        
                                         <div class="mt-2">
                                             <small class="text-muted">
                                                 Mean Motion: {{ "%.6f"|format(tle.mean_motion) if tle.mean_motion else 'N/A' }}<br>
@@ -375,24 +419,70 @@
     
     {% if current_tle and not current_tle.error %}
     <script>
-    function copyTLE() {
-        const tleText = `{{ current_tle.satellite_name }}
-{{ current_tle.tle_line1 }}
-{{ current_tle.tle_line2 }}`;
+function copyToClipboard(text, description) {
+    navigator.clipboard.writeText(text).then(function() {
+        // Create a temporary success message
+        const toast = document.createElement('div');
+        toast.className = 'alert alert-success position-fixed';
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 250px;';
+        toast.innerHTML = `<strong>${description}</strong> copied to clipboard!`;
+        document.body.appendChild(toast);
         
-        navigator.clipboard.writeText(tleText).then(function() {
-            alert('TLE data copied to clipboard!');
-        }, function(err) {
-            console.error('Could not copy text: ', err);
-        });
-    }
-    </script>
-    {% else %}
-    <script>
-    function copyTLE() {
-        alert('No TLE data available to copy');
-    }
-    </script>
+        // Remove the message after 2 seconds
+        setTimeout(() => {
+            document.body.removeChild(toast);
+        }, 2000);
+    }, function(err) {
+        console.error('Could not copy text: ', err);
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            alert(`${description} copied to clipboard!`);
+        } catch (err) {
+            alert(`Failed to copy ${description}`);
+        }
+        document.body.removeChild(textArea);
+    });
+}
+
+function copyFullTLE(satelliteName, line1, line2) {
+    const tleText = `${satelliteName}
+${line1}
+${line2}`;
+    
+    navigator.clipboard.writeText(tleText).then(function() {
+        // Create a temporary success message
+        const toast = document.createElement('div');
+        toast.className = 'alert alert-success position-fixed';
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 250px;';
+        toast.innerHTML = '<strong>Complete TLE</strong> copied to clipboard!';
+        document.body.appendChild(toast);
+        
+        // Remove the message after 2 seconds
+        setTimeout(() => {
+            document.body.removeChild(toast);
+        }, 2000);
+    }, function(err) {
+        console.error('Could not copy text: ', err);
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = tleText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            alert('Complete TLE copied to clipboard!');
+        } catch (err) {
+            alert('Failed to copy complete TLE');
+        }
+        document.body.removeChild(textArea);
+    });
+}
+</script>
     {% endif %}
 </body>
 </html>
