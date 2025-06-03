@@ -7,10 +7,10 @@ class Config:
     # Satellite defaults
     SATELLITE_NAME: str = "Bluebon"
     SATELLITE_TLE_LINE1: str = (
-        "1 62688U 25009CH  25124.74930353  .00015765  00000+0  69252-3 0  9994"
+        ""
     )
     SATELLITE_TLE_LINE2: str = (
-        "2 62688  97.4284 205.7904 0001127  28.6595 331.4703 15.22003295 16668"
+        ""
     )
 
     # Ground stations
