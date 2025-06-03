@@ -1,251 +1,222 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Satellite Passes Results</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/vis-timeline@7.7.0/dist/vis-timeline-graph2d.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/vis-timeline@7.7.0/dist/vis-timeline-graph2d.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  </head>
-  <body>
-    <div class="container-fluid mt-4">
-      <div class="row justify-content-center">
-        <div class="col-md-11">
-          <div class="card shadow-sm mb-4">
-            <div class="card-header bg-primary text-white">
-              <h2 class="text-center mb-0">Satellite Passes for {{ date }}</h2>
-            </div>
-            <div class="card-body">
-              <ul class="nav nav-tabs mb-4">
-                <li class="nav-item">
-                  <a class="nav-link active" href="{{ url_for('index') }}"
-                    >Pass Calculator</a
-                  >
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('position') }}"
-                    >Position Calculator</a
-                  >
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('tle_viewer') }}"
-                    >TLE Viewer</a
-                  >
-                </li>
-              </ul>
+{% extends "base.html" %} {% block title %}Satellite Passes Results{% endblock
+%} {% block page_title %}Satellite Passes for {{ date }}{% endblock %} {% block
+col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/vis-timeline@7.7.0/dist/vis-timeline-graph2d.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+/>
+<style>
+  .timeline-container {
+    height: 300px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
 
-              <div class="row mb-5">
-                <div class="col-md-8">
-                  <h3 class="text-center mb-3">Visual Timeline</h3>
-                  <div class="timeline-container">
-                    <div id="visualization"></div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <h3 class="text-center mb-3">Ground Stations Map</h3>
-                  <div class="map-container">
-                    <div id="map"></div>
-                  </div>
-                </div>
-              </div>
+  .map-container {
+    height: 300px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
 
-              <h3 class="text-center mb-3">Common Visibility Windows</h3>
-              <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                  <thead class="table-primary">
-                    <tr>
-                      <th>Nr</th>
-                      <th>Date</th>
-                      <th>Start (UTC)</th>
-                      <th>End (UTC)</th>
-                      <th>Max Elevation</th>
-                      <th>Duration</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% if common_windows %} {% for window in common_windows %}
-                    <tr>
-                      <td>{{ window.Nr }}</td>
-                      <td>{{ window.Date }}</td>
-                      <td>{{ window['Start (UTC)'] }}</td>
-                      <td>{{ window['End (UTC)'] }}</td>
-                      <td>{{ window['Max Elevation'] }}</td>
-                      <td>{{ window.Duration }}</td>
-                    </tr>
-                    {% endfor %} {% else %}
-                    <tr>
-                      <td colspan="6" class="text-center">
-                        No common visibility windows found
-                      </td>
-                    </tr>
-                    {% endif %}
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="row mt-5">
-                <div class="col-md-6">
-                  <h3 class="text-center mb-3">
-                    {{ gs1_name }} Station Passes
-                  </h3>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-bordered">
-                      <thead class="table-primary">
-                        <tr>
-                          <th>Nr</th>
-                          <th>Date</th>
-                          <th>Rise (UTC)</th>
-                          <th>Set (UTC)</th>
-                          <th>Max Elevation</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% if gs1_passes %} {% for pass in gs1_passes %}
-                        <tr>
-                          <td>{{ pass.Nr }}</td>
-                          <td>{{ pass.Date }}</td>
-                          <td>{{ pass['Rise Time (UTC)'] }}</td>
-                          <td>{{ pass['Set Time (UTC)'] }}</td>
-                          <td>{{ pass['Max Elevation'] }}</td>
-                        </tr>
-                        {% endfor %} {% else %}
-                        <tr>
-                          <td colspan="5" class="text-center">
-                            No passes found
-                          </td>
-                        </tr>
-                        {% endif %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <h3 class="text-center mb-3">
-                    {{ gs2_name }} Station Passes
-                  </h3>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-bordered">
-                      <thead class="table-primary">
-                        <tr>
-                          <th>Nr</th>
-                          <th>Date</th>
-                          <th>Rise (UTC)</th>
-                          <th>Set (UTC)</th>
-                          <th>Max Elevation</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% if gs2_passes %} {% for pass in gs2_passes %}
-                        <tr>
-                          <td>{{ pass.Nr }}</td>
-                          <td>{{ pass.Date }}</td>
-                          <td>{{ pass['Rise Time (UTC)'] }}</td>
-                          <td>{{ pass['Set Time (UTC)'] }}</td>
-                          <td>{{ pass['Max Elevation'] }}</td>
-                        </tr>
-                        {% endfor %} {% else %}
-                        <tr>
-                          <td colspan="5" class="text-center">
-                            No passes found
-                          </td>
-                        </tr>
-                        {% endif %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-
-              <div class="text-center mt-4">
-                <a href="{{ url_for('index') }}" class="btn btn-primary"
-                  >Calculate New Passes</a
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  #map {
+    height: 100%;
+    width: 100%;
+  }
+</style>
+{% endblock %} {% block head_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/vis-timeline@7.7.0/dist/vis-timeline-graph2d.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+{% endblock %} {% block content %}
+<div class="row mb-5">
+  <div class="col-md-8">
+    <h3 class="text-center mb-3">Visual Timeline</h3>
+    <div class="timeline-container">
+      <div id="visualization"></div>
     </div>
+  </div>
+  <div class="col-md-4">
+    <h3 class="text-center mb-3">Ground Stations Map</h3>
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+  </div>
+</div>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-          // Parse the timeline data
-          const timelineData = {{ timeline_data|safe }};
+<h3 class="text-center mb-3">Common Visibility Windows</h3>
+<div class="table-responsive">
+  <table class="table table-striped table-bordered">
+    <thead class="table-primary">
+      <tr>
+        <th>Nr</th>
+        <th>Date</th>
+        <th>Start (UTC)</th>
+        <th>End (UTC)</th>
+        <th>Max Elevation</th>
+        <th>Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if common_windows %} {% for window in common_windows %}
+      <tr>
+        <td>{{ window.Nr }}</td>
+        <td>{{ window.Date }}</td>
+        <td>{{ window['Start (UTC)'] }}</td>
+        <td>{{ window['End (UTC)'] }}</td>
+        <td>{{ window['Max Elevation'] }}</td>
+        <td>{{ window.Duration }}</td>
+      </tr>
+      {% endfor %} {% else %}
+      <tr>
+        <td colspan="6" class="text-center">
+          No common visibility windows found
+        </td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
 
-          // Create groups
-          const groups = [
-              {id: '{{ gs1_name }}', content: '{{ gs1_name }} Station'},
-              {id: '{{ gs2_name }}', content: '{{ gs2_name }} Station'},
-              {id: 'Common', content: 'Common Visibility'}
-          ];
+<div class="row mt-5">
+  <div class="col-md-6">
+    <h3 class="text-center mb-3">{{ gs1_name }} Station Passes</h3>
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead class="table-primary">
+          <tr>
+            <th>Nr</th>
+            <th>Date</th>
+            <th>Rise (UTC)</th>
+            <th>Set (UTC)</th>
+            <th>Max Elevation</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if gs1_passes %} {% for pass in gs1_passes %}
+          <tr>
+            <td>{{ pass.Nr }}</td>
+            <td>{{ pass.Date }}</td>
+            <td>{{ pass['Rise Time (UTC)'] }}</td>
+            <td>{{ pass['Set Time (UTC)'] }}</td>
+            <td>{{ pass['Max Elevation'] }}</td>
+          </tr>
+          {% endfor %} {% else %}
+          <tr>
+            <td colspan="5" class="text-center">No passes found</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <h3 class="text-center mb-3">{{ gs2_name }} Station Passes</h3>
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead class="table-primary">
+          <tr>
+            <th>Nr</th>
+            <th>Date</th>
+            <th>Rise (UTC)</th>
+            <th>Set (UTC)</th>
+            <th>Max Elevation</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if gs2_passes %} {% for pass in gs2_passes %}
+          <tr>
+            <td>{{ pass.Nr }}</td>
+            <td>{{ pass.Date }}</td>
+            <td>{{ pass['Rise Time (UTC)'] }}</td>
+            <td>{{ pass['Set Time (UTC)'] }}</td>
+            <td>{{ pass['Max Elevation'] }}</td>
+          </tr>
+          {% endfor %} {% else %}
+          <tr>
+            <td colspan="5" class="text-center">No passes found</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-          // Create a DataSet with the parsed data
-          const items = new vis.DataSet(timelineData);
+<div class="text-center mt-4">
+  <a href="{{ url_for('index') }}" class="btn btn-primary"
+    >Calculate New Passes</a
+  >
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Parse the timeline data
+      const timelineData = {{ timeline_data|safe }};
 
-          // DOM element where the Timeline will be attached
-          const container = document.getElementById('visualization');
+      // Create groups
+      const groups = [
+          {id: '{{ gs1_name }}', content: '{{ gs1_name }} Station'},
+          {id: '{{ gs2_name }}', content: '{{ gs2_name }} Station'},
+          {id: 'Common', content: 'Common Visibility'}
+      ];
 
-          // Configuration for the Timeline
-          const options = {
-              zoomable: true,
-              moveable: true,
-              stack: false,
-              min: new Date('{{ date }} 00:00:00'),
-              max: new Date('{{ date }} 23:59:59'),
-              timeAxis: {scale: 'minute', step: 30}
-          };
+      // Create a DataSet with the parsed data
+      const items = new vis.DataSet(timelineData);
 
-          // Create a Timeline
-          const timeline = new vis.Timeline(container, items, groups, options);
+      // DOM element where the Timeline will be attached
+      const container = document.getElementById('visualization');
 
-          // Initialize the map
-          const map = L.map('map').setView([{{ (gs1_lat + gs2_lat) / 2 }}, {{ (gs1_lon + gs2_lon) / 2 }}], 4);
+      // Configuration for the Timeline
+      const options = {
+          zoomable: true,
+          moveable: true,
+          stack: false,
+          min: new Date('{{ date }} 00:00:00'),
+          max: new Date('{{ date }} 23:59:59'),
+          timeAxis: {scale: 'minute', step: 30}
+      };
 
-          // Add OpenStreetMap tiles
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-              maxZoom: 19,
-              attribution: '© OpenStreetMap contributors'
-          }).addTo(map);
+      // Create a Timeline
+      const timeline = new vis.Timeline(container, items, groups, options);
 
-          // Add markers for ground stations
-          const gs1Marker = L.marker([{{ gs1_lat }}, {{ gs1_lon }}])
-              .addTo(map)
-              .bindPopup("<b>{{ gs1_name }}</b><br>Lat: {{ gs1_lat }}, Lon: {{ gs1_lon }}<br>Elevation: {{ gs1_elev }} m");
+      // Initialize the map
+      const map = L.map('map').setView([{{ (gs1_lat + gs2_lat) / 2 }}, {{ (gs1_lon + gs2_lon) / 2 }}], 4);
 
-          const gs2Marker = L.marker([{{ gs2_lat }}, {{ gs2_lon }}])
-              .addTo(map)
-              .bindPopup("<b>{{ gs2_name }}</b><br>Lat: {{ gs2_lat }}, Lon: {{ gs2_lon }}<br>Elevation: {{ gs2_elev }} m");
+      // Add OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
 
-          // Draw a line connecting the ground stations
-          const polyline = L.polyline([
-              [{{ gs1_lat }}, {{ gs1_lon }}],
-              [{{ gs2_lat }}, {{ gs2_lon }}]
-          ], {color: 'blue', weight: 2, opacity: 0.5, dashArray: '5, 10'}).addTo(map);
+      // Add markers for ground stations
+      const gs1Marker = L.marker([{{ gs1_lat }}, {{ gs1_lon }}])
+          .addTo(map)
+          .bindPopup("<b>{{ gs1_name }}</b><br>Lat: {{ gs1_lat }}, Lon: {{ gs1_lon }}<br>Elevation: {{ gs1_elev }} m");
 
-          // Fit map to show both markers
-          const bounds = L.latLngBounds([
-              [{{ gs1_lat }}, {{ gs1_lon }}],
-              [{{ gs2_lat }}, {{ gs2_lon }}]
-          ]);
-          map.fitBounds(bounds.pad(0.2));
-      });
-    </script>
-  </body>
-</html>
+      const gs2Marker = L.marker([{{ gs2_lat }}, {{ gs2_lon }}])
+          .addTo(map)
+          .bindPopup("<b>{{ gs2_name }}</b><br>Lat: {{ gs2_lat }}, Lon: {{ gs2_lon }}<br>Elevation: {{ gs2_elev }} m");
+
+      // Draw a line connecting the ground stations
+      const polyline = L.polyline([
+          [{{ gs1_lat }}, {{ gs1_lon }}],
+          [{{ gs2_lat }}, {{ gs2_lon }}]
+      ], {color: 'blue', weight: 2, opacity: 0.5, dashArray: '5, 10'}).addTo(map);
+
+      // Fit map to show both markers
+      const bounds = L.latLngBounds([
+          [{{ gs1_lat }}, {{ gs1_lon }}],
+          [{{ gs2_lat }}, {{ gs2_lon }}]
+      ]);
+      map.fitBounds(bounds.pad(0.2));
+  });
+</script>
+{% endblock %}
