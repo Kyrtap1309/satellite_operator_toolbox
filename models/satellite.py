@@ -81,15 +81,3 @@ class SatellitePosition:
     longitude: float
     elevation: float
     satellite_name: str
-
-
-@dataclass
-class TLEComparison:
-    """TLE comparison result model."""
-
-    epoch_diff_days: int
-    mean_motion_diff: float
-    inclination_diff: float
-    eccentricity_diff: float
-    changes: list[str]
-    error: Optional[str] = None

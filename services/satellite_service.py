@@ -8,7 +8,6 @@ from models.satellite import (
     GroundStation,
     SatellitePass,
     SatellitePosition,
-    TLEComparison,
     TLEData,
 )
 from services.celestrak_service import CelestrakService
@@ -148,59 +147,6 @@ class SatelliteService:
         except Exception as e:
             self.logger.error(f"Error calculating position: {e}")
             raise
-
-    def compare_tle_elements(self, tle1: TLEData, tle2: TLEData) -> TLEComparison:
-        """Compare two TLE datasets."""
-        try:
-            changes = []
-
-            # Parse epochs
-            epoch1 = self._parse_epoch(tle1.epoch)
-            epoch2 = self._parse_epoch(tle2.epoch)
-            epoch_diff_days = abs((epoch1 - epoch2).days) if epoch1 and epoch2 else 0
-
-            # Calculate differences
-            mean_motion_diff = abs(tle1.mean_motion - tle2.mean_motion)
-            inclination_diff = abs(tle1.inclination - tle2.inclination)
-            eccentricity_diff = abs(tle1.eccentricity - tle2.eccentricity)
-
-            # Check for significant changes
-            if mean_motion_diff > 0.001:
-                changes.append("Significant mean motion change detected")
-            if inclination_diff > 0.01:
-                changes.append("Inclination change detected")
-            if eccentricity_diff > 0.0001:
-                changes.append("Eccentricity change detected")
-            if epoch_diff_days > 7:
-                changes.append("Large time gap between TLE epochs")
-
-            # Check RAAN and argument of perigee
-            raan_diff = abs(tle1.ra_of_asc_node - tle2.ra_of_asc_node)
-            if raan_diff > 1.0:
-                changes.append("RAAN change detected")
-
-            arg_diff = abs(tle1.arg_of_pericenter - tle2.arg_of_pericenter)
-            if arg_diff > 1.0:
-                changes.append("Argument of perigee change detected")
-
-            return TLEComparison(
-                epoch_diff_days=epoch_diff_days,
-                mean_motion_diff=mean_motion_diff,
-                inclination_diff=inclination_diff,
-                eccentricity_diff=eccentricity_diff,
-                changes=changes,
-            )
-
-        except Exception as e:
-            self.logger.error(f"Error comparing TLEs: {e}")
-            return TLEComparison(
-                epoch_diff_days=0,
-                mean_motion_diff=0,
-                inclination_diff=0,
-                eccentricity_diff=0,
-                changes=[],
-                error=f"Error comparing TLE data: {e}",
-            )
 
     def _parse_epoch(self, epoch_str: str) -> Optional[datetime]:
         """Parse epoch with multiple format support."""

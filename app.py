@@ -39,7 +39,13 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
 
     @app.route("/")
     def index():
-        app.logger.debug("Index page accessed")
+        """Homepage with tool panel."""
+        app.logger.debug("Homepage accessed")
+        return render_template("index.html")
+
+    @app.route("/satellite_passes")
+    def satellite_passes():
+        app.logger.debug("Pass calculator page accessed")
         tomorrow = datetime.now() + timedelta(days=1)
         default_date = tomorrow.strftime("%Y-%m-%d")
 
@@ -151,8 +157,8 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
             app.logger.error(f"Error in calculation: {e}")
             return render_template("error.html", error_message=str(e)), 500
 
-    @app.route("/position")
-    def position():
+    @app.route("/satellite_position")
+    def satellite_position():
         """Render the satellite position calculator page."""
         now = datetime.now()
         default_date = now.strftime("%Y-%m-%d")
@@ -229,13 +235,6 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
             tle_history = satellite_service.get_tle_history(norad_id, days_back)
             tle_age_info = satellite_service.get_tle_age_info(norad_id)
 
-            # Compare TLEs if available
-            comparison = None
-            if tle_history:
-                comparison = satellite_service.compare_tle_elements(
-                    current_tle, tle_history[0]
-                )
-
             app.logger.info("TLE data fetch completed successfully")
 
             return render_template(
@@ -245,7 +244,6 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
                 current_tle=current_tle,
                 tle_history=tle_history,
                 tle_age_info=tle_age_info,
-                comparison=comparison,
             )
 
         except Exception as e:

@@ -6,12 +6,8 @@ from dataclasses import dataclass
 class Config:
     # Satellite defaults
     SATELLITE_NAME: str = "Bluebon"
-    SATELLITE_TLE_LINE1: str = (
-        ""
-    )
-    SATELLITE_TLE_LINE2: str = (
-        ""
-    )
+    SATELLITE_TLE_LINE1: str = ""
+    SATELLITE_TLE_LINE2: str = ""
 
     # Ground stations
     STATION1_NAME: str = "Sweden"

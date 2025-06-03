@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block title %}Satellite Operator Tools - Homepage{% endblock %}
+{% block page_title %}Satellite Operator Tools{% endblock %}
+{% block content %}
+
+<div class="row mb-4">
+    <div class="col-md-12 text-center">
+        <p class="lead">Professional tools for satellite operations and analysis</p>
+        <hr>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Pass Calculator Tool -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 tool-card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-satellite"></i> Pass Calculator
+                </h5>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <p class="card-text">
+                    Calculate satellite passes and find common visibility windows between two ground stations.
+                </p>
+                <ul class="list-unstyled mb-3">
+                    <li><i class="fas fa-check text-success"></i> Multi-station analysis</li>
+                    <li><i class="fas fa-check text-success"></i> Common visibility windows</li>
+                    <li><i class="fas fa-check text-success"></i> Interactive timeline</li>
+                    <li><i class="fas fa-check text-success"></i> Ground station mapping</li>
+                </ul>
+                <div class="mt-auto">
+                    <a href="{{ url_for('satellite_passes') }}" class="btn btn-primary btn-block w-100">
+                        <i class="fas fa-calculator"></i> Open Calculator
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Position Calculator Tool -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 tool-card">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-globe"></i> Position Calculator
+                </h5>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <p class="card-text">
+                    Calculate precise satellite position at any given time and visualize on interactive map.
+                </p>
+                <ul class="list-unstyled mb-3">
+                    <li><i class="fas fa-check text-success"></i> Real-time positioning</li>
+                    <li><i class="fas fa-check text-success"></i> Interactive world map</li>
+                    <li><i class="fas fa-check text-success"></i> Coverage footprint</li>
+                    <li><i class="fas fa-check text-success"></i> Orbital parameters</li>
+                </ul>
+                <div class="mt-auto">
+                    <a href="{{ url_for('satellite_position') }}" class="btn btn-success btn-block w-100">
+                        <i class="fas fa-map-marker-alt"></i> Open Calculator
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TLE Viewer Tool -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 tool-card">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-database"></i> TLE Viewer
+                </h5>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <p class="card-text">
+                    Browse and analyze TLE (Two-Line Element) data history for any satellite.
+                </p>
+                <ul class="list-unstyled mb-3">
+                    <li><i class="fas fa-check text-success"></i> Historical TLE data</li>
+                    <li><i class="fas fa-check text-success"></i> Data export options</li>
+                    <li><i class="fas fa-check text-success"></i> Import to calculator</li>
+                </ul>
+                <div class="mt-auto">
+                    <a href="{{ url_for('tle_viewer') }}" class="btn btn-info btn-block w-100">
+                        <i class="fas fa-eye"></i> Open Viewer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Access Section -->
+<div class="row mt-5">
+    <div class="col-md-12">
+        <h4 class="text-center mb-4">Quick Access</h4>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="card quick-access-card">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">ISS Tracking</h6>
+                        <p class="card-text small">International Space Station</p>
+                        <a href="{{ url_for('import_tle', norad_id='25544') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-rocket"></i> Quick Setup
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card quick-access-card">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Hubble Space Telescope</h6>
+                        <p class="card-text small">HST Observatory</p>
+                        <a href="{{ url_for('import_tle', norad_id='20580') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-telescope"></i> Quick Setup
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card quick-access-card">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Custom TLE</h6>
+                        <p class="card-text small">Import any satellite</p>
+                        <a href="{{ url_for('tle_viewer') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-search"></i> Search TLE
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Overview -->
+<div class="row mt-5">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="fas fa-star"></i> Key Features</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-chart-line text-primary"></i> <strong>Real-time calculations</strong> - Precise orbital mechanics</li>
+                            <li class="mb-2"><i class="fas fa-map text-success"></i> <strong>Interactive visualizations</strong> - Maps and timelines</li>
+                            <li class="mb-2"><i class="fas fa-cloud-download-alt text-info"></i> <strong>Live TLE data</strong> - Automatic updates from CelesTrak</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-users text-warning"></i> <strong>Multi-station support</strong> - Compare multiple ground stations</li>
+                            <li class="mb-2"><i class="fas fa-copy text-secondary"></i> <strong>Data export</strong> - Copy and export results</li>
+                            <li class="mb-2"><i class="fas fa-mobile-alt text-primary"></i> <strong>Responsive design</strong> - Works on all devices</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+{{ super() }}
+<style>
+.tool-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: none;
+}
+
+.tool-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.quick-access-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    transition: all 0.2s ease;
+}
+
+.quick-access-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.lead {
+    font-size: 1.1rem;
+    color: #6c757d;
+}
+
+.card-header h5 {
+    font-weight: 600;
+}
+
+.btn-block {
+    font-weight: 500;
+}
+</style>
+{% endblock %}
