@@ -3,4 +3,5 @@ de421.bsp
 .env
 logs/
 *.log
-.prettierrc
+cache/
+*.cache

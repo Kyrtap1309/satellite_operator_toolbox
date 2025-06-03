@@ -1,10 +1,11 @@
 import json
 from datetime import datetime, timedelta
 
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, jsonify, redirect, render_template, request, url_for
 
 from config import Config
 from models.satellite import GroundStation, TLEData
+from services.cache_service import CacheService
 from services.celestrak_service import CelestrakService
 from services.satellite_service import SatelliteService
 from services.spacetrack_service import SpaceTrackService
@@ -287,6 +288,48 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
                     "index", error=f"Failed to import TLE for NORAD ID {norad_id}: {e}"
                 )
             )
+
+    @app.route("/cache/info")
+    def cache_info():
+        """Display cache information."""
+        cache_service = CacheService(config)
+        cache_stats = cache_service.get_cache_info()
+        return jsonify(cache_stats)
+
+    @app.route("/cache/clear", methods=["POST"])
+    def clear_cache():
+        """Clear all cached data."""
+        cache_service = CacheService(config)
+        cache_service.clear()
+        return jsonify({"status": "success", "message": "Cache cleared"})
+
+    @app.route('/cache/cleanup', methods=['POST'])
+    def cleanup_cache():
+        """Clean up expired cache files."""
+        cache_service = CacheService(config)
+        stats = cache_service.cleanup_expired_cache()
+        return jsonify({
+            "status": "success", 
+            "message": f"Cleanup completed: {stats['removed']} files removed, {stats['errors']} errors"
+        })
+
+    @app.route('/cache/health')
+    def cache_health():
+        """Check cache health and freshness."""
+        cache_service = CacheService(config)
+        info = cache_service.get_cache_info()
+        
+        # Add health indicators
+        if info.get("enabled"):
+            total_files = info.get("total_files", 0)
+            expired_count = sum(stats.get("expired", 0) for stats in info.get("cache_types", {}).values())
+            
+            info["health"] = {
+                "status": "healthy" if expired_count < total_files * 0.5 else "needs_cleanup",
+                "expired_percentage": round((expired_count / total_files * 100) if total_files > 0 else 0, 1)
+            }
+        
+        return jsonify(info)
 
 
 def register_error_handlers(app):

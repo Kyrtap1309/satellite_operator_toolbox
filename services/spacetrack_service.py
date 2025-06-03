@@ -6,6 +6,8 @@ import requests
 
 from config import Config
 from models.satellite import TLEData
+from services.cache_service import CacheService
+from utils.logging_config import get_logger
 
 
 class SpaceTrackService:
@@ -15,7 +17,8 @@ class SpaceTrackService:
         self.config = config
         self.base_url = config.SPACETRACK_BASE_URL
         self.session: Optional[requests.Session] = None
-        self.logger = logging.getLogger(__name__)
+        self.logger = get_logger(__name__)
+        self.cache = CacheService(config)
 
     def authenticate(self) -> bool:
         """Authenticate with Space-Track.org."""
@@ -71,6 +74,14 @@ class SpaceTrackService:
 
     def fetch_tle_history(self, norad_id: str, days_back: int = 30) -> list[TLEData]:
         """Fetch historical TLE data."""
+
+        cache_key = f"tle_history_{norad_id}_{days_back}"
+
+        cached_data = self.cache.get(cache_key)
+        if cached_data is not None:
+            self.logger.info(f"Using cached TLE history for NORAD ID: {norad_id}")
+            return cached_data
+
         session = self._ensure_authenticated()
 
         try:
@@ -95,7 +106,12 @@ class SpaceTrackService:
             if not data:
                 return []
 
-            return self._parse_tle_history(data)
+            tle_list = self._parse_tle_history(data)
+
+            self.cache.set(cache_key, tle_list)
+            self.logger.info(f"Cached TLE history for NORAD ID: {norad_id}")
+
+            return tle_list
 
         except Exception as e:
             self.logger.error(f"Failed to fetch TLE history: {e}")
@@ -103,6 +119,13 @@ class SpaceTrackService:
 
     def get_latest_tle_age(self, norad_id: str) -> dict[str, Any]:
         """Get age information for latest TLE."""
+        cache_key = f"tle_age_{norad_id}"
+
+        cached_data = self.cache.get(cache_key)
+        if cached_data is not None:
+            self.logger.debug(f"Using cached TLE age for NORAD ID: {norad_id}")
+            return cached_data
+
         session = self._ensure_authenticated()
 
         try:
@@ -119,7 +142,11 @@ class SpaceTrackService:
             if not data:
                 raise Exception("No TLE found")
 
-            return self._calculate_tle_age(data[0])
+            age_info = self._calculate_tle_age(data[0])
+
+            self.cache.set(cache_key, age_info)
+
+            return age_info
 
         except Exception as e:
             self.logger.error(f"Failed to get TLE age: {e}")
