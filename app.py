@@ -44,7 +44,7 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
         default_date = tomorrow.strftime("%Y-%m-%d")
 
         return render_template(
-            "index.html",
+            "satellite_passes/index.html",
             gs1_name=config.STATION1_NAME,
             gs1_lat=config.STATION1_LAT,
             gs1_lon=config.STATION1_LON,
@@ -131,7 +131,7 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
             )
 
             return render_template(
-                "results.html",
+                "satellite_passes/results.html",
                 gs1_name=gs1.name,
                 gs2_name=gs2.name,
                 gs1_passes=formatted_gs1,
@@ -159,7 +159,7 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
         default_time = now.strftime("%H:%M")
 
         return render_template(
-            "position_calculator.html",
+            "satellite_position/position_calculator.html",
             tle_name=config.SATELLITE_NAME,
             tle_line1=config.SATELLITE_TLE_LINE1,
             tle_line2=config.SATELLITE_TLE_LINE2,
@@ -194,7 +194,7 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
             position_data = satellite_service.calculate_position(tle_data, datetime_obj)
 
             return render_template(
-                "position_calculator.html",
+                "satellite_position/position_calculator.html",
                 tle_name=tle_data.satellite_name,
                 tle_line1=tle_data.tle_line1,
                 tle_line2=tle_data.tle_line2,
@@ -210,7 +210,7 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
     @app.route("/tle-viewer")
     def tle_viewer():
         """Render the TLE history viewer page."""
-        return render_template("tle_viewer.html", norad_id="25544", days_back=30)
+        return render_template("tle/tle_viewer.html", norad_id="25544", days_back=30)
 
     @app.route("/fetch_tle_data", methods=["POST"])
     def fetch_tle_data():
@@ -239,7 +239,7 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
             app.logger.info("TLE data fetch completed successfully")
 
             return render_template(
-                "tle_viewer.html",
+                "tle/tle_viewer.html",
                 norad_id=norad_id,
                 days_back=days_back,
                 current_tle=current_tle,
@@ -251,7 +251,7 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
         except Exception as e:
             app.logger.error(f"Error fetching TLE data: {e}")
             return render_template(
-                "tle_viewer.html",
+                "tle/tle_viewer.html",
                 norad_id=norad_id,
                 days_back=days_back,
                 error=str(e),
@@ -266,7 +266,7 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
             default_date = tomorrow.strftime("%Y-%m-%d")
 
             return render_template(
-                "index.html",
+                "satellite_passes/index.html",
                 success=f"TLE data imported for {tle_data.satellite_name}",
                 gs1_name=config.STATION1_NAME,
                 gs1_lat=config.STATION1_LAT,
