@@ -201,5 +201,23 @@
 .btn-block {
     font-weight: 500;
 }
+
+/* Dark mode overrides for index page */
+[data-theme="dark"] .quick-access-card {
+    background: linear-gradient(135deg, #2d2d2d 0%, #1e1e1e 100%) !important;
+    border-color: #404040 !important;
+}
+
+[data-theme="dark"] .quick-access-card:hover {
+    box-shadow: 0 4px 12px rgba(255,255,255,0.1) !important;
+}
+
+[data-theme="dark"] .tool-card:hover {
+    box-shadow: 0 8px 25px rgba(255,255,255,0.15) !important;
+}
+
+[data-theme="dark"] .lead {
+    color: #9e9e9e !important;
+}
 </style>
 {% endblock %}
