@@ -56,6 +56,9 @@ class SpaceTrackService:
 
         except Exception as e:
             self.logger.error(f"Authentication failed: {e}")
+            if self.session:
+                self.session.close()
+                self.session = None
             return False
 
     def _ensure_authenticated(self) -> requests.Session:
