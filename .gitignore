@@ -5,3 +5,6 @@ logs/
 *.log
 cache/
 *.cache
+.coverage
+__pycache__
+htmlcov

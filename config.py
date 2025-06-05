@@ -36,7 +36,9 @@ class Config:
     LOG_BACKUP_COUNT: int = 10
     LOG_DIR: str = "logs"
     LOG_FILE: str = "satellite_app.log"
-    LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+    LOG_LEVEL: str = os.getenv(
+        "LOG_LEVEL", "INFO"
+    )  # DEBUG, INFO, WARNING, ERROR, CRITICAL
     CONSOLE_LOG_LEVEL: str = os.getenv("CONSOLE_LOG_LEVEL", "DEBUG")
     FILE_LOG_LEVEL: str = os.getenv("FILE_LOG_LEVEL", "INFO")
 
@@ -49,9 +51,11 @@ class Config:
     CACHE_ENABLED: bool = True
     CACHE_TTL_HOURS: int = 6
     CACHE_DIR: str = "cache"
-    
+
     # Smart cache settings for TLE data
     TLE_CACHE_MAX_AGE_HOURS: int = 18  # Maximum age for TLE cache (less than 24h)
     TLE_DATA_FRESHNESS_THRESHOLD_HOURS: int = 12  # When to consider TLE data stale
-    HISTORICAL_DATA_CACHE_HOURS: int = 24 * 7  # Historical data can be cached longer (1 week)
+    HISTORICAL_DATA_CACHE_HOURS: int = (
+        24 * 7
+    )  # Historical data can be cached longer (1 week)
     METADATA_CACHE_HOURS: int = 24  # Satellite metadata cache

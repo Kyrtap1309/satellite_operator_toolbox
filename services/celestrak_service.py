@@ -1,4 +1,3 @@
-import logging
 from typing import Any
 
 import requests  # type: ignore
@@ -28,23 +27,29 @@ class CelestrakService:
             return cached_data
 
         try:
-            self.logger.info(f"Fetching TLE data from CelesTrak for NORAD ID: {norad_id}")
-            
+            self.logger.info(
+                f"Fetching TLE data from CelesTrak for NORAD ID: {norad_id}"
+            )
+
             # Fetch both JSON and TLE format data
             json_data = self._fetch_json_data(norad_id)
             tle_lines = self._fetch_tle_lines(norad_id)
 
             # Combine data from both sources
             tle_data = self._combine_tle_data(json_data, tle_lines)
-            
+
             # Cache the result
             self.cache.set(cache_key, tle_data)
-            self.logger.info(f"Successfully fetched and cached TLE data for NORAD ID: {norad_id}")
-            
+            self.logger.info(
+                f"Successfully fetched and cached TLE data for NORAD ID: {norad_id}"
+            )
+
             return tle_data
 
         except Exception as e:
-            self.logger.error(f"Failed to fetch TLE from CelesTrak for NORAD ID {norad_id}: {e}")
+            self.logger.error(
+                f"Failed to fetch TLE from CelesTrak for NORAD ID {norad_id}: {e}"
+            )
             raise
 
     def _fetch_json_data(self, norad_id: str) -> dict[str, Any]:
@@ -83,8 +88,10 @@ class CelestrakService:
             "tle_line1": lines[1].strip(),
             "tle_line2": lines[2].strip(),
         }
-        
-        self.logger.debug(f"Successfully fetched TLE lines for: {result['satellite_name']}")
+
+        self.logger.debug(
+            f"Successfully fetched TLE lines for: {result['satellite_name']}"
+        )
         return result
 
     def _combine_tle_data(
