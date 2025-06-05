@@ -10,14 +10,9 @@ from services.celestrak_service import CelestrakService
 @pytest.fixture
 def mock_config():
     """Mock configuration for testing."""
-    with tempfile.TemporaryDirectory() as temp_dir:
+    with tempfile.TemporaryDirectory():
         config = Config()
         config.CELESTRAK_BASE_URL = "https://celestrak.org/NORAD/elements/gp.php"
-        config.CACHE_ENABLED = True
-        config.CACHE_TTL_HOURS = 5
-        config.CACHE_DIR = temp_dir
-        config.TLE_CACHE_MAX_AGE_HOURS = 18
-        config.TLE_DATA_FRESHNESS_THRESHOLD_HOURS = 12
         config.LOG_LEVEL = "DEBUG"
         yield config
 

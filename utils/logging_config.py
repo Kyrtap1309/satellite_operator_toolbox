@@ -77,7 +77,6 @@ def configure_module_loggers(config: Config):
 
     # Configure service loggers
     service_loggers = [
-        "services.cache_service",
         "services.celestrak_service",
         "services.spacetrack_service",
         "services.satellite_service",

@@ -4,7 +4,6 @@ import requests  # type: ignore
 
 from config import Config
 from models.satellite import TLEData
-from services.cache_service import CacheService
 from utils.logging_config import get_logger
 
 
@@ -15,16 +14,9 @@ class CelestrakService:
         self.config = config
         self.base_url = config.CELESTRAK_BASE_URL
         self.logger = get_logger(__name__)
-        self.cache = CacheService(config)
 
     def fetch_current_tle(self, norad_id: str) -> TLEData:
         """Fetch current TLE data from CelesTrak."""
-        # Try cache first
-        cache_key = f"celestrak_tle_{norad_id}"
-        cached_data = self.cache.get(cache_key)
-        if cached_data is not None:
-            self.logger.info(f"Using cached TLE data for NORAD ID: {norad_id}")
-            return cached_data
 
         try:
             self.logger.info(
@@ -38,12 +30,7 @@ class CelestrakService:
             # Combine data from both sources
             tle_data = self._combine_tle_data(json_data, tle_lines)
 
-            # Cache the result
-            self.cache.set(cache_key, tle_data)
-            self.logger.info(
-                f"Successfully fetched and cached TLE data for NORAD ID: {norad_id}"
-            )
-
+            self.logger.info(f"Successfully fetched TLE data for NORAD ID: {norad_id}")
             return tle_data
 
         except Exception as e:
