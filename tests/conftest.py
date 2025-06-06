@@ -127,6 +127,18 @@ def sample_spacetrack_history_response():
 
 
 @pytest.fixture
+def sample_spacetrack_age_response():
+    """Sample TLE age response from SpaceTrack API."""
+    return [
+        {
+            "NORAD_CAT_ID": "25544",
+            "EPOCH": "2024-06-05T19:58:12.000000",
+            "OBJECT_NAME": "ISS (ZARYA)",
+        }
+    ]
+
+
+@pytest.fixture
 def celestrak_service(mock_config):
     """CelestrakService instance for testing."""
     return CelestrakService(mock_config)
