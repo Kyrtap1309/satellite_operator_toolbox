@@ -1,10 +1,12 @@
 import tempfile
+from unittest.mock import Mock
 
 import pytest
 
 from config import Config
 from models.satellite import TLEData
 from services.celestrak_service import CelestrakService
+from services.satellite_service import SatelliteService
 from services.spacetrack_service import SpaceTrackService
 
 
@@ -148,3 +150,26 @@ def celestrak_service(mock_config):
 def spacetrack_service(mock_config):
     """SpacetrackService instance for testing."""
     return SpaceTrackService(mock_config)
+
+
+@pytest.fixture
+def mock_spacetrack_service():
+    """Mock SpaceTrackService for testing."""
+    service = Mock()
+    service.fetch_tle_history.return_value = []
+    service.get_latest_tle_age.return_value = {"age_days": 1, "is_fresh": True}
+    return service
+
+
+@pytest.fixture
+def mock_celestrak_service():
+    """Mock CelestrakService for testing."""
+    service = Mock()
+    service.fetch_current_tle.return_value = None
+    return service
+
+
+@pytest.fixture
+def satellite_service(mock_spacetrack_service, mock_celestrak_service):
+    """SatelliteService instance for testing."""
+    return SatelliteService(mock_spacetrack_service, mock_celestrak_service)
