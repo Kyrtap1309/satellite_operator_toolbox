@@ -236,17 +236,17 @@ class TestSpaceTrackService:
         mock_session.get.return_value = mock_response
 
         with patch("services.spacetrack_service.datetime") as mock_datetime:
-            mock_now = datetime(2025, 6, 6, 19, 58, 12)
+            mock_now = datetime(2024, 6, 6, 19, 58, 12)
             mock_datetime.now.return_value = mock_now
             mock_datetime.strptime = datetime.strptime
 
-        result = spacetrack_service.get_latest_tle_age("25544")
+            result = spacetrack_service.get_latest_tle_age("25544")
 
         assert "epoch" in result
         assert "age_days" in result
         assert "is_fresh" in result
         assert result["epoch"] == "2024-06-05T19:58:12.000000"
-        assert result["age_days"] == 365
+        assert result["age_days"] == 1
 
     @patch.object(SpaceTrackService, "_ensure_authenticated")
     def test_get_latest_tle_age_no_data(
