@@ -71,22 +71,45 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
         app.logger.info("Pass calculation requested")
 
         try:
+            # Check input method
+            input_method = request.form.get("input_method", "norad")
+
+            if input_method == "norad":
+                # Fetch TLE from NORAD ID
+                norad_id = request.form.get("norad_id")
+                if not norad_id:
+                    flash("Please provide a NORAD ID", "error")
+                    return redirect(url_for("satellite_passes"))
+
+                # Get latest TLE data
+                tle_data = satellite_service.get_current_tle(norad_id)
+            else:
+                # Use manually provided TLE
+                tle_name = request.form.get("tle_name")
+                tle_line1 = request.form.get("tle_line1")
+                tle_line2 = request.form.get("tle_line2")
+
+                if not all([tle_name, tle_line1, tle_line2]):
+                    flash("Please provide complete TLE data", "error")
+                    return redirect(url_for("satellite_passes"))
+
+                # Create TLE data object from manual input
+                tle_data = TLEData(
+                    norad_id="",
+                    satellite_name=tle_name,
+                    tle_line1=tle_line1,
+                    tle_line2=tle_line2,
+                    epoch="",
+                    mean_motion=0,
+                    eccentricity=0,
+                    inclination=0,
+                    ra_of_asc_node=0,
+                    arg_of_pericenter=0,
+                    mean_anomaly=0,
+                )
+
             # Parse form data
             form_data = request.form
-
-            tle_data = TLEData(
-                norad_id="",
-                satellite_name=form_data.get("tle_name", config.SATELLITE_NAME),
-                tle_line1=form_data.get("tle_line1", config.SATELLITE_TLE_LINE1),
-                tle_line2=form_data.get("tle_line2", config.SATELLITE_TLE_LINE2),
-                epoch="",
-                mean_motion=0,
-                eccentricity=0,
-                inclination=0,
-                ra_of_asc_node=0,
-                arg_of_pericenter=0,
-                mean_anomaly=0,
-            )
 
             gs1 = GroundStation(
                 name=form_data.get("gs1_name", config.STATION1_NAME),
@@ -154,8 +177,9 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
             )
 
         except Exception as e:
+            flash(f"Error: {str(e)}", "error")
             app.logger.error(f"Error in calculation: {e}")
-            return render_template("error.html", error_message=str(e)), 500
+            return redirect(url_for("satellite_passes"))
 
     @app.route("/satellite_position")
     def satellite_position():
@@ -176,10 +200,51 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
     @app.route("/calculate_position", methods=["POST"])
     def calculate_position():
         try:
-            # Get form data
-            tle_name = request.form.get("tle_name")
-            tle_line1 = request.form.get("tle_line1")
-            tle_line2 = request.form.get("tle_line2")
+            # Check input method
+            input_method = request.form.get("input_method", "norad")
+            
+            if input_method == "norad":
+                # Fetch TLE from NORAD ID
+                norad_id = request.form.get("norad_id")
+                if not norad_id:
+                    flash("Please provide a NORAD ID", "error")
+                    return redirect(url_for("satellite_position"))
+                
+                # Get latest TLE data
+                tle_data = satellite_service.get_current_tle(norad_id)
+            else:
+                # Use manually provided TLE
+                tle_name = request.form.get("tle_name")
+                tle_line1 = request.form.get("tle_line1")
+                tle_line2 = request.form.get("tle_line2")
+                
+                if not all([tle_name, tle_line1, tle_line2]):
+                    flash("Please provide complete TLE data", "error")
+                    return redirect(url_for("satellite_position"))
+                
+                # Create TLE data object from manual input
+                tle_data = TLEData(
+                    norad_id="",
+                    satellite_name=tle_name,
+                    tle_line1=tle_line1,
+                    tle_line2=tle_line2,
+                    epoch="",
+                    mean_motion=0,
+                    eccentricity=0,
+                    inclination=0,
+                    ra_of_asc_node=0,
+                    arg_of_pericenter=0,
+                    mean_anomaly=0,
+                    classification="",
+                    intl_designator="",
+                    element_set_no="",
+                    rev_at_epoch="",
+                    bstar="",
+                    mean_motion_dot="",
+                    mean_motion_ddot="",
+                )
+
+            # Get date and time
             date_str = request.form.get("date")
             time_str = request.form.get("time")
 
@@ -196,33 +261,16 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
                 flash(f"Invalid date/time format: {e}", "error")
                 return render_template(
                     "satellite_position/position_calculator.html",
-                    tle_name=tle_name,
-                    tle_line1=tle_line1,
-                    tle_line2=tle_line2,
+                    tle_name=tle_data.satellite_name if input_method == "tle" else "",
+                    tle_line1=tle_data.tle_line1 if input_method == "tle" else "",
+                    tle_line2=tle_data.tle_line2 if input_method == "tle" else "",
+                    norad_id=request.form.get("norad_id") if input_method == "norad" else "",
                     default_date=date_str,
                     default_time=time_str,
                 )
 
-            # Create TLE data object
-            tle_data = TLEData(
-                satellite_name=tle_name,
-                tle_line1=tle_line1,
-                tle_line2=tle_line2,
-                norad_id="",
-                epoch="",
-                inclination=0,
-                ra_of_asc_node=0,
-                eccentricity=0,
-                arg_of_pericenter=0,
-                mean_anomaly=0,
-                mean_motion=0,
-                classification="",
-                intl_designator="",
-                element_set_no="",
-                rev_at_epoch="",
-                bstar="",
-                mean_motion_dot="",
-                mean_motion_ddot="",
+            app.logger.info(
+                f"Calculating position for {tle_data.satellite_name} at {calculation_time}"
             )
 
             # Calculate position
@@ -230,9 +278,10 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
 
             return render_template(
                 "satellite_position/position_calculator.html",
-                tle_name=tle_name,
-                tle_line1=tle_line1,
-                tle_line2=tle_line2,
+                tle_name=tle_data.satellite_name if input_method == "tle" else "",
+                tle_line1=tle_data.tle_line1 if input_method == "tle" else "",
+                tle_line2=tle_data.tle_line2 if input_method == "tle" else "",
+                norad_id=request.form.get("norad_id") if input_method == "norad" else "",
                 default_date=date_str,
                 default_time=time_str,
                 position_data=position,
