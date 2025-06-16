@@ -1,0 +1,41 @@
+<div id="{{ prefix }}tle_input" style="display: none">
+  <div class="col-md-4">
+    <div class="form-group mb-3">
+      <label for="{{ prefix }}tle_name">Satellite Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="{{ prefix }}tle_name"
+        name="tle_name"
+        value="{{ tle_name | default('') }}"
+        placeholder="Enter satellite name"
+      />
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="form-group mb-3">
+      <label for="{{ prefix }}tle_line1">TLE Line 1</label>
+      <input
+        type="text"
+        class="form-control"
+        id="{{ prefix }}tle_line1"
+        name="tle_line1"
+        value="{{ tle_line1 | default('') }}"
+        placeholder="Enter TLE Line 1"
+      />
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="form-group mb-3">
+      <label for="{{ prefix }}tle_line2">TLE Line 2</label>
+      <input
+        type="text"
+        class="form-control"
+        id="{{ prefix }}tle_line2"
+        name="tle_line2"
+        value="{{ tle_line2 | default('') }}"
+        placeholder="Enter TLE Line 2"
+      />
+    </div>
+  </div>
+</div>

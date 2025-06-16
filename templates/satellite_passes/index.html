@@ -2,84 +2,12 @@
 %} {% block page_title %}Satellite Pass Calculator{% endblock %} {% block
 content %}
 <form action="{{ url_for('calculate') }}" method="post">
-  <div class="row mb-4">
-    <div class="col-md-12">
-      <h4>Satellite Data Input</h4>
-      <hr />
-    </div>
-    <div class="col-md-12">
-      <div class="form-group mb-3">
-        <label>Input Method</label>
-        <div class="btn-group w-100" role="group" data-toggle="buttons">
-          <input type="radio" class="btn-check" name="input_method" id="input_norad" value="norad" checked>
-          <label class="btn btn-outline-primary" for="input_norad">NORAD ID</label>
-          
-          <input type="radio" class="btn-check" name="input_method" id="input_tle" value="tle">
-          <label class="btn btn-outline-primary" for="input_tle">Manual TLE</label>
-        </div>
-      </div>
-    </div>
-    
-    <!-- NORAD ID Input -->
-    <div id="norad_input" class="col-md-12">
-      <div class="form-group mb-3">
-        <label for="norad_id">NORAD Catalog ID</label>
-        <input
-          type="text"
-          class="form-control"
-          id="norad_id"
-          name="norad_id"
-          value="{{ norad_id | default('') }}"
-          placeholder="e.g., 25544 (ISS), 62688 (BlueBON)"
-        />
-        <small class="form-text text-muted">Enter NORAD ID to fetch latest TLE automatically</small>
-      </div>
-    </div>
-    
-    <!-- Manual TLE Input -->
-    <div id="tle_input" style="display: none;">
-      <div class="col-md-4">
-        <div class="form-group mb-3">
-          <label for="tle_name">Satellite Name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="tle_name"
-            name="tle_name"
-            value="{{ tle_name | default('') }}"
-            placeholder="Enter satellite name"
-          />
-        </div>
-      </div>
-      <div class="col-md-8">
-        <div class="form-group mb-3">
-          <label for="tle_line1">TLE Line 1</label>
-          <input
-            type="text"
-            class="form-control"
-            id="tle_line1"
-            name="tle_line1"
-            value="{{ tle_line1 | default('') }}"
-            placeholder="Enter TLE Line 1"
-          />
-        </div>
-      </div>
-      <div class="col-md-12">
-        <div class="form-group mb-3">
-          <label for="tle_line2">TLE Line 2</label>
-          <input
-            type="text"
-            class="form-control"
-            id="tle_line2"
-            name="tle_line2"
-            value="{{ tle_line2 | default('') }}"
-            placeholder="Enter TLE Line 2"
-          />
-        </div>
-      </div>
-    </div>
+  <!-- Satellite Input Section -->
+  <div data-satellite-input="">
+    {% set prefix = '' %} {% include 'shared/satellite_input_methods.html' %}
   </div>
 
+  <!-- Ground Station 1 Section -->
   <div class="row mb-4">
     <div class="col-md-12">
       <h4>Ground Station 1</h4>
@@ -150,6 +78,7 @@ content %}
     </div>
   </div>
 
+  <!-- Ground Station 2 Section -->
   <div class="row mb-4">
     <div class="col-md-12">
       <h4>Ground Station 2</h4>
@@ -220,6 +149,7 @@ content %}
     </div>
   </div>
 
+  <!-- Calculation Parameters Section -->
   <div class="row mb-4">
     <div class="col-md-12">
       <h4>Calculation Parameters</h4>
@@ -264,31 +194,6 @@ content %}
   </div>
 </form>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const noradRadio = document.getElementById('input_norad');
-    const tleRadio = document.getElementById('input_tle');
-    const noradInput = document.getElementById('norad_input');
-    const tleInput = document.getElementById('tle_input');
-    
-    function toggleInputMethod() {
-        if (noradRadio.checked) {
-            noradInput.style.display = 'block';
-            tleInput.style.display = 'none';
-            // Clear TLE fields when switching to NORAD
-            document.getElementById('tle_name').value = '';
-            document.getElementById('tle_line1').value = '';
-            document.getElementById('tle_line2').value = '';
-        } else {
-            noradInput.style.display = 'none';
-            tleInput.style.display = 'block';
-            // Clear NORAD field when switching to TLE
-            document.getElementById('norad_id').value = '';
-        }
-    }
-    
-    noradRadio.addEventListener('change', toggleInputMethod);
-    tleRadio.addEventListener('change', toggleInputMethod);
-});
-</script>
-{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/shared/satellite_input_handler.js') }}"></script>
+{% endblock %} {% endblock %}

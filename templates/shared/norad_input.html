@@ -1,0 +1,16 @@
+<div id="{{ prefix }}norad_input" class="col-md-12">
+  <div class="form-group mb-3">
+    <label for="{{ prefix }}norad_id">NORAD Catalog ID</label>
+    <input
+      type="text"
+      class="form-control"
+      id="{{ prefix }}norad_id"
+      name="norad_id"
+      value="{{ norad_id | default('') }}"
+      placeholder="e.g., 25544 (ISS), 62688 (BlueBON)"
+    />
+    <small class="form-text text-muted"
+      >Enter NORAD ID to fetch latest TLE automatically</small
+    >
+  </div>
+</div>

@@ -46,3 +46,4 @@ class Config:
     FLASK_HOST: str = "0.0.0.0"
     FLASK_PORT: int = 5000
     FLASK_DEBUG: bool = True
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
