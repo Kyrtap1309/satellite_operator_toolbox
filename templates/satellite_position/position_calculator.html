@@ -106,6 +106,7 @@ block extra_css %} {{ super() }}
           id="time"
           name="time"
           value="{{ default_time | default('') }}"
+          step="1"
           required
         />
       </div>

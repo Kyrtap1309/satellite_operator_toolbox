@@ -1,7 +1,7 @@
 import json
 from datetime import datetime, timedelta
 
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, url_for, flash
 
 from config import Config
 from models.satellite import GroundStation, TLEData
@@ -175,43 +175,63 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
 
     @app.route("/calculate_position", methods=["POST"])
     def calculate_position():
-        """Calculate and display the satellite position."""
         try:
-            form_data = request.form
-
+            # Get form data
+            tle_name = request.form.get('tle_name')
+            tle_line1 = request.form.get('tle_line1') 
+            tle_line2 = request.form.get('tle_line2')
+            date_str = request.form.get('date')
+            time_str = request.form.get('time')
+            
+            # Parse date and time - handle seconds format
+            try:
+                if len(time_str.split(':')) == 3:  # HH:MM:SS format
+                    time_obj = datetime.strptime(time_str, '%H:%M:%S').time()
+                else:  # HH:MM format
+                    time_obj = datetime.strptime(time_str, '%H:%M').time()
+                
+                date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
+                calculation_time = datetime.combine(date_obj, time_obj)
+            except ValueError as e:
+                flash(f'Invalid date/time format: {e}', 'error')
+                return render_template('satellite_position/position_calculator.html',
+                                     tle_name=tle_name, tle_line1=tle_line1, tle_line2=tle_line2,
+                                     default_date=date_str, default_time=time_str)
+            
+            # Create TLE data object
             tle_data = TLEData(
+                satellite_name=tle_name,
+                tle_line1=tle_line1,
+                tle_line2=tle_line2,
                 norad_id="",
-                satellite_name=form_data.get("tle_name", config.SATELLITE_NAME),
-                tle_line1=form_data.get("tle_line1", config.SATELLITE_TLE_LINE1),
-                tle_line2=form_data.get("tle_line2", config.SATELLITE_TLE_LINE2),
                 epoch="",
-                mean_motion=0,
-                eccentricity=0,
                 inclination=0,
                 ra_of_asc_node=0,
+                eccentricity=0,
                 arg_of_pericenter=0,
                 mean_anomaly=0,
+                mean_motion=0,
+                classification="",
+                intl_designator="",
+                element_set_no="",
+                rev_at_epoch="",
+                bstar="",
+                mean_motion_dot="",
+                mean_motion_ddot=""
             )
-
-            date = form_data.get("date")
-            time = form_data.get("time")
-            datetime_obj = datetime.strptime(f"{date} {time}:00", "%Y-%m-%d %H:%M:%S")
-
-            position_data = satellite_service.calculate_position(tle_data, datetime_obj)
-
-            return render_template(
-                "satellite_position/position_calculator.html",
-                tle_name=tle_data.satellite_name,
-                tle_line1=tle_data.tle_line1,
-                tle_line2=tle_data.tle_line2,
-                default_date=date,
-                default_time=time,
-                position_data=position_data,
-            )
-
+            
+            # Calculate position
+            position = satellite_service.calculate_position(tle_data, calculation_time)
+            
+            return render_template('satellite_position/position_calculator.html',
+                                 tle_name=tle_name, tle_line1=tle_line1, tle_line2=tle_line2,
+                                 default_date=date_str, default_time=time_str,
+                                 position_data=position)
+                                 
         except Exception as e:
             app.logger.error(f"Error calculating position: {e}")
-            return render_template("error.html", error_message=str(e)), 500
+            flash(f'Error calculating position: {e}', 'error')
+            return render_template('satellite_position/position_calculator.html')
 
     @app.route("/tle-viewer")
     def tle_viewer():
