@@ -177,7 +177,7 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
             )
 
         except Exception as e:
-            flash(f"Error: {str(e)}", "error")
+            flash(f"Error: {e!s}", "error")
             app.logger.error(f"Error in calculation: {e}")
             return redirect(url_for("satellite_passes"))
 
@@ -202,14 +202,14 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
         try:
             # Check input method
             input_method = request.form.get("input_method", "norad")
-            
+
             if input_method == "norad":
                 # Fetch TLE from NORAD ID
                 norad_id = request.form.get("norad_id")
                 if not norad_id:
                     flash("Please provide a NORAD ID", "error")
                     return redirect(url_for("satellite_position"))
-                
+
                 # Get latest TLE data
                 tle_data = satellite_service.get_current_tle(norad_id)
             else:
@@ -217,11 +217,11 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
                 tle_name = request.form.get("tle_name")
                 tle_line1 = request.form.get("tle_line1")
                 tle_line2 = request.form.get("tle_line2")
-                
+
                 if not all([tle_name, tle_line1, tle_line2]):
                     flash("Please provide complete TLE data", "error")
                     return redirect(url_for("satellite_position"))
-                
+
                 # Create TLE data object from manual input
                 tle_data = TLEData(
                     norad_id="",
@@ -264,7 +264,9 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
                     tle_name=tle_data.satellite_name if input_method == "tle" else "",
                     tle_line1=tle_data.tle_line1 if input_method == "tle" else "",
                     tle_line2=tle_data.tle_line2 if input_method == "tle" else "",
-                    norad_id=request.form.get("norad_id") if input_method == "norad" else "",
+                    norad_id=request.form.get("norad_id")
+                    if input_method == "norad"
+                    else "",
                     default_date=date_str,
                     default_time=time_str,
                 )
@@ -281,7 +283,9 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
                 tle_name=tle_data.satellite_name if input_method == "tle" else "",
                 tle_line1=tle_data.tle_line1 if input_method == "tle" else "",
                 tle_line2=tle_data.tle_line2 if input_method == "tle" else "",
-                norad_id=request.form.get("norad_id") if input_method == "norad" else "",
+                norad_id=request.form.get("norad_id")
+                if input_method == "norad"
+                else "",
                 default_date=date_str,
                 default_time=time_str,
                 position_data=position,
