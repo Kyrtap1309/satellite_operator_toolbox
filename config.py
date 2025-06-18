@@ -45,3 +45,7 @@ class Config:
     FLASK_PORT: int = 5000
     FLASK_DEBUG: bool = True
     SECRET_KEY: str = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
+
+    # Database configuration
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://satellite_user:password@localhost:5432/satellite_db")
+    POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "satellite_password")

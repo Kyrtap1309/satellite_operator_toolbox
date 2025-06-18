@@ -3,6 +3,16 @@ from typing import Any, Optional
 
 
 @dataclass
+class GroundStation:
+    """Ground station model."""
+
+    name: str
+    latitude: float
+    longitude: float
+    elevation: float
+
+
+@dataclass
 class TLEData:
     """Two-Line Element data model."""
 
@@ -10,13 +20,13 @@ class TLEData:
     satellite_name: str
     tle_line1: str
     tle_line2: str
-    epoch: str
-    mean_motion: float
-    eccentricity: float
-    inclination: float
-    ra_of_asc_node: float
-    arg_of_pericenter: float
-    mean_anomaly: float
+    epoch: str = ""
+    mean_motion: float = 0.0
+    eccentricity: float = 0.0
+    inclination: float = 0.0
+    ra_of_asc_node: float = 0.0
+    arg_of_pericenter: float = 0.0
+    mean_anomaly: float = 0.0
     classification: Optional[str] = None
     intl_designator: Optional[str] = None
     element_set_no: Optional[int] = None
@@ -50,16 +60,6 @@ class TLEData:
             mean_motion_ddot=data.get("mean_motion_ddot"),
             period_minutes=data.get("period_minutes"),
         )
-
-
-@dataclass
-class GroundStation:
-    """Ground station model."""
-
-    name: str
-    latitude: float
-    longitude: float
-    elevation: float
 
 
 @dataclass

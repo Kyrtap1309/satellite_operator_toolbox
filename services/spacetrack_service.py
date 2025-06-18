@@ -68,60 +68,47 @@ class SpaceTrackService:
 
     def fetch_tle_history(self, norad_id: str, days_back: int = 30) -> list[TLEData]:
         """Fetch historical TLE data."""
-
-        session = self._ensure_authenticated()
-
         try:
+            session = self._ensure_authenticated()
+
             end_date = datetime.now()
             start_date = end_date - timedelta(days=days_back)
 
-            start_date_str = start_date.strftime("%Y-%m-%d")
-            end_date_str = end_date.strftime("%Y-%m-%d")
-
-            query_url = (
+            url = (
                 f"{self.base_url}/basicspacedata/query/class/tle/"
                 f"NORAD_CAT_ID/{norad_id}/"
-                f"EPOCH/{start_date_str}--{end_date_str}/"
-                f"orderby/TLE_LINE1%20desc/"
-                f"format/json"
+                f"EPOCH/{start_date.strftime('%Y-%m-%d')}--{end_date.strftime('%Y-%m-%d')}/"
+                f"orderby/EPOCH%20desc/format/json"
             )
 
-            response = session.get(query_url, timeout=30)
+            response = session.get(url, timeout=60)
             response.raise_for_status()
+
             data = response.json()
-
-            if not data:
-                return []
-
-            tle_list = self._parse_tle_history(data)
-
-            return tle_list
+            return self._parse_tle_history(data)
 
         except Exception as e:
-            self.logger.error(f"Failed to fetch TLE history: {e}")
+            self.logger.error(f"Error fetching TLE history: {e}")
             raise
 
     def get_latest_tle_age(self, norad_id: str) -> dict[str, Any]:
         """Get age information for latest TLE."""
-
-        session = self._ensure_authenticated()
-
         try:
-            query_url = f"{self.base_url}/basicspacedata/query/class/tle_latest/NORAD_CAT_ID/{norad_id}/format/json"
+            session = self._ensure_authenticated()
 
-            response = session.get(query_url, timeout=30)
+            url = f"{self.base_url}/basicspacedata/query/class/tle_latest/NORAD_CAT_ID/{norad_id}/format/json"
+
+            response = session.get(url, timeout=30)
             response.raise_for_status()
+
             data = response.json()
-
             if not data:
-                raise Exception("No TLE found")
+                raise Exception(f"No TLE data found for NORAD ID {norad_id}")
 
-            age_info = self._calculate_tle_age(data[0])
-
-            return age_info
+            return self._calculate_tle_age(data[0])
 
         except Exception as e:
-            self.logger.error(f"Failed to get TLE age: {e}")
+            self.logger.error(f"Error getting TLE age: {e}")
             raise
 
     def _parse_tle_history(self, data: list[dict[str, Any]]) -> list[TLEData]:
@@ -130,18 +117,16 @@ class SpaceTrackService:
 
         for entry in data:
             try:
-                mean_motion = self._safe_float(entry.get("MEAN_MOTION"))
-                period_minutes = round(1440 / mean_motion, 2) if mean_motion > 0 else None
+                tle_line1 = entry.get("TLE_LINE1", "")
+                tle_line2 = entry.get("TLE_LINE2", "")
 
-                # Ensure TLE lines are properly formatted
-                tle_line1 = entry.get("TLE_LINE1", "").strip()
-                tle_line2 = entry.get("TLE_LINE2", "").strip()
-
-                # Validate TLE line lengths (should be exactly 69 characters)
                 if len(tle_line1) != 69:
                     self.logger.warning(f"TLE Line 1 has incorrect length: {len(tle_line1)} (expected 69)")
                 if len(tle_line2) != 69:
                     self.logger.warning(f"TLE Line 2 has incorrect length: {len(tle_line2)} (expected 69)")
+
+                mean_motion = self._safe_float(entry.get("MEAN_MOTION"))
+                period_minutes = (1440.0 / mean_motion) if mean_motion > 0 else None
 
                 tle_data = TLEData(
                     norad_id=entry.get("NORAD_CAT_ID", ""),
@@ -178,15 +163,20 @@ class SpaceTrackService:
         if not epoch_str:
             raise Exception("No epoch data")
 
-        epoch_dt = self._parse_epoch_date(epoch_str)
-        age_days = (datetime.now() - epoch_dt).days
+        try:
+            epoch = self._parse_epoch_date(epoch_str)
+            now = datetime.now()
+            age_days = (now - epoch).days
 
-        return {
-            "epoch": epoch_str,
-            "age_days": age_days,
-            "is_fresh": age_days < 7,
-            "warning": "TLE is outdated" if age_days > 14 else None,
-        }
+            return {
+                "epoch": epoch_str,
+                "age_days": age_days,
+                "is_fresh": age_days <= 3,
+                "warning": "TLE is outdated" if age_days > 7 else None,
+            }
+        except Exception as e:
+            self.logger.error(f"Error calculating TLE age: {e}")
+            raise
 
     def _parse_epoch_date(self, epoch_str: str) -> datetime:
         """Parse epoch date with multiple format support."""
@@ -203,7 +193,7 @@ class SpaceTrackService:
             except ValueError:
                 continue
 
-        raise ValueError(f"Could not parse epoch: {epoch_str}")
+        raise ValueError(f"Unable to parse epoch: {epoch_str}")
 
     @staticmethod
     def _safe_float(value: Any, default: float = 0.0) -> float:
@@ -223,5 +213,5 @@ class SpaceTrackService:
 
     def __del__(self) -> None:
         """Clean up session."""
-        if self.session:
+        if hasattr(self, "session") and self.session:
             self.session.close()
