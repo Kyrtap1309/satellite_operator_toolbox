@@ -210,7 +210,50 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
     @log_route_access()
     def tle_viewer():
         """Render the TLE viewer page."""
-        return render_template("tle_viewer/index.html")
+        return render_template("tle/tle_viewer.html")
+
+    @app.route("/fetch_tle_data", methods=["POST"])
+    @handle_route_errors("tle_viewer")
+    @log_route_access()
+    def fetch_tle_data():
+        """Fetch TLE data and history for a satellite."""
+        norad_id = request.form.get("norad_id", "").strip()
+        days_back = int(request.form.get("days_back", 30))
+
+        if not norad_id:
+            raise ValueError("Please provide a NORAD ID")
+
+        app.logger.info(f"TLE data fetch requested for NORAD ID: {norad_id}")
+
+        # Get current TLE
+        try:
+            current_tle = satellite_service.get_current_tle(norad_id)
+        except Exception as e:
+            app.logger.error(f"Error fetching current TLE: {e}")
+            current_tle = {"error": str(e)}
+
+        # Get TLE history
+        try:
+            tle_history = satellite_service.get_tle_history(norad_id, days_back)
+        except Exception as e:
+            app.logger.error(f"Error fetching TLE history: {e}")
+            tle_history = []
+
+        # Get TLE age info
+        try:
+            tle_age_info = satellite_service.get_tle_age_info(norad_id)
+        except Exception as e:
+            app.logger.error(f"Error fetching TLE age info: {e}")
+            tle_age_info = {"error": str(e)}
+
+        return render_template(
+            "tle/tle_viewer.html",
+            norad_id=norad_id,
+            days_back=days_back,
+            current_tle=current_tle,
+            tle_history=tle_history,
+            tle_age_info=tle_age_info,
+        )
 
     @app.route("/import_tle/<norad_id>")
     @handle_route_errors("index")

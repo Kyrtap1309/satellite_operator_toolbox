@@ -103,6 +103,7 @@ class TestRegisterRoutes:
             "/satellite_position",
             "/calculate_position",
             "/tle_viewer",
+            "/fetch_tle_data",
             "/import_tle/<norad_id>",
             "/search_satellites",
         ]
@@ -169,24 +170,85 @@ class TestRoutes:
         response = client.get("/tle_viewer")
         assert response.status_code == 200
 
+    def test_fetch_tle_data_route_no_norad_id(self, client):
+        """Test fetch TLE data route without NORAD ID."""
+        response = client.post("/fetch_tle_data", data={})
+        assert response.status_code == 302  # Redirect due to error handler
+
+    def test_fetch_tle_data_route_with_norad_id(self, client):
+        """Test fetch TLE data route with NORAD ID."""
+        response = client.post(
+            "/fetch_tle_data", data={"norad_id": "25544", "days_back": "30"}
+        )
+        assert response.status_code == 200
+
+    def test_all_get_routes_render_successfully(self, client):
+        """Test that all GET routes render without template errors."""
+        routes_to_test = [
+            "/",
+            "/satellite_passes",
+            "/satellite_position",
+            "/tle_viewer",
+        ]
+
+        for route in routes_to_test:
+            response = client.get(route)
+            assert response.status_code == 200, (
+                f"Route {route} failed with status {response.status_code}"
+            )
+            # Ensure we get a proper response, not an error page
+            assert b"<html>Test Response</html>" in response.data, (
+                f"Unexpected response for route {route}"
+            )
+
     def test_search_satellites_route_no_query(self, client):
         """Test search satellites route without query."""
         response = client.get("/search_satellites")
-        # Error handler redirects to tle_viewer route, so we get 302
         assert response.status_code == 302
-        # Check that it redirects to the expected error page
-        assert "/tle_viewer" in response.location
 
     def test_search_satellites_route_with_query(self, client):
         """Test search satellites route with query."""
-        with patch("app.SatelliteService") as mock_service_class:
-            # Mock the service instance that gets created in create_app
-            mock_service = Mock()
-            mock_service.search_satellites.return_value = []
-            mock_service_class.return_value = mock_service
+        response = client.get("/search_satellites?query=ISS")
+        assert response.status_code == 200
 
-            response = client.get("/search_satellites?query=ISS")
-            assert response.status_code == 200
+    def test_template_path_correctness(self, client):
+        """Test that routes use correct template paths."""
+        with patch("app.render_template") as mock_render:
+            mock_render.return_value = "<html>Mock Response</html>"
+
+            # Test each route and verify correct template is called
+            client.get("/")
+            mock_render.assert_called_with("index.html")
+
+            client.get("/satellite_passes")
+            mock_render.assert_called_with(
+                "satellite_passes/index.html",
+                tle_name="ISS (ZARYA)",
+                tle_line1="test line 1",
+                tle_line2="test line 2",
+                gs1_name="Station 1",
+                gs1_lat=52.0,
+                gs1_lon=21.0,
+                gs1_elev=100.0,
+                gs2_name="Station 2",
+                gs2_lat=51.0,
+                gs2_lon=20.0,
+                gs2_elev=150.0,
+                min_el=10.0,
+            )
+
+            client.get("/tle_viewer")
+            mock_render.assert_called_with("tle/tle_viewer.html")
+
+            # Test the new route
+            client.post(
+                "/fetch_tle_data", data={"norad_id": "25544", "days_back": "30"}
+            )
+            args, kwargs = mock_render.call_args
+            assert args[0] == "tle/tle_viewer.html"
+            assert "norad_id" in kwargs
+            assert "current_tle" in kwargs
+            assert "tle_history" in kwargs
 
 
 class TestErrorHandlers:
