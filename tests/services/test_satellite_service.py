@@ -74,9 +74,7 @@ class TestSatelliteService:
         start_time = datetime(2024, 6, 15, 0, 0, 0)
         end_time = datetime(2024, 6, 15, 23, 59, 59)
 
-        result = satellite_service.find_passes(
-            sample_tle_data, ground_station, start_time, end_time, 10.0
-        )
+        result = satellite_service.find_passes(sample_tle_data, ground_station, start_time, end_time, 10.0)
 
         assert len(result) == 1
         assert isinstance(result[0], SatellitePass)
@@ -87,9 +85,7 @@ class TestSatelliteService:
 
     @patch("services.satellite_service.load.timescale")
     @patch("services.satellite_service.EarthSatellite")
-    def test_find_passes_no_passes(
-        self, mock_earth_satellite, mock_timescale, satellite_service, sample_tle_data
-    ):
+    def test_find_passes_no_passes(self, mock_earth_satellite, mock_timescale, satellite_service, sample_tle_data):
         """Test finding passes when no passes occur."""
         mock_ts = Mock()
         mock_timescale.return_value = mock_ts
@@ -103,9 +99,7 @@ class TestSatelliteService:
         start_time = datetime(2024, 6, 15, 0, 0, 0)
         end_time = datetime(2024, 6, 15, 23, 59, 59)
 
-        result = satellite_service.find_passes(
-            sample_tle_data, ground_station, start_time, end_time, 10.0
-        )
+        result = satellite_service.find_passes(sample_tle_data, ground_station, start_time, end_time, 10.0)
 
         assert result == []
 
@@ -287,9 +281,7 @@ class TestSatelliteService:
         result = satellite_service.get_tle_history("25544", 30)
 
         assert result == tle_list
-        satellite_service.spacetrack.fetch_tle_history.assert_called_once_with(
-            "25544", 30
-        )
+        satellite_service.spacetrack.fetch_tle_history.assert_called_once_with("25544", 30)
 
     def test_get_tle_age_info(self, satellite_service):
         """Test getting TLE age information."""
@@ -379,12 +371,8 @@ class TestSatelliteServiceIntegration:
         end_time = datetime(2024, 6, 15, 23, 59, 59)
 
         # Calculate passes for both stations
-        passes_gs1 = satellite_service.find_passes(
-            sample_tle_data, gs1, start_time, end_time, 10.0
-        )
-        passes_gs2 = satellite_service.find_passes(
-            sample_tle_data, gs2, start_time, end_time, 10.0
-        )
+        passes_gs1 = satellite_service.find_passes(sample_tle_data, gs1, start_time, end_time, 10.0)
+        passes_gs2 = satellite_service.find_passes(sample_tle_data, gs2, start_time, end_time, 10.0)
 
         # Find common windows
         common_windows = satellite_service.find_common_windows(passes_gs1, passes_gs2)
@@ -409,9 +397,7 @@ class TestSatelliteServiceIntegration:
 
         # Verify calls were made
         satellite_service.celestrak.fetch_current_tle.assert_called_once_with("25544")
-        satellite_service.spacetrack.fetch_tle_history.assert_called_once_with(
-            "25544", 7
-        )
+        satellite_service.spacetrack.fetch_tle_history.assert_called_once_with("25544", 7)
         satellite_service.spacetrack.get_latest_tle_age.assert_called_once_with("25544")
 
         # Verify results
@@ -444,9 +430,7 @@ class TestSatelliteServiceEdgeCases:
             start_time = datetime(2024, 6, 15, 0, 0, 0)
             end_time = datetime(2024, 6, 15, 23, 59, 59)
 
-            result = satellite_service.find_passes(
-                sample_tle_data, ground_station, start_time, end_time, 10.0
-            )
+            result = satellite_service.find_passes(sample_tle_data, ground_station, start_time, end_time, 10.0)
 
             assert result == []  # No complete passes found
 
@@ -518,9 +502,7 @@ class TestSatelliteServiceEdgeCases:
             mock_geocentric.subpoint.return_value = mock_subpoint
 
             calculation_time = datetime(2024, 6, 15, 12, 30, 45)
-            result = satellite_service.calculate_position(
-                sample_tle_data, calculation_time
-            )
+            result = satellite_service.calculate_position(sample_tle_data, calculation_time)
 
             # Check that precision is limited to 6 decimal places for lat/lon
             assert result.latitude == 52.123457  # Rounded to 6 decimals

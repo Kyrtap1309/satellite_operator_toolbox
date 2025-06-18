@@ -36,14 +36,12 @@ class Config:
     LOG_BACKUP_COUNT: int = 10
     LOG_DIR: str = "logs"
     LOG_FILE: str = "satellite_app.log"
-    LOG_LEVEL: str = os.getenv(
-        "LOG_LEVEL", "INFO"
-    )  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+    LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")  # DEBUG, INFO, WARNING, ERROR, CRITICAL
     CONSOLE_LOG_LEVEL: str = os.getenv("CONSOLE_LOG_LEVEL", "DEBUG")
     FILE_LOG_LEVEL: str = os.getenv("FILE_LOG_LEVEL", "INFO")
 
     # Flask
-    FLASK_HOST: str = "0.0.0.0"
+    FLASK_HOST: str = os.getenv("FLASK_HOST", "127.0.0.1")
     FLASK_PORT: int = 5000
     FLASK_DEBUG: bool = True
     SECRET_KEY: str = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")

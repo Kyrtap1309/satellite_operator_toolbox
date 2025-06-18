@@ -23,9 +23,7 @@ class SpaceTrackService:
             self.logger.error("Space-Track credentials not found")
             return False
 
-        self.logger.info(
-            f"Authenticating with Space-Track as: {self.config.SPACETRACK_USERNAME}"
-        )
+        self.logger.info(f"Authenticating with Space-Track as: {self.config.SPACETRACK_USERNAME}")
 
         try:
             self.session = requests.Session()
@@ -42,15 +40,11 @@ class SpaceTrackService:
             test_url = f"{self.base_url}/basicspacedata/query/class/tle_latest/NORAD_CAT_ID/25544/limit/1/format/json"
             test_response = self.session.get(test_url, timeout=30)
 
-            success = (
-                test_response.status_code == 200 and test_response.text.strip() != "[]"
-            )
+            success = test_response.status_code == 200 and test_response.text.strip() != "[]"
             if success:
                 self.logger.info("Space-Track authentication successful")
             else:
-                self.logger.error(
-                    f"Authentication test failed: {test_response.status_code}"
-                )
+                self.logger.error(f"Authentication test failed: {test_response.status_code}")
 
             return success
 
@@ -113,11 +107,7 @@ class SpaceTrackService:
         session = self._ensure_authenticated()
 
         try:
-            query_url = (
-                f"{self.base_url}/basicspacedata/query/class/tle_latest/"
-                f"NORAD_CAT_ID/{norad_id}/"
-                f"format/json"
-            )
+            query_url = f"{self.base_url}/basicspacedata/query/class/tle_latest/NORAD_CAT_ID/{norad_id}/format/json"
 
             response = session.get(query_url, timeout=30)
             response.raise_for_status()
@@ -141,9 +131,7 @@ class SpaceTrackService:
         for entry in data:
             try:
                 mean_motion = self._safe_float(entry.get("MEAN_MOTION"))
-                period_minutes = (
-                    round(1440 / mean_motion, 2) if mean_motion > 0 else None
-                )
+                period_minutes = round(1440 / mean_motion, 2) if mean_motion > 0 else None
 
                 # Ensure TLE lines are properly formatted
                 tle_line1 = entry.get("TLE_LINE1", "").strip()
@@ -151,13 +139,9 @@ class SpaceTrackService:
 
                 # Validate TLE line lengths (should be exactly 69 characters)
                 if len(tle_line1) != 69:
-                    self.logger.warning(
-                        f"TLE Line 1 has incorrect length: {len(tle_line1)} (expected 69)"
-                    )
+                    self.logger.warning(f"TLE Line 1 has incorrect length: {len(tle_line1)} (expected 69)")
                 if len(tle_line2) != 69:
-                    self.logger.warning(
-                        f"TLE Line 2 has incorrect length: {len(tle_line2)} (expected 69)"
-                    )
+                    self.logger.warning(f"TLE Line 2 has incorrect length: {len(tle_line2)} (expected 69)")
 
                 tle_data = TLEData(
                     norad_id=entry.get("NORAD_CAT_ID", ""),

@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 from typing import Any, Optional
 
-from skyfield.api import EarthSatellite, Topos, load, utc  # type: ignore
+from skyfield.api import EarthSatellite, Topos, load, utc  # type: ignore[import-untyped]
 
 from models.satellite import (
     GroundStation,
@@ -17,9 +17,7 @@ from services.spacetrack_service import SpaceTrackService
 class SatelliteService:
     """Main satellite operations service."""
 
-    def __init__(
-        self, spacetrack_service: SpaceTrackService, celestrak_service: CelestrakService
-    ):
+    def __init__(self, spacetrack_service: SpaceTrackService, celestrak_service: CelestrakService):
         self.spacetrack = spacetrack_service
         self.celestrak = celestrak_service
         self.logger = logging.getLogger(__name__)
@@ -35,9 +33,7 @@ class SatelliteService:
         """Find satellite passes for a ground station."""
         try:
             ts = load.timescale()
-            satellite = EarthSatellite(
-                tle_data.tle_line1, tle_data.tle_line2, tle_data.satellite_name, ts
-            )
+            satellite = EarthSatellite(tle_data.tle_line1, tle_data.tle_line2, tle_data.satellite_name, ts)
             station = Topos(
                 latitude_degrees=ground_station.latitude,
                 longitude_degrees=ground_station.longitude,
@@ -47,9 +43,7 @@ class SatelliteService:
             t0 = ts.from_datetime(start_time.replace(tzinfo=utc))
             t1 = ts.from_datetime(end_time.replace(tzinfo=utc))
 
-            times, events = satellite.find_events(
-                station, t0, t1, altitude_degrees=min_elevation
-            )
+            times, events = satellite.find_events(station, t0, t1, altitude_degrees=min_elevation)
 
             passes = []
             for i in range(0, len(events) - 2, 3):
@@ -65,9 +59,7 @@ class SatelliteService:
 
                     pass_data = SatellitePass(
                         rise_time_utc=rise_time.utc_strftime("%Y-%m-%d %H:%M:%S"),
-                        culmination_time_utc=culminate_time.utc_strftime(
-                            "%Y-%m-%d %H:%M:%S"
-                        ),
+                        culmination_time_utc=culminate_time.utc_strftime("%Y-%m-%d %H:%M:%S"),
                         set_time_utc=set_time.utc_strftime("%Y-%m-%d %H:%M:%S"),
                         max_elevation_degrees=round(alt.degrees, 2),
                     )
@@ -98,9 +90,7 @@ class SatelliteService:
                     common_rise = max(rise_time1, rise_time2)
                     common_set = min(set_time1, set_time2)
 
-                    min_elevation = min(
-                        pass1.max_elevation_degrees, pass2.max_elevation_degrees
-                    )
+                    min_elevation = min(pass1.max_elevation_degrees, pass2.max_elevation_degrees)
                     duration_sec = (common_set - common_rise).total_seconds()
                     duration_min = int(duration_sec // 60)
                     duration_sec_remainder = int(duration_sec % 60)
@@ -122,15 +112,11 @@ class SatelliteService:
 
         return sorted(common_windows, key=lambda x: x["rise_time_utc"])
 
-    def calculate_position(
-        self, tle_data: TLEData, time: datetime
-    ) -> SatellitePosition:
+    def calculate_position(self, tle_data: TLEData, time: datetime) -> SatellitePosition:
         """Calculate satellite position at given time."""
         try:
             ts = load.timescale()
-            satellite = EarthSatellite(
-                tle_data.tle_line1, tle_data.tle_line2, tle_data.satellite_name, ts
-            )
+            satellite = EarthSatellite(tle_data.tle_line1, tle_data.tle_line2, tle_data.satellite_name, ts)
 
             t = ts.from_datetime(time.replace(tzinfo=utc))
             geocentric = satellite.at(t)

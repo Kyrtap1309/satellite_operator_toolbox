@@ -1,6 +1,6 @@
 from typing import Any
 
-import requests  # type: ignore
+import requests
 
 from config import Config
 from models.satellite import TLEData
@@ -19,9 +19,7 @@ class CelestrakService:
         """Fetch current TLE data from CelesTrak."""
 
         try:
-            self.logger.info(
-                f"Fetching TLE data from CelesTrak for NORAD ID: {norad_id}"
-            )
+            self.logger.info(f"Fetching TLE data from CelesTrak for NORAD ID: {norad_id}")
 
             # Fetch both JSON and TLE format data
             json_data = self._fetch_json_data(norad_id)
@@ -34,12 +32,10 @@ class CelestrakService:
             return tle_data
 
         except Exception as e:
-            self.logger.error(
-                f"Failed to fetch TLE from CelesTrak for NORAD ID {norad_id}: {e}"
-            )
+            self.logger.error(f"Failed to fetch TLE from CelesTrak for NORAD ID {norad_id}: {e}")
             raise
 
-    def _fetch_json_data(self, norad_id: str) -> dict[str, Any]:
+    def _fetch_json_data(self, norad_id: str) -> Any:
         """Fetch JSON formatted orbital data."""
         json_url = f"{self.base_url}?CATNR={norad_id}&FORMAT=json"
         self.logger.debug(f"Fetching JSON data from: {json_url}")
@@ -76,14 +72,10 @@ class CelestrakService:
             "tle_line2": lines[2].strip(),
         }
 
-        self.logger.debug(
-            f"Successfully fetched TLE lines for: {result['satellite_name']}"
-        )
+        self.logger.debug(f"Successfully fetched TLE lines for: {result['satellite_name']}")
         return result
 
-    def _combine_tle_data(
-        self, json_data: dict[str, Any], tle_lines: dict[str, str]
-    ) -> TLEData:
+    def _combine_tle_data(self, json_data: dict[str, Any], tle_lines: dict[str, str]) -> TLEData:
         """Combine JSON and TLE line data."""
         period_minutes = None
         if json_data.get("MEAN_MOTION"):

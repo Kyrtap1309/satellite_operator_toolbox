@@ -1,35 +1,38 @@
 import logging
 from functools import wraps
+from typing import Any, Callable, TypeVar, cast
 
 from flask import current_app, flash, redirect, url_for
 
+F = TypeVar("F", bound=Callable[..., Any])
 
-def handle_route_errors(redirect_endpoint: str):
+
+def handle_route_errors(redirect_endpoint: str) -> Callable[[F], F]:
     """Decorator for consistent error handling in routes."""
 
-    def decorator(func):
+    def decorator(func: F) -> F:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             try:
                 return func(*args, **kwargs)
             except ValueError as e:
                 flash(str(e), "error")
                 return redirect(url_for(redirect_endpoint))
 
-        return wrapper
+        return cast(F, wrapper)
 
     return decorator
 
 
-def handle_calculation_errors(redirect_endpoint: str, preserve_form_data: bool = False):
+def handle_calculation_errors(redirect_endpoint: str, preserve_form_data: bool = False) -> Callable[[F], F]:
     """
     Decorator for calculation routes with optional form data preservation.
     Used for routes that need to preserve user input on errors.
     """
 
-    def decorator(func):
+    def decorator(func: F) -> F:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             try:
                 return func(*args, **kwargs)
             except ValueError as e:
@@ -48,12 +51,12 @@ def handle_calculation_errors(redirect_endpoint: str, preserve_form_data: bool =
                 flash(f"Calculation failed: {e}", "error")
                 return redirect(url_for(redirect_endpoint))
 
-        return wrapper
+        return cast(F, wrapper)
 
     return decorator
 
 
-def _handle_position_error(error, form_data):
+def _handle_position_error(error: ValueError, form_data: dict[str, Any]) -> str:
     """Handle errors in position calculation while preserving form data."""
     from flask import render_template
 
@@ -69,12 +72,12 @@ def _handle_position_error(error, form_data):
     )
 
 
-def log_route_access(log_level: int = logging.INFO):
+def log_route_access(log_level: int = logging.INFO) -> Callable[[F], F]:
     """Decorator to log route access for monitoring."""
 
-    def decorator(func):
+    def decorator(func: F) -> F:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             from flask import request
 
             current_app.logger.log(
@@ -83,6 +86,6 @@ def log_route_access(log_level: int = logging.INFO):
             )
             return func(*args, **kwargs)
 
-        return wrapper
+        return cast(F, wrapper)
 
     return decorator

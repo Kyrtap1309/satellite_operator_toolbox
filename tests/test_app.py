@@ -14,9 +14,7 @@ class TestCreateApp:
     @patch("app.CelestrakService")
     @patch("app.SpaceTrackService")
     @patch("app.setup_logging")
-    def test_create_app_success(
-        self, mock_setup_logging, mock_spacetrack, mock_celestrak, mock_satellite
-    ):
+    def test_create_app_success(self, mock_setup_logging, mock_spacetrack, mock_celestrak, mock_satellite):
         """Test successful application creation."""
 
         with patch("app.Config") as mock_config_class:
@@ -68,12 +66,8 @@ class TestRegisterRoutes:
         """Mock configuration."""
         config = Mock(spec=Config)
         config.SATELLITE_NAME = "ISS (ZARYA)"
-        config.SATELLITE_TLE_LINE1 = (
-            "1 25544U 98067A   24157.83208333  .00002182  00000+0  40768-4 0  9990"
-        )
-        config.SATELLITE_TLE_LINE2 = (
-            "2 25544  51.6461 339.7939 0001220  92.8340 267.3124 15.49309239456831"
-        )
+        config.SATELLITE_TLE_LINE1 = "1 25544U 98067A   24157.83208333  .00002182  00000+0  40768-4 0  9990"
+        config.SATELLITE_TLE_LINE2 = "2 25544  51.6461 339.7939 0001220  92.8340 267.3124 15.49309239456831"
         config.STATION1_NAME = "Station 1"
         config.STATION1_LAT = 52.0
         config.STATION1_LON = 21.0
@@ -105,7 +99,6 @@ class TestRegisterRoutes:
             "/tle_viewer",
             "/fetch_tle_data",
             "/import_tle/<norad_id>",
-            "/search_satellites",
         ]
 
         for route in expected_routes:
@@ -177,9 +170,7 @@ class TestRoutes:
 
     def test_fetch_tle_data_route_with_norad_id(self, client):
         """Test fetch TLE data route with NORAD ID."""
-        response = client.post(
-            "/fetch_tle_data", data={"norad_id": "25544", "days_back": "30"}
-        )
+        response = client.post("/fetch_tle_data", data={"norad_id": "25544", "days_back": "30"})
         assert response.status_code == 200
 
     def test_all_get_routes_render_successfully(self, client):
@@ -193,23 +184,9 @@ class TestRoutes:
 
         for route in routes_to_test:
             response = client.get(route)
-            assert response.status_code == 200, (
-                f"Route {route} failed with status {response.status_code}"
-            )
+            assert response.status_code == 200, f"Route {route} failed with status {response.status_code}"
             # Ensure we get a proper response, not an error page
-            assert b"<html>Test Response</html>" in response.data, (
-                f"Unexpected response for route {route}"
-            )
-
-    def test_search_satellites_route_no_query(self, client):
-        """Test search satellites route without query."""
-        response = client.get("/search_satellites")
-        assert response.status_code == 302
-
-    def test_search_satellites_route_with_query(self, client):
-        """Test search satellites route with query."""
-        response = client.get("/search_satellites?query=ISS")
-        assert response.status_code == 200
+            assert b"<html>Test Response</html>" in response.data, f"Unexpected response for route {route}"
 
     def test_template_path_correctness(self, client):
         """Test that routes use correct template paths."""
@@ -241,9 +218,7 @@ class TestRoutes:
             mock_render.assert_called_with("tle/tle_viewer.html")
 
             # Test the new route
-            client.post(
-                "/fetch_tle_data", data={"norad_id": "25544", "days_back": "30"}
-            )
+            client.post("/fetch_tle_data", data={"norad_id": "25544", "days_back": "30"})
             args, kwargs = mock_render.call_args
             assert args[0] == "tle/tle_viewer.html"
             assert "norad_id" in kwargs

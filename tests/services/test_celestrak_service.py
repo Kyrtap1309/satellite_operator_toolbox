@@ -60,9 +60,7 @@ class TestCelestrakService:
         assert "CATNR=25544" in tle_call[0][0]
 
     @patch("services.celestrak_service.requests.get")
-    def test_fetch_json_data_success(
-        self, mock_get, celestrak_service: CelestrakService, sample_json_response
-    ):
+    def test_fetch_json_data_success(self, mock_get, celestrak_service: CelestrakService, sample_json_response):
         """Test successful JSON data fetch."""
         mock_response = Mock()
         mock_response.json.return_value = sample_json_response
@@ -76,9 +74,7 @@ class TestCelestrakService:
         assert "FORMAT=json" in mock_get.call_args[0][0]
 
     @patch("services.celestrak_service.requests.get")
-    def test_fetch_json_data_empty_response(
-        self, mock_get, celestrak_service: CelestrakService
-    ):
+    def test_fetch_json_data_empty_response(self, mock_get, celestrak_service: CelestrakService):
         mock_response = Mock()
         mock_response.json.return_value = []
         mock_response.raise_for_status.return_value = None
@@ -88,9 +84,7 @@ class TestCelestrakService:
             celestrak_service._fetch_json_data("99999999")
 
     @patch("services.celestrak_service.requests.get")
-    def test_fetch_json_data_http_error(
-        self, mock_get, celestrak_service: CelestrakService
-    ):
+    def test_fetch_json_data_http_error(self, mock_get, celestrak_service: CelestrakService):
         """Test JSON fetch with HTTP error."""
         mock_response = Mock()
         mock_response.raise_for_status.side_effect = HTTPError("404 Not Found")
@@ -106,9 +100,7 @@ class TestCelestrakService:
             celestrak_service._fetch_json_data("25544")
 
     @patch("services.celestrak_service.requests.get")
-    def test_fetch_tle_lines_success(
-        self, mock_get, celestrak_service, sample_tle_response
-    ):
+    def test_fetch_tle_lines_success(self, mock_get, celestrak_service, sample_tle_response):
         """Test successful TLE lines fetch."""
         mock_response = Mock()
         mock_response.text = sample_tle_response
@@ -128,9 +120,7 @@ class TestCelestrakService:
         assert "FORMAT=TLE" in mock_get.call_args[0][0]
 
     @patch("services.celestrak_service.requests.get")
-    def test_fetch_tle_lines_empty_response(
-        self, mock_get, celestrak_service: CelestrakService
-    ):
+    def test_fetch_tle_lines_empty_response(self, mock_get, celestrak_service: CelestrakService):
         """Test TLE lines fetch with empty response."""
         mock_response = Mock()
         mock_response.text = ""
@@ -141,9 +131,7 @@ class TestCelestrakService:
             celestrak_service._fetch_tle_lines("999999999999")
 
     @patch("services.celestrak_service.requests.get")
-    def test_fetch_tle_lines_invalid_format(
-        self, mock_get, celestrak_service: CelestrakService
-    ):
+    def test_fetch_tle_lines_invalid_format(self, mock_get, celestrak_service: CelestrakService):
         mock_response = Mock()
         mock_response.text = "ISS (ZARYA)\n1 25544U"  # Only 2 lines instead of 3
         mock_response.raise_for_status.return_value = None
@@ -152,9 +140,7 @@ class TestCelestrakService:
         with pytest.raises(Exception, match="Invalid TLE format"):
             celestrak_service._fetch_tle_lines("25544")
 
-    def test_combine_tle_data(
-        self, celestrak_service: CelestrakService, sample_json_response
-    ):
+    def test_combine_tle_data(self, celestrak_service: CelestrakService, sample_json_response):
         """Test TLE data combination."""
         json_data = sample_json_response[0]
         tle_lines = {
@@ -186,9 +172,7 @@ class TestCelestrakService:
         assert result.mean_motion == 0.0
 
     @patch("services.celestrak_service.requests.get")
-    def test_fetch_current_tle_error_handling(
-        self, mock_get, celestrak_service: CelestrakService
-    ):
+    def test_fetch_current_tle_error_handling(self, mock_get, celestrak_service: CelestrakService):
         """Test error handling in fetch_current_tle."""
         mock_get.side_effect = RequestException("Network error")
 
@@ -237,9 +221,7 @@ class TestCelestrakServiceIntegration:
         """Test that API calls have correct structure (without hitting real API)."""
         # Mock responses
         json_response = Mock()
-        json_response.json.return_value = [
-            {"NORAD_CAT_ID": "25544", "MEAN_MOTION": "15.5"}
-        ]
+        json_response.json.return_value = [{"NORAD_CAT_ID": "25544", "MEAN_MOTION": "15.5"}]
         json_response.raise_for_status.return_value = None
 
         tle_response = Mock()

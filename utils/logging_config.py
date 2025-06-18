@@ -2,6 +2,8 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 
+from flask import Flask
+
 from config import Config
 
 
@@ -17,7 +19,7 @@ def get_log_level(level_str: str) -> int:
     return level_map.get(level_str.upper(), logging.INFO)
 
 
-def setup_logging(app, config: Config):
+def setup_logging(app: Flask, config: Config) -> None:
     """Configure application logging."""
     # Remove existing handlers to avoid duplicates
     app.logger.handlers.clear()
@@ -31,9 +33,7 @@ def setup_logging(app, config: Config):
     detailed_formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s [%(filename)s:%(lineno)d]"
     )
-    simple_formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
+    simple_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
     # Always add console handler for Docker
     console_handler = logging.StreamHandler()
@@ -69,7 +69,7 @@ def setup_logging(app, config: Config):
     configure_module_loggers(config)
 
 
-def configure_module_loggers(config: Config):
+def configure_module_loggers(config: Config) -> None:
     """Configure logging for specific modules."""
     # Set logging level for requests library to reduce noise
     logging.getLogger("requests").setLevel(logging.WARNING)

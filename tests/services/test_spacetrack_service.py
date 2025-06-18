@@ -32,9 +32,7 @@ class TestSpaceTrackService:
         assert service.config == config
 
     @patch("services.spacetrack_service.requests.Session")
-    def test_authenticate_success(
-        self, mock_session_class, spacetrack_service: SpaceTrackService
-    ):
+    def test_authenticate_success(self, mock_session_class, spacetrack_service: SpaceTrackService):
         mock_session = Mock()
         mock_session_class.return_value = mock_session
 
@@ -68,9 +66,7 @@ class TestSpaceTrackService:
         assert service.session is None
 
     @patch("services.spacetrack_service.requests.Session")
-    def test_authenticate_login_failure(
-        self, mock_session_class, spacetrack_service: SpaceTrackService
-    ):
+    def test_authenticate_login_failure(self, mock_session_class, spacetrack_service: SpaceTrackService):
         """Test authentication failure durign login."""
         mock_session = Mock()
         mock_session_class.return_value = mock_session
@@ -83,9 +79,7 @@ class TestSpaceTrackService:
         assert spacetrack_service.session is None
 
     @patch("services.spacetrack_service.requests.Session")
-    def test_authenticate_test_failure(
-        self, mock_session_class, spacetrack_service: SpaceTrackService
-    ):
+    def test_authenticate_test_failure(self, mock_session_class, spacetrack_service: SpaceTrackService):
         """Test authentication failure during test request."""
         mock_session = Mock()
         mock_session_class.return_value = mock_session
@@ -176,9 +170,7 @@ class TestSpaceTrackService:
         assert "format/json" in call_args
 
     @patch.object(SpaceTrackService, "_ensure_authenticated")
-    def test_fetch_tle_history_empty_response(
-        self, mock_ensure_auth, spacetrack_service: SpaceTrackService
-    ):
+    def test_fetch_tle_history_empty_response(self, mock_ensure_auth, spacetrack_service: SpaceTrackService):
         """Test TLE history fetch with empty response."""
         mock_session = Mock()
         mock_ensure_auth.return_value = mock_session
@@ -193,9 +185,7 @@ class TestSpaceTrackService:
         assert result == []
 
     @patch.object(SpaceTrackService, "_ensure_authenticated")
-    def test_fetch_tle_history_http_error(
-        self, mock_ensure_auth, spacetrack_service: SpaceTrackService
-    ):
+    def test_fetch_tle_history_http_error(self, mock_ensure_auth, spacetrack_service: SpaceTrackService):
         """Test TLE history fetch with HTTP error."""
         mock_session = Mock()
         mock_ensure_auth.return_value = mock_session
@@ -206,9 +196,7 @@ class TestSpaceTrackService:
             spacetrack_service.fetch_tle_history("25544", 30)
 
     @patch.object(SpaceTrackService, "_ensure_authenticated")
-    def test_fetch_tle_history_timeout(
-        self, mock_ensure_auth, spacetrack_service: SpaceTrackService
-    ):
+    def test_fetch_tle_history_timeout(self, mock_ensure_auth, spacetrack_service: SpaceTrackService):
         """Test TLE history fetch with timeout."""
         mock_session = Mock()
         mock_ensure_auth.return_value = mock_session
@@ -249,9 +237,7 @@ class TestSpaceTrackService:
         assert result["age_days"] == 1
 
     @patch.object(SpaceTrackService, "_ensure_authenticated")
-    def test_get_latest_tle_age_no_data(
-        self, mock_ensure_auth, spacetrack_service: SpaceTrackService
-    ):
+    def test_get_latest_tle_age_no_data(self, mock_ensure_auth, spacetrack_service: SpaceTrackService):
         """Test TLE age fetch with no data."""
         mock_session = Mock()
         mock_ensure_auth.return_value = mock_session
@@ -268,9 +254,7 @@ class TestSpaceTrackService:
         self, spacetrack_service: SpaceTrackService, sample_spacetrack_history_response
     ):
         """Test successful TLE history parsing."""
-        result = spacetrack_service._parse_tle_history(
-            sample_spacetrack_history_response
-        )
+        result = spacetrack_service._parse_tle_history(sample_spacetrack_history_response)
 
         assert len(result) == 2
         tle = result[0]
@@ -280,9 +264,7 @@ class TestSpaceTrackService:
         assert tle.mean_motion == 15.49309239
         assert tle.period_minutes == pytest.approx(92.68, rel=0.01)
 
-    def test_parse_tle_history_invalid_tle_lines(
-        self, spacetrack_service: SpaceTrackService
-    ):
+    def test_parse_tle_history_invalid_tle_lines(self, spacetrack_service: SpaceTrackService):
         """Test TLE history parsing with invalid TLE line lengths."""
         invalid_data = [
             {
@@ -490,9 +472,7 @@ class TestSpaceTrackServiceIntegration:
     @pytest.mark.slow
     def test_multiple_requests_performance(self, spacetrack_service: SpaceTrackService):
         """Test performance with multiple requests."""
-        with patch.object(
-            spacetrack_service, "_ensure_authenticated"
-        ) as mock_ensure_auth:
+        with patch.object(spacetrack_service, "_ensure_authenticated") as mock_ensure_auth:
             mock_session = Mock()
             mock_ensure_auth.return_value = mock_session
 
@@ -509,9 +489,7 @@ class TestSpaceTrackServiceIntegration:
 
     def test_date_range_calculation(self, spacetrack_service: SpaceTrackService):
         """Test that date ranges are calculated correctly."""
-        with patch.object(
-            spacetrack_service, "_ensure_authenticated"
-        ) as mock_ensure_auth:
+        with patch.object(spacetrack_service, "_ensure_authenticated") as mock_ensure_auth:
             mock_session = Mock()
             mock_ensure_auth.return_value = mock_session
 
@@ -532,9 +510,7 @@ class TestSpaceTrackServiceIntegration:
 
     def test_url_construction(self, spacetrack_service: SpaceTrackService):
         """Test that URLs are constructed correctly."""
-        with patch.object(
-            spacetrack_service, "_ensure_authenticated"
-        ) as mock_ensure_auth:
+        with patch.object(spacetrack_service, "_ensure_authenticated") as mock_ensure_auth:
             mock_session = Mock()
             mock_ensure_auth.return_value = mock_session
 
@@ -543,9 +519,7 @@ class TestSpaceTrackServiceIntegration:
             history_response.raise_for_status.return_value = None
 
             age_response = Mock()
-            age_response.json.return_value = [
-                {"NORAD_CAT_ID": "25544", "EPOCH": "2024-06-05T19:58:12.000000"}
-            ]
+            age_response.json.return_value = [{"NORAD_CAT_ID": "25544", "EPOCH": "2024-06-05T19:58:12.000000"}]
             age_response.raise_for_status.return_value = None
 
             mock_session.get.side_effect = [history_response, age_response]

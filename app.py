@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from typing import Any
 
 from flask import Flask, render_template, request
 
@@ -18,7 +19,7 @@ from utils.route_decorators import (
 )
 
 
-def create_app():
+def create_app() -> Flask:
     """Application factory."""
     app = Flask(__name__)
 
@@ -42,7 +43,7 @@ def create_app():
     return app
 
 
-def register_routes(app, config: Config, satellite_service: SatelliteService):
+def register_routes(app: Flask, config: Config, satellite_service: SatelliteService) -> None:
     """Register application routes."""
 
     # Create TLE input service instance
@@ -50,13 +51,13 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
 
     @app.route("/")
     @log_route_access()
-    def index():
+    def index() -> str:
         """Render the main index page."""
         return render_template("index.html")
 
     @app.route("/satellite_passes")
     @log_route_access()
-    def satellite_passes():
+    def satellite_passes() -> str:
         """Render the satellite passes calculator page."""
         return render_template(
             "satellite_passes/index.html",
@@ -77,7 +78,7 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
     @app.route("/calculate", methods=["POST"])
     @handle_calculation_errors("satellite_passes")
     @log_route_access()
-    def calculate():
+    def calculate() -> str:
         """Calculate satellite passes for two ground stations."""
         app.logger.info("Pass calculation requested")
 
@@ -110,12 +111,8 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
         app.logger.info(f"Calculating passes for {tle_data.satellite_name} on {date}")
 
         # Find passes
-        passes_gs1 = satellite_service.find_passes(
-            tle_data, gs1, start_time, end_time, min_el
-        )
-        passes_gs2 = satellite_service.find_passes(
-            tle_data, gs2, start_time, end_time, min_el
-        )
+        passes_gs1 = satellite_service.find_passes(tle_data, gs1, start_time, end_time, min_el)
+        passes_gs2 = satellite_service.find_passes(tle_data, gs2, start_time, end_time, min_el)
         common_windows = satellite_service.find_common_windows(passes_gs1, passes_gs2)
 
         # Format data
@@ -123,13 +120,9 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
         formatted_gs1 = formatter.format_passes_for_display(passes_gs1)
         formatted_gs2 = formatter.format_passes_for_display(passes_gs2)
         formatted_common = formatter.format_common_windows(common_windows)
-        timeline_data = formatter.prepare_timeline_data(
-            passes_gs1, passes_gs2, common_windows, gs1.name, gs2.name
-        )
+        timeline_data = formatter.prepare_timeline_data(passes_gs1, passes_gs2, common_windows, gs1.name, gs2.name)
 
-        app.logger.info(
-            f"Calculation completed. Found {len(formatted_common)} common windows"
-        )
+        app.logger.info(f"Calculation completed. Found {len(formatted_common)} common windows")
 
         return render_template(
             "satellite_passes/results.html",
@@ -150,7 +143,7 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
 
     @app.route("/satellite_position")
     @log_route_access()
-    def satellite_position():
+    def satellite_position() -> str:
         """Render the satellite position calculator page."""
         now = datetime.now()
         default_date = now.strftime("%Y-%m-%d")
@@ -169,27 +162,32 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
     @app.route("/calculate_position", methods=["POST"])
     @handle_calculation_errors("satellite_position", preserve_form_data=True)
     @log_route_access()
-    def calculate_position():
+    def calculate_position() -> str:
         """Calculate satellite position at a specific time."""
         # Get TLE data using the service
         tle_data = tle_input_service.get_tle_data(request.form)
 
         # Get date and time
-        date_str = request.form.get("date")
-        time_str = request.form.get("time")
+        date_str = request.form.get("date", "")
+        time_str = request.form.get("time", "")
 
         # Parse date and time - handle seconds format
-        if len(time_str.split(":")) == 3:  # HH:MM:SS format
+        if time_str and len(time_str.split(":")) == 3:  # HH:MM:SS format
             time_obj = datetime.strptime(time_str, "%H:%M:%S").time()
-        else:  # HH:MM format
+        elif time_str:  # HH:MM format
             time_obj = datetime.strptime(time_str, "%H:%M").time()
+        else:
+            # Use current time if not provided
+            time_obj = datetime.now().time()
 
-        date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+        if date_str:
+            date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+        else:
+            # Use current date if not provided
+            date_obj = datetime.now().date()
+
         calculation_time = datetime.combine(date_obj, time_obj)
-
-        app.logger.info(
-            f"Calculating position for {tle_data.satellite_name} at {calculation_time}"
-        )
+        app.logger.info(f"Calculating position for {tle_data.satellite_name} at {calculation_time}")
 
         # Calculate position
         position = satellite_service.calculate_position(tle_data, calculation_time)
@@ -208,14 +206,14 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
 
     @app.route("/tle_viewer")
     @log_route_access()
-    def tle_viewer():
+    def tle_viewer() -> str:
         """Render the TLE viewer page."""
         return render_template("tle/tle_viewer.html")
 
     @app.route("/fetch_tle_data", methods=["POST"])
     @handle_route_errors("tle_viewer")
     @log_route_access()
-    def fetch_tle_data():
+    def fetch_tle_data() -> str:
         """Fetch TLE data and history for a satellite."""
         norad_id = request.form.get("norad_id", "").strip()
         days_back = int(request.form.get("days_back", 30))
@@ -230,7 +228,7 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
             current_tle = satellite_service.get_current_tle(norad_id)
         except Exception as e:
             app.logger.error(f"Error fetching current TLE: {e}")
-            current_tle = {"error": str(e)}
+            current_tle = None  # Handle the error in the template
 
         # Get TLE history
         try:
@@ -258,7 +256,7 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
     @app.route("/import_tle/<norad_id>")
     @handle_route_errors("index")
     @log_route_access()
-    def import_tle(norad_id):
+    def import_tle(norad_id: str) -> str:
         """Import TLE data for a satellite by NORAD ID."""
         app.logger.info(f"TLE import requested for NORAD ID: {norad_id}")
 
@@ -281,33 +279,17 @@ def register_routes(app, config: Config, satellite_service: SatelliteService):
             min_el=config.MIN_ELEVATION,
         )
 
-    @app.route("/search_satellites", methods=["GET"])
-    @handle_route_errors("tle_viewer")
-    @log_route_access()
-    def search_satellites():
-        """Search for satellites by name or NORAD ID."""
-        query = request.args.get("query", "").strip()
-        if not query:
-            raise ValueError("Please provide a search query")
 
-        app.logger.info(f"Satellite search requested: {query}")
-
-        results = satellite_service.search_satellites(query)
-        return render_template(
-            "tle_viewer/search_results.html", results=results, query=query
-        )
-
-
-def register_error_handlers(app):
+def register_error_handlers(app: Flask) -> None:
     """Register error handlers."""
 
     @app.errorhandler(404)
-    def not_found_error(error):
+    def not_found_error(error: Any) -> tuple[str, int]:
         app.logger.warning(f"404 error: {request.url}")
         return render_template("404.html"), 404
 
     @app.errorhandler(500)
-    def internal_error(error):
+    def internal_error(error: Any) -> tuple[str, int]:
         app.logger.error(f"500 error: {error}")
         return render_template("500.html"), 500
 
