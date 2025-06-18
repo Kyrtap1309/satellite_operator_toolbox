@@ -6,13 +6,16 @@ from config import Config
 from models.satellite import TLEData
 from utils.logging_config import get_logger
 
+# Constants
+TLE_FORMAT_LINE_COUNT = 3  # Satellite name + TLE line 1 + TLE line 2
+
 
 class CelestrakService:
     """Service for interacting with CelesTrak API."""
 
     def __init__(self, config: Config):
         self.config = config
-        self.base_url = config.CELESTRAK_BASE_URL
+        self.base_url = "https://celestrak.org/NORAD/elements/gp.php"
         self.logger = get_logger(__name__)
 
     def fetch_current_tle(self, norad_id: str) -> TLEData:
@@ -45,9 +48,8 @@ class CelestrakService:
 
         data = response.json()
         if not data:
-            raise Exception(f"No satellite data found for NORAD ID: {norad_id}")
+            raise Exception(f"No JSON data found for NORAD ID: {norad_id}")
 
-        self.logger.debug(f"Successfully fetched JSON data for NORAD ID: {norad_id}")
         return data[0]
 
     def _fetch_tle_lines(self, norad_id: str) -> dict[str, str]:
@@ -63,7 +65,7 @@ class CelestrakService:
             raise Exception(f"No TLE data found for NORAD ID: {norad_id}")
 
         lines = tle_data.split("\n")
-        if len(lines) < 3:
+        if len(lines) < TLE_FORMAT_LINE_COUNT:
             raise Exception("Invalid TLE format received")
 
         result = {

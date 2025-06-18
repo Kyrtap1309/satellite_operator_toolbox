@@ -1,11 +1,19 @@
 from datetime import datetime, timedelta
-from typing import Any, Optional
+from typing import Any
 
 import requests
 
 from config import Config
 from models.satellite import TLEData
 from utils.logging_config import get_logger
+
+# Constants
+HTTP_STATUS_OK = 200
+TLE_LINE_LENGTH = 69  # Standard TLE line length
+
+# TLE Age thresholds (in days)
+TLE_FRESH_THRESHOLD_DAYS = 3  # TLE is considered fresh if <= 3 days old
+TLE_OUTDATED_THRESHOLD_DAYS = 7  # TLE is considered outdated if > 7 days old
 
 
 class SpaceTrackService:
@@ -14,7 +22,7 @@ class SpaceTrackService:
     def __init__(self, config: Config):
         self.config = config
         self.base_url = config.SPACETRACK_BASE_URL
-        self.session: Optional[requests.Session] = None
+        self.session: requests.Session | None = None
         self.logger = get_logger(__name__)
 
     def authenticate(self) -> bool:
@@ -40,7 +48,7 @@ class SpaceTrackService:
             test_url = f"{self.base_url}/basicspacedata/query/class/tle_latest/NORAD_CAT_ID/25544/limit/1/format/json"
             test_response = self.session.get(test_url, timeout=30)
 
-            success = test_response.status_code == 200 and test_response.text.strip() != "[]"
+            success = test_response.status_code == requests.codes.ok and test_response.text.strip() != "[]"
             if success:
                 self.logger.info("Space-Track authentication successful")
             else:
@@ -57,9 +65,8 @@ class SpaceTrackService:
 
     def _ensure_authenticated(self) -> requests.Session:
         """Ensure we have an authenticated session."""
-        if self.session is None:
-            if not self.authenticate():
-                raise Exception("Authentication failed")
+        if self.session is None and not self.authenticate():
+            raise Exception("Authentication failed")
 
         if self.session is None:
             raise Exception("Failed to create session")
@@ -120,10 +127,10 @@ class SpaceTrackService:
                 tle_line1 = entry.get("TLE_LINE1", "")
                 tle_line2 = entry.get("TLE_LINE2", "")
 
-                if len(tle_line1) != 69:
-                    self.logger.warning(f"TLE Line 1 has incorrect length: {len(tle_line1)} (expected 69)")
-                if len(tle_line2) != 69:
-                    self.logger.warning(f"TLE Line 2 has incorrect length: {len(tle_line2)} (expected 69)")
+                if len(tle_line1) != TLE_LINE_LENGTH:
+                    self.logger.warning(f"TLE Line 1 has incorrect length: {len(tle_line1)} (expected {TLE_LINE_LENGTH})")
+                if len(tle_line2) != TLE_LINE_LENGTH:
+                    self.logger.warning(f"TLE Line 2 has incorrect length: {len(tle_line2)} (expected {TLE_LINE_LENGTH})")
 
                 mean_motion = self._safe_float(entry.get("MEAN_MOTION"))
                 period_minutes = (1440.0 / mean_motion) if mean_motion > 0 else None
@@ -171,8 +178,8 @@ class SpaceTrackService:
             return {
                 "epoch": epoch_str,
                 "age_days": age_days,
-                "is_fresh": age_days <= 3,
-                "warning": "TLE is outdated" if age_days > 7 else None,
+                "is_fresh": age_days <= TLE_FRESH_THRESHOLD_DAYS,
+                "warning": "TLE is outdated" if age_days > TLE_OUTDATED_THRESHOLD_DAYS else None,
             }
         except Exception as e:
             self.logger.error(f"Error calculating TLE age: {e}")

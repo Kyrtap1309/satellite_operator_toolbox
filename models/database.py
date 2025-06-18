@@ -37,9 +37,7 @@ class TLEDataModel(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def __repr__(self):
-        return (
-            f"<TLEDataModel(norad_id='{self.norad_id}', satellite_name='{self.satellite_name}', epoch='{self.epoch}')>"
-        )
+        return f"<TLEDataModel(norad_id='{self.norad_id}', satellite_name='{self.satellite_name}', epoch='{self.epoch}')>"
 
 
 class DatabaseManager:

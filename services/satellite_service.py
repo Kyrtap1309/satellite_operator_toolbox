@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 from skyfield.api import EarthSatellite, Topos, load, utc  # type: ignore[import-untyped]
 
@@ -13,6 +13,12 @@ from models.satellite import (
 from services.celestrak_service import CelestrakService
 from services.database_service import DatabaseService
 from services.spacetrack_service import SpaceTrackService
+
+# Constants for satellite pass events
+SATELLITE_EVENT_RISE = 0
+SATELLITE_EVENT_CULMINATE = 1
+SATELLITE_EVENT_SET = 2
+PASS_EVENT_SEQUENCE_LENGTH = 3  # rise, culminate, set
 
 
 class SatelliteService:
@@ -53,8 +59,8 @@ class SatelliteService:
             times, events = satellite.find_events(station, t0, t1, altitude_degrees=min_elevation)
 
             passes = []
-            for i in range(0, len(events) - 2, 3):
-                if events[i] == 0 and events[i + 1] == 1 and events[i + 2] == 2:
+            for i in range(0, len(events) - 2, PASS_EVENT_SEQUENCE_LENGTH):
+                if events[i] == SATELLITE_EVENT_RISE and events[i + 1] == SATELLITE_EVENT_CULMINATE and events[i + 2] == SATELLITE_EVENT_SET:
                     rise_time = times[i]
                     culminate_time = times[i + 1]
                     set_time = times[i + 2]
@@ -78,9 +84,7 @@ class SatelliteService:
             self.logger.error(f"Error finding passes: {e}")
             raise
 
-    def find_common_windows(
-        self, passes_station1: list[SatellitePass], passes_station2: list[SatellitePass]
-    ) -> list[dict[str, Any]]:
+    def find_common_windows(self, passes_station1: list[SatellitePass], passes_station2: list[SatellitePass]) -> list[dict[str, Any]]:
         """Find common visibility windows between two stations."""
         common_windows = []
 
@@ -136,7 +140,7 @@ class SatelliteService:
             self.logger.error(f"Error calculating position: {e}")
             raise
 
-    def _parse_epoch(self, epoch_str: str) -> Optional[datetime]:
+    def _parse_epoch(self, epoch_str: str) -> datetime | None:
         """Parse epoch with multiple format support."""
         if not epoch_str:
             return None
@@ -188,17 +192,13 @@ class SatelliteService:
 
         # Jeśli mamy kompletną historię, zwróć ją
         if len(existing_history) >= days_back:
-            self.logger.info(
-                f"Found complete TLE history in database: {len(existing_history)} records for {norad_id_str}"
-            )
+            self.logger.info(f"Found complete TLE history in database: {len(existing_history)} records for {norad_id_str}")
             return existing_history
 
         # Jeśli brakuje danych, sprawdź czy warto pobierać z Space-Track
         missing_days = days_back - len(existing_history) if existing_history else days_back
 
-        self.logger.info(
-            f"Database has {len(existing_history)} TLE records, missing ~{missing_days} days. Fetching from Space-Track..."
-        )
+        self.logger.info(f"Database has {len(existing_history)} TLE records, missing ~{missing_days} days. Fetching from Space-Track...")
 
         try:
             # Pobierz z Space-Track z większym zakresem żeby złapać wszystkie brakujące dni
@@ -211,9 +211,7 @@ class SatelliteService:
                 if self.database.save_tle_data(tle_data, source="spacetrack"):
                     new_records_count += 1
 
-            self.logger.info(
-                f"Fetched {len(spacetrack_history)} records from Space-Track, saved {new_records_count} new records"
-            )
+            self.logger.info(f"Fetched {len(spacetrack_history)} records from Space-Track, saved {new_records_count} new records")
 
             # Pobierz zaktualizowaną historię z bazy
             updated_history = self.database.get_tle_history(norad_id_str, days_back)

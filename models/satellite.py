@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 
 
 @dataclass
@@ -27,14 +27,14 @@ class TLEData:
     ra_of_asc_node: float = 0.0
     arg_of_pericenter: float = 0.0
     mean_anomaly: float = 0.0
-    classification: Optional[str] = None
-    intl_designator: Optional[str] = None
-    element_set_no: Optional[int] = None
-    rev_at_epoch: Optional[int] = None
-    bstar: Optional[str] = None
-    mean_motion_dot: Optional[str] = None
-    mean_motion_ddot: Optional[str] = None
-    period_minutes: Optional[float] = None
+    classification: str | None = None
+    intl_designator: str | None = None
+    element_set_no: int | None = None
+    rev_at_epoch: int | None = None
+    bstar: str | None = None
+    mean_motion_dot: str | None = None
+    mean_motion_ddot: str | None = None
+    period_minutes: float | None = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "TLEData":

@@ -20,6 +20,9 @@ from utils.route_decorators import (
     log_route_access,
 )
 
+# Constants
+TIME_FORMAT_PARTS_WITH_SECONDS = 3
+
 
 def create_app() -> Flask:
     """Application factory."""
@@ -47,11 +50,15 @@ def create_app() -> Flask:
     return app
 
 
-def register_routes(
-    app: Flask, config: Config, satellite_service: SatelliteService, tle_input_service: TLEInputService
-) -> None:
+def register_routes(app: Flask, config: Config, satellite_service: SatelliteService, tle_input_service: TLEInputService) -> None:
     """Register application routes."""
-    formatter = DataFormatter()
+    register_main_routes(app, config)
+    register_satellite_routes(app, config, satellite_service, tle_input_service)
+    register_tle_routes(app, satellite_service)
+
+
+def register_main_routes(app: Flask, config: Config) -> None:
+    """Register main application routes."""
 
     @app.route("/")
     @log_route_access()
@@ -80,6 +87,11 @@ def register_routes(
             gs2_elev=config.STATION2_ELEV,
             min_el=config.MIN_ELEVATION,
         )
+
+
+def register_satellite_routes(app: Flask, config: Config, satellite_service: SatelliteService, tle_input_service: TLEInputService) -> None:
+    """Register satellite calculation routes."""
+    formatter = DataFormatter()
 
     @app.route("/calculate", methods=["POST"])
     @handle_calculation_errors("satellite_passes")
@@ -178,7 +190,7 @@ def register_routes(
         time_str = request.form.get("time", "")
 
         # Parse date and time - handle seconds format
-        if time_str and len(time_str.split(":")) == 3:  # HH:MM:SS format
+        if time_str and len(time_str.split(":")) == TIME_FORMAT_PARTS_WITH_SECONDS:  # HH:MM:SS format
             time_obj = datetime.strptime(time_str, "%H:%M:%S").time()
         elif time_str:  # HH:MM format
             time_obj = datetime.strptime(time_str, "%H:%M").time()
@@ -186,11 +198,7 @@ def register_routes(
             # Use current time if not provided
             time_obj = datetime.now().time()
 
-        if date_str:
-            date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
-        else:
-            # Use current date if not provided
-            date_obj = datetime.now().date()
+        date_obj = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else datetime.now().date()
 
         calculation_time = datetime.combine(date_obj, time_obj)
         app.logger.info(f"Calculating position for {tle_data.satellite_name} at {calculation_time}")
@@ -199,6 +207,7 @@ def register_routes(
         position = satellite_service.calculate_position(tle_data, calculation_time)
 
         input_method = request.form.get("input_method", "norad")
+
         return render_template(
             "satellite_position/position_calculator.html",
             tle_name=tle_data.satellite_name if input_method == "tle" else "",
@@ -209,6 +218,10 @@ def register_routes(
             default_time=time_str,
             position_data=position,
         )
+
+
+def register_tle_routes(app: Flask, satellite_service: SatelliteService) -> None:
+    """Register TLE-related routes."""
 
     @app.route("/tle_viewer")
     @log_route_access()
