@@ -54,8 +54,6 @@ class TLEInputService:
 
         try:
             tle_data = self.satellite_service.get_current_tle(norad_id)
-            if not tle_data:
-                raise ValueError(f"No TLE data found for NORAD ID: {norad_id}")
             return tle_data
         except Exception as e:
             self.logger.error(f"Error fetching TLE for NORAD ID {norad_id}: {e}")

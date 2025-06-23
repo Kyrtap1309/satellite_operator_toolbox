@@ -168,7 +168,7 @@ class SatelliteService:
         # Try database first
         tle_data = self.database.get_latest_tle(norad_id_str)
 
-        if tle_data:
+        if tle_data is not None:
             self.logger.info(f"Retrieved TLE for {norad_id_str} from database")
             return tle_data
 
@@ -177,7 +177,7 @@ class SatelliteService:
         tle_data = self.celestrak.fetch_current_tle(norad_id_str)
 
         # Save to database
-        if tle_data:
+        if tle_data is not None:
             self.database.save_tle_data(tle_data, source="celestrak")
 
         return tle_data

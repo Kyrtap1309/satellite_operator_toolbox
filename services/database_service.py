@@ -1,7 +1,9 @@
 import logging
 from datetime import datetime, timedelta
+from typing import Any
 
 from sqlalchemy import and_, desc
+from sqlalchemy.orm import Session
 
 from models.database import DatabaseManager, TLEDataModel
 from models.satellite import TLEData
@@ -33,7 +35,7 @@ TLE_LINE2_MEAN_MOTION_INDEX = 7
 class DatabaseService:
     """Service for database operations."""
 
-    def __init__(self, database_manager: DatabaseManager):
+    def __init__(self, database_manager: DatabaseManager) -> None:
         self.db_manager = database_manager
         self.logger = logging.getLogger(__name__)
 
@@ -82,7 +84,7 @@ class DatabaseService:
 
         return True
 
-    def _tle_exists(self, session, tle_data: TLEData, norad_id_str: str) -> bool:
+    def _tle_exists(self, session: Session, tle_data: TLEData, norad_id_str: str) -> bool:
         """Check if this exact TLE already exists in database."""
         existing = (
             session.query(TLEDataModel)
@@ -107,7 +109,7 @@ class DatabaseService:
             self.logger.error(f"Error parsing epoch from TLE: {e}")
             return datetime.utcnow()
 
-    def _parse_orbital_parameters(self, line2_parts: list[str]) -> dict:
+    def _parse_orbital_parameters(self, line2_parts: list[str]) -> dict[str, float]:
         """Parse orbital parameters from TLE line 2."""
         try:
             return {
@@ -129,7 +131,7 @@ class DatabaseService:
                 "mean_anomaly": 0.0,
             }
 
-    def _parse_line1_parameters(self, line1_parts: list[str]) -> dict:
+    def _parse_line1_parameters(self, line1_parts: list[str]) -> dict[str, Any]:
         """Parse parameters from TLE line 1."""
         try:
             # Parse revolution number at epoch
@@ -170,7 +172,7 @@ class DatabaseService:
                 "ephemeris_type": 0,
             }
 
-    def _parse_tle_data(self, tle_data: TLEData) -> dict:
+    def _parse_tle_data(self, tle_data: TLEData) -> dict[str, Any]:
         """Parse all TLE data and return orbital parameters."""
         line1_parts = tle_data.tle_line1.split()
         line2_parts = tle_data.tle_line2.split()
@@ -191,7 +193,7 @@ class DatabaseService:
             **line1_params,
         }
 
-    def _create_tle_model(self, tle_data: TLEData, orbital_params: dict, norad_id_str: str, source: str) -> TLEDataModel:
+    def _create_tle_model(self, tle_data: TLEData, orbital_params: dict[str, Any], norad_id_str: str, source: str) -> TLEDataModel:
         """Create TLE model instance."""
         return TLEDataModel(
             norad_id=norad_id_str,
@@ -219,30 +221,32 @@ class DatabaseService:
             norad_id_str = str(norad_id)
 
             with self.db_manager.get_session() as session:
-                latest = session.query(TLEDataModel).filter(TLEDataModel.norad_id == norad_id_str).order_by(desc(TLEDataModel.epoch)).first()
+                latest: TLEDataModel | None = (
+                    session.query(TLEDataModel).filter(TLEDataModel.norad_id == norad_id_str).order_by(desc(TLEDataModel.epoch)).first()
+                )
 
                 if latest:
-                    # NAPRAWIONE: przekaż wszystkie wymagane argumenty
+                    # Handle nullable fields with proper defaults
                     return TLEData(
-                        satellite_name=latest.satellite_name,
-                        norad_id=latest.norad_id,
-                        tle_line1=latest.tle_line1,
-                        tle_line2=latest.tle_line2,
+                        satellite_name=latest.satellite_name or "Unknown Satellite",
+                        norad_id=latest.norad_id or norad_id_str,
+                        tle_line1=latest.tle_line1 or "",
+                        tle_line2=latest.tle_line2 or "",
                         epoch=latest.epoch.isoformat() if latest.epoch else "",
-                        mean_motion=latest.mean_motion or 0.0,
-                        eccentricity=latest.eccentricity or 0.0,
-                        inclination=latest.inclination or 0.0,
-                        ra_of_asc_node=latest.raan or 0.0,
-                        arg_of_pericenter=latest.arg_of_perigee or 0.0,
-                        mean_anomaly=latest.mean_anomaly or 0.0,
+                        mean_motion=float(latest.mean_motion) if latest.mean_motion is not None else 0.0,
+                        eccentricity=float(latest.eccentricity) if latest.eccentricity is not None else 0.0,
+                        inclination=float(latest.inclination) if latest.inclination is not None else 0.0,
+                        ra_of_asc_node=float(latest.raan) if latest.raan is not None else 0.0,
+                        arg_of_pericenter=float(latest.arg_of_perigee) if latest.arg_of_perigee is not None else 0.0,
+                        mean_anomaly=float(latest.mean_anomaly) if latest.mean_anomaly is not None else 0.0,
                         classification=latest.classification,
                         intl_designator=latest.international_designator,
                         element_set_no=latest.element_set_no,
                         rev_at_epoch=latest.rev_at_epoch,
-                        bstar=latest.bstar,
+                        bstar=str(latest.bstar) if latest.bstar is not None else None,
                         mean_motion_dot=None,  # Nie zapisujemy tego w bazie
                         mean_motion_ddot=None,  # Nie zapisujemy tego w bazie
-                        period_minutes=1440.0 / latest.mean_motion if latest.mean_motion and latest.mean_motion > 0 else None,
+                        period_minutes=(1440.0 / float(latest.mean_motion) if latest.mean_motion is not None and latest.mean_motion > 0 else None),
                     )
                 return None
 
@@ -260,7 +264,7 @@ class DatabaseService:
             self.logger.debug(f"Querying TLE history for NORAD {norad_id_str}, cutoff date: {cutoff_date}")
 
             with self.db_manager.get_session() as session:
-                history = (
+                history: list[TLEDataModel] = (
                     session.query(TLEDataModel)
                     .filter(and_(TLEDataModel.norad_id == norad_id_str, TLEDataModel.epoch >= cutoff_date))
                     .order_by(desc(TLEDataModel.epoch))
@@ -271,27 +275,27 @@ class DatabaseService:
 
                 result = []
                 for tle in history:
-                    # NAPRAWIONE: przekaż wszystkie wymagane argumenty
+                    # Handle nullable fields with proper defaults
                     tle_data = TLEData(
-                        satellite_name=tle.satellite_name,
-                        norad_id=tle.norad_id,
-                        tle_line1=tle.tle_line1,
-                        tle_line2=tle.tle_line2,
+                        satellite_name=tle.satellite_name or "Unknown Satellite",
+                        norad_id=tle.norad_id or norad_id_str,
+                        tle_line1=tle.tle_line1 or "",
+                        tle_line2=tle.tle_line2 or "",
                         epoch=tle.epoch.isoformat() if tle.epoch else "",
-                        mean_motion=tle.mean_motion or 0.0,
-                        eccentricity=tle.eccentricity or 0.0,
-                        inclination=tle.inclination or 0.0,
-                        ra_of_asc_node=tle.raan or 0.0,
-                        arg_of_pericenter=tle.arg_of_perigee or 0.0,
-                        mean_anomaly=tle.mean_anomaly or 0.0,
+                        mean_motion=float(tle.mean_motion) if tle.mean_motion is not None else 0.0,
+                        eccentricity=float(tle.eccentricity) if tle.eccentricity is not None else 0.0,
+                        inclination=float(tle.inclination) if tle.inclination is not None else 0.0,
+                        ra_of_asc_node=float(tle.raan) if tle.raan is not None else 0.0,
+                        arg_of_pericenter=float(tle.arg_of_perigee) if tle.arg_of_perigee is not None else 0.0,
+                        mean_anomaly=float(tle.mean_anomaly) if tle.mean_anomaly is not None else 0.0,
                         classification=tle.classification,
                         intl_designator=tle.international_designator,
                         element_set_no=tle.element_set_no,
                         rev_at_epoch=tle.rev_at_epoch,
-                        bstar=tle.bstar,
+                        bstar=str(tle.bstar) if tle.bstar is not None else None,
                         mean_motion_dot=None,
                         mean_motion_ddot=None,
-                        period_minutes=1440.0 / tle.mean_motion if tle.mean_motion and tle.mean_motion > 0 else None,
+                        period_minutes=(1440.0 / float(tle.mean_motion) if tle.mean_motion is not None and tle.mean_motion > 0 else None),
                     )
                     result.append(tle_data)
 
@@ -302,7 +306,7 @@ class DatabaseService:
             self.logger.error(f"Error getting TLE history: {e}")
             return []
 
-    def get_tle_coverage_info(self, norad_id: str, days_back: int = 30) -> dict:
+    def get_tle_coverage_info(self, norad_id: str, days_back: int = 30) -> dict[str, Any]:
         """Get information about TLE data coverage in database."""
         try:
             norad_id_str = str(norad_id)
@@ -328,7 +332,7 @@ class DatabaseService:
                 )
 
                 coverage_days = 0
-                if oldest and newest:
+                if oldest and newest and oldest.epoch and newest.epoch:
                     coverage_days = (newest.epoch - oldest.epoch).days + 1
 
                 return {
@@ -367,7 +371,7 @@ class DatabaseService:
             self.logger.error(f"Error cleaning up old TLEs: {e}")
             return 0
 
-    def get_satellite_list(self) -> list[dict]:
+    def get_satellite_list(self) -> list[dict[str, str]]:
         """Get list of satellites with TLE data."""
         try:
             with self.db_manager.get_session() as session:
