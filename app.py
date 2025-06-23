@@ -63,7 +63,7 @@ def register_main_routes(app: Flask, config: Config) -> None:
     @app.route("/")
     @log_route_access()
     @handle_route_errors("index")
-    def index():
+    def index() -> None:
         """Homepage."""
         return render_template("index.html")
 

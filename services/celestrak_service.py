@@ -24,11 +24,9 @@ class CelestrakService:
         try:
             self.logger.info(f"Fetching TLE data from CelesTrak for NORAD ID: {norad_id}")
 
-            # Fetch both JSON and TLE format data
             json_data = self._fetch_json_data(norad_id)
             tle_lines = self._fetch_tle_lines(norad_id)
 
-            # Combine data from both sources
             tle_data = self._combine_tle_data(json_data, tle_lines)
 
             self.logger.info(f"Successfully fetched TLE data for NORAD ID: {norad_id}")

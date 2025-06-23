@@ -162,13 +162,13 @@ class SatelliteService:
 
     def get_current_tle(self, norad_id: str) -> TLEData:
         """Get current TLE from database or fetch from CelesTrak."""
-        # Ensure norad_id is a string
+
         norad_id_str = str(norad_id)
 
         # Try database first
         tle_data = self.database.get_latest_tle(norad_id_str)
 
-        if tle_data:
+        if tle_data is not None:
             self.logger.info(f"Retrieved TLE for {norad_id_str} from database")
             return tle_data
 
@@ -177,7 +177,7 @@ class SatelliteService:
         tle_data = self.celestrak.fetch_current_tle(norad_id_str)
 
         # Save to database
-        if tle_data:
+        if tle_data is not None:
             self.database.save_tle_data(tle_data, source="celestrak")
 
         return tle_data
@@ -186,26 +186,22 @@ class SatelliteService:
         """Get TLE history - check database first, then fetch missing data from Space-Track."""
         norad_id_str = str(norad_id)
 
-        # Sprawdź co mamy w bazie danych
         self.logger.info(f"Checking database for TLE history: {norad_id_str}")
         existing_history = self.database.get_tle_history(norad_id_str, days_back)
 
-        # Jeśli mamy kompletną historię, zwróć ją
         if len(existing_history) >= days_back:
             self.logger.info(f"Found complete TLE history in database: {len(existing_history)} records for {norad_id_str}")
             return existing_history
 
-        # Jeśli brakuje danych, sprawdź czy warto pobierać z Space-Track
         missing_days = days_back - len(existing_history) if existing_history else days_back
 
         self.logger.info(f"Database has {len(existing_history)} TLE records, missing ~{missing_days} days. Fetching from Space-Track...")
 
         try:
-            # Pobierz z Space-Track z większym zakresem żeby złapać wszystkie brakujące dni
-            fetch_days = max(days_back, 60)  # Pobierz więcej dni dla pewności
+            # Download from SpaceTrack with bigger range to catch all missing days
+            fetch_days = max(days_back, 60)  # Download more days to be sure
             spacetrack_history = self.spacetrack.fetch_tle_history(norad_id_str, fetch_days)
 
-            # Zapisz nowe dane do bazy
             new_records_count = 0
             for tle_data in spacetrack_history:
                 if self.database.save_tle_data(tle_data, source="spacetrack"):
@@ -213,7 +209,6 @@ class SatelliteService:
 
             self.logger.info(f"Fetched {len(spacetrack_history)} records from Space-Track, saved {new_records_count} new records")
 
-            # Pobierz zaktualizowaną historię z bazy
             updated_history = self.database.get_tle_history(norad_id_str, days_back)
             self.logger.info(f"Final TLE history count: {len(updated_history)} records for {norad_id_str}")
 
@@ -222,7 +217,7 @@ class SatelliteService:
         except Exception as e:
             self.logger.warning(f"Failed to fetch from Space-Track: {e}")
 
-            # Fallback - zwróć to co mamy w bazie, nawet jeśli niepełne
+            # Fallback - Return database content, even then they are lacking
             if existing_history:
                 self.logger.info(f"Using partial history from database: {len(existing_history)} records")
                 return existing_history
