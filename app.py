@@ -19,6 +19,7 @@ from utils.route_decorators import (
     handle_route_errors,
     log_route_access,
 )
+from routes.todo_routes import todo_bp
 
 # Constants
 TIME_FORMAT_PARTS_WITH_SECONDS = 3
@@ -28,6 +29,8 @@ def create_app() -> Flask:
     """Application factory."""
     app = Flask(__name__)
     config = Config()
+
+    app.secret_key = config.SECRET_KEY
 
     # Setup logging
     setup_logging(app, config)
@@ -45,7 +48,6 @@ def create_app() -> Flask:
 
     # Register routes and error handlers
     register_routes(app, config, satellite_service, tle_input_service)
-    register_error_handlers(app)
 
     return app
 
@@ -55,6 +57,10 @@ def register_routes(app: Flask, config: Config, satellite_service: SatelliteServ
     register_main_routes(app, config)
     register_satellite_routes(app, config, satellite_service, tle_input_service)
     register_tle_routes(app, satellite_service)
+    
+    app.register_blueprint(todo_bp)
+    
+    register_error_handlers(app)
 
 
 def register_main_routes(app: Flask, config: Config) -> None:

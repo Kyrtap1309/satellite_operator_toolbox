@@ -81,6 +81,13 @@
                   >
                 </li>
                 <li class="nav-item">
+                  <a
+                    class="nav-link {% if request.endpoint and 'todo' in request.endpoint %}active{% endif %}"
+                    href="{{ url_for('todo.todo_index') }}"
+                    ><i class="fas fa-tasks"></i> TODO List</a
+                  >
+                </li>
+                <li class="nav-item">
                     <div class="nav-link">
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="darkModeToggle">

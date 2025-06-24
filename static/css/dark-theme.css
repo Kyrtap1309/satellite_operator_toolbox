@@ -326,3 +326,55 @@
 [data-theme="dark"] .table thead tr th {
   color: #ffffff !important;
 }
+
+/* Quick Access Card dark mode styling */
+[data-theme="dark"] .quick-access-card {
+    background: linear-gradient(135deg, #2d2d2d 0%, #1e1e1e 100%) !important;
+    border-color: #404040 !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .quick-access-card .card-header {
+    background-color: #404040 !important;
+    border-bottom-color: #606060 !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .quick-access-card .card-title {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .quick-access-card .card-body {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .quick-access-card h6 {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .quick-access-card .list-unstyled li {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .quick-access-card .list-unstyled li strong {
+    color: #ffffff !important;
+}
+
+/* Tool cards hover effect in dark mode */
+[data-theme="dark"] .tool-card:hover {
+    box-shadow: 0 8px 25px rgba(255,255,255,0.1) !important;
+}
+
+[data-theme="dark"] .quick-access-card:hover {
+    box-shadow: 0 4px 15px rgba(255,255,255,0.1) !important;
+}
+
+/* Recent tasks section dark mode */
+[data-theme="dark"] .border-left-warning {
+    border-left-color: #ffc107 !important;
+    background-color: #1e1e1e !important;
+}
+
+[data-theme="dark"] .progress-bar.bg-warning {
+    background-color: #ffc107 !important;
+}

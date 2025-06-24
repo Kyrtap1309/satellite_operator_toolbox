@@ -1,30 +1,24 @@
 {% extends "base.html" %}
-{% block title %}Satellite Operator Tools - Homepage{% endblock %}
+{% block title %}Satellite Operator Tools{% endblock %}
 {% block page_title %}Satellite Operator Tools{% endblock %}
+
 {% block content %}
-
-<div class="row mb-4">
-    <div class="col-md-12 text-center">
-        <p class="lead">Professional tools for satellite operations and analysis</p>
-        <hr>
-    </div>
-</div>
-
-<div class="row g-4">
+<div class="row">
     <!-- Pass Calculator Tool -->
     <div class="col-md-6 col-lg-4">
         <div class="card h-100 tool-card">
             <div class="card-header bg-primary text-white">
                 <h5 class="card-title mb-0">
-                    <i class="fas fa-satellite"></i> Pass Calculator
+                    <i class="fas fa-calculator"></i> Pass Calculator
                 </h5>
             </div>
             <div class="card-body d-flex flex-column">
                 <p class="card-text">
-                    Calculate satellite passes and find common visibility windows between two ground stations.
+                    Calculate satellite passes for multiple ground stations with precision timing and elevation data.
                 </p>
                 <ul class="list-unstyled mb-3">
-                    <li><i class="fas fa-check text-success"></i> Multi-station analysis</li>
+                    <li><i class="fas fa-check text-success"></i> Multi-station support</li>
+                    <li><i class="fas fa-check text-success"></i> Elevation tracking</li>
                     <li><i class="fas fa-check text-success"></i> Common visibility windows</li>
                     <li><i class="fas fa-check text-success"></i> Interactive timeline</li>
                     <li><i class="fas fa-check text-success"></i> Ground station mapping</li>
@@ -75,16 +69,45 @@
             </div>
             <div class="card-body d-flex flex-column">
                 <p class="card-text">
-                    Browse and analyze TLE (Two-Line Element) data history for any satellite.
+                    View and manage Two-Line Element (TLE) data for satellites with real-time updates.
                 </p>
                 <ul class="list-unstyled mb-3">
-                    <li><i class="fas fa-check text-success"></i> Historical TLE data</li>
-                    <li><i class="fas fa-check text-success"></i> Data export options</li>
-                    <li><i class="fas fa-check text-success"></i> Import to calculator</li>
+                    <li><i class="fas fa-check text-success"></i> Real-time TLE data</li>
+                    <li><i class="fas fa-check text-success"></i> Satellite search</li>
+                    <li><i class="fas fa-check text-success"></i> Data visualization</li>
+                    <li><i class="fas fa-check text-success"></i> Export capabilities</li>
                 </ul>
                 <div class="mt-auto">
                     <a href="{{ url_for('tle_viewer') }}" class="btn btn-info btn-block w-100">
                         <i class="fas fa-eye"></i> Open Viewer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TODO List Tool -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 tool-card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-tasks"></i> TODO List Manager
+                </h5>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <p class="card-text">
+                    Organize your satellite operations with task management, subtasks, and timeline visualization.
+                </p>
+                <ul class="list-unstyled mb-3">
+                    <li><i class="fas fa-check text-success"></i> Task organization</li>
+                    <li><i class="fas fa-check text-success"></i> Subtask planning</li>
+                    <li><i class="fas fa-check text-success"></i> Timeline visualization</li>
+                    <li><i class="fas fa-check text-success"></i> Progress tracking</li>
+                    <li><i class="fas fa-check text-success"></i> Time scheduling</li>
+                </ul>
+                <div class="mt-auto">
+                    <a href="{{ url_for('todo.todo_index') }}" class="btn btn-warning btn-block w-100">
+                        <i class="fas fa-tasks"></i> Open TODO List
                     </a>
                 </div>
             </div>
@@ -95,65 +118,29 @@
 <!-- Quick Access Section -->
 <div class="row mt-5">
     <div class="col-md-12">
-        <h4 class="text-center mb-4">Quick Access</h4>
-        <div class="row g-3">
-            <div class="col-md-4">
-                <div class="card quick-access-card">
-                    <div class="card-body text-center">
-                        <h6 class="card-title">ISS Tracking</h6>
-                        <p class="card-text small">International Space Station</p>
-                        <a href="{{ url_for('import_tle', norad_id='25544') }}" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-rocket"></i> Quick Setup
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card quick-access-card">
-                    <div class="card-body text-center">
-                        <h6 class="card-title">Bluebon</h6>
-                        <p class="card-text small">Bluebon</p>
-                        <a href="{{ url_for('import_tle', norad_id='62688') }}" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-telescope"></i> Quick Setup
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card quick-access-card">
-                    <div class="card-body text-center">
-                        <h6 class="card-title">Custom TLE</h6>
-                        <p class="card-text small">Import any satellite</p>
-                        <a href="{{ url_for('tle_viewer') }}" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-search"></i> Search TLE
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Features Overview -->
-<div class="row mt-5">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header bg-dark text-white">
-                <h5 class="mb-0"><i class="fas fa-star"></i> Key Features</h5>
+        <div class="card quick-access-card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-rocket"></i> Quick Start Guide
+                </h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
+                        <h6><i class="fas fa-play-circle text-primary"></i> Getting Started</h6>
                         <ul class="list-unstyled">
-                            <li class="mb-2"><i class="fas fa-chart-line text-primary"></i> <strong>Real-time calculations</strong> - Precise orbital mechanics</li>
-                            <li class="mb-2"><i class="fas fa-map text-success"></i> <strong>Interactive visualizations</strong> - Maps and timelines</li>
-                            <li class="mb-2"><i class="fas fa-cloud-download-alt text-info"></i> <strong>Live TLE data</strong> - Automatic updates from CelesTrak</li>
+                            <li class="mb-2"><i class="fas fa-satellite text-primary"></i> <strong>Select a satellite</strong> - Use TLE Viewer to browse available satellites</li>
+                            <li class="mb-2"><i class="fas fa-map-marker-alt text-success"></i> <strong>Set your location</strong> - Configure ground station coordinates</li>
+                            <li class="mb-2"><i class="fas fa-calculator text-primary"></i> <strong>Calculate passes</strong> - Find optimal observation windows</li>
+                            <li class="mb-2"><i class="fas fa-tasks text-warning"></i> <strong>Plan operations</strong> - Use TODO List to organize your schedule</li>
                         </ul>
                     </div>
                     <div class="col-md-6">
+                        <h6><i class="fas fa-lightbulb text-warning"></i> Features</h6>
                         <ul class="list-unstyled">
-                            <li class="mb-2"><i class="fas fa-users text-warning"></i> <strong>Multi-station support</strong> - Compare multiple ground stations</li>
-                            <li class="mb-2"><i class="fas fa-copy text-secondary"></i> <strong>Data export</strong> - Copy and export results</li>
+                            <li class="mb-2"><i class="fas fa-clock text-info"></i> <strong>Real-time calculations</strong> - Always up-to-date orbital data</li>
+                            <li class="mb-2"><i class="fas fa-chart-line text-success"></i> <strong>Visual timeline</strong> - Interactive pass visualization</li>
+                            <li class="mb-2"><i class="fas fa-globe text-primary"></i> <strong>Global coverage</strong> - Support for worldwide ground stations</li>
                             <li class="mb-2"><i class="fas fa-mobile-alt text-primary"></i> <strong>Responsive design</strong> - Works on all devices</li>
                         </ul>
                     </div>
@@ -179,45 +166,36 @@
 }
 
 .quick-access-card {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border: 1px solid #dee2e6;
     transition: all 0.2s ease;
 }
 
 .quick-access-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.lead {
-    font-size: 1.1rem;
-    color: #6c757d;
-}
-
-.card-header h5 {
-    font-weight: 600;
+.card-header {
+    border-bottom: 2px solid rgba(255,255,255,0.2);
 }
 
 .btn-block {
-    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
-/* Dark mode overrides for index page */
-[data-theme="dark"] .quick-access-card {
-    background: linear-gradient(135deg, #2d2d2d 0%, #1e1e1e 100%) !important;
-    border-color: #404040 !important;
+.btn-block:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-[data-theme="dark"] .quick-access-card:hover {
-    box-shadow: 0 4px 12px rgba(255,255,255,0.1) !important;
-}
-
-[data-theme="dark"] .tool-card:hover {
-    box-shadow: 0 8px 25px rgba(255,255,255,0.15) !important;
-}
-
-[data-theme="dark"] .lead {
-    color: #9e9e9e !important;
+@media (max-width: 768px) {
+    .tool-card:hover {
+        transform: none;
+    }
+    
+    .quick-access-card:hover {
+        transform: none;
+    }
 }
 </style>
 {% endblock %}

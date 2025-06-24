@@ -31,7 +31,7 @@ COPY . .
 RUN python -c "from skyfield.api import load; load('de421.bsp')"
 
 # Create logs directory
-RUN mkdir -p logs
+RUN mkdir -p logs data
 
 EXPOSE 1309
 

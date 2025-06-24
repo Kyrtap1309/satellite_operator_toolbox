@@ -48,23 +48,67 @@ body {
   font-weight: bold;
 }
 
+/* Enhanced timeline styling */
 .vis-timeline {
   border: 1px solid #dee2e6;
   border-radius: 4px;
+  font-family: inherit;
 }
 
 .vis-item {
   border-width: 2px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.vis-item.completed {
+  background-color: rgba(40, 167, 69, 0.8) !important;
+  border-color: #28a745 !important;
+}
+
+.vis-item.pending {
+  background-color: rgba(0, 123, 255, 0.8) !important;
+  border-color: #007bff !important;
 }
 
 .vis-time-axis .vis-text {
   color: #495057;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.vis-time-axis .vis-text.vis-major {
+  font-weight: 600;
+  color: #343a40;
 }
 
 .vis-item .vis-item-content {
-  padding: 5px;
+  padding: 6px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-table {
-  font-size: 14px;
+.vis-labelset .vis-label {
+  border-bottom: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.vis-current-time {
+  background-color: #dc3545;
+  width: 2px;
+}
+
+@media (max-width: 768px) {
+  .vis-item .vis-item-content {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+  
+  .vis-time-axis .vis-text {
+    font-size: 10px;
+  }
 }
