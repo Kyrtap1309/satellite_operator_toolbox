@@ -7,6 +7,7 @@ from flask import Flask, render_template, request
 from config import Config
 from models.database import DatabaseManager
 from models.satellite import GroundStation
+from routes.todo_routes import todo_bp
 from services.celestrak_service import CelestrakService
 from services.database_service import DatabaseService
 from services.satellite_service import SatelliteService
@@ -19,7 +20,6 @@ from utils.route_decorators import (
     handle_route_errors,
     log_route_access,
 )
-from routes.todo_routes import todo_bp
 
 # Constants
 TIME_FORMAT_PARTS_WITH_SECONDS = 3
@@ -57,9 +57,9 @@ def register_routes(app: Flask, config: Config, satellite_service: SatelliteServ
     register_main_routes(app, config)
     register_satellite_routes(app, config, satellite_service, tle_input_service)
     register_tle_routes(app, satellite_service)
-    
+
     app.register_blueprint(todo_bp)
-    
+
     register_error_handlers(app)
 
 
@@ -69,7 +69,7 @@ def register_main_routes(app: Flask, config: Config) -> None:
     @app.route("/")
     @log_route_access()
     @handle_route_errors("index")
-    def index() -> None:
+    def index() -> str:
         """Homepage."""
         return render_template("index.html")
 
