@@ -165,14 +165,6 @@ class SatelliteService:
 
         norad_id_str = str(norad_id)
 
-        # Try database first
-        tle_data = self.database.get_latest_tle(norad_id_str)
-
-        if tle_data is not None:
-            self.logger.info(f"Retrieved TLE for {norad_id_str} from database")
-            return tle_data
-
-        # Fallback to CelesTrak
         self.logger.info(f"Fetching TLE for {norad_id_str} from CelesTrak")
         tle_data = self.celestrak.fetch_current_tle(norad_id_str)
 
