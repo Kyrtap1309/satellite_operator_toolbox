@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "USA West Coast Imaging",
+    "description": "West Coast imaging",
+    "subtasks": [
+      {
+        "id": 1,
+        "title": "Payload Activation",
+        "description": "Aktywacja payloadu",
+        "start_time": "2025-06-18T19:03:00",
+        "end_time": "2025-06-25T19:13:00",
+        "completed": true,
+        "created_at": "2025-06-24T13:48:17.972237"
+      },
+      {
+        "id": 2,
+        "title": "Tilt Position",
+        "description": "Tilt na West Coast ",
+        "start_time": "2025-06-19T18:50:00",
+        "end_time": "2025-06-19T19:20:00",
+        "completed": true,
+        "created_at": "2025-06-24T13:49:26.294308"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-24T13:47:12.229441"
+  }
+]
