@@ -1,4 +1,21 @@
 services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: satellite_db
+      POSTGRES_USER: satellite_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U satellite_user -d satellite_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
   satellite-pass-calculator:
     build: .
     env_file:
@@ -11,7 +28,14 @@ services:
       - FLASK_HOST=0.0.0.0
       - SPACETRACK_USERNAME=${SPACETRACK_USERNAME}
       - SPACETRACK_PASSWORD=${SPACETRACK_PASSWORD}
+      - DATABASE_URL=postgresql://satellite_user:${POSTGRES_PASSWORD}@postgres:5432/satellite_db
     volumes:
       - ./static:/app/static
       - ./logs:/app/logs  
     restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 from skyfield.api import EarthSatellite, Topos, load, utc  # type: ignore[import-untyped]
 
@@ -11,15 +11,28 @@ from models.satellite import (
     TLEData,
 )
 from services.celestrak_service import CelestrakService
+from services.database_service import DatabaseService
 from services.spacetrack_service import SpaceTrackService
+
+# Constants for satellite pass events
+SATELLITE_EVENT_RISE = 0
+SATELLITE_EVENT_CULMINATE = 1
+SATELLITE_EVENT_SET = 2
+PASS_EVENT_SEQUENCE_LENGTH = 3  # rise, culminate, set
 
 
 class SatelliteService:
     """Main satellite operations service."""
 
-    def __init__(self, spacetrack_service: SpaceTrackService, celestrak_service: CelestrakService):
+    def __init__(
+        self,
+        spacetrack_service: SpaceTrackService,
+        celestrak_service: CelestrakService,
+        database_service: DatabaseService,
+    ):
         self.spacetrack = spacetrack_service
         self.celestrak = celestrak_service
+        self.database = database_service
         self.logger = logging.getLogger(__name__)
 
     def find_passes(
@@ -46,8 +59,8 @@ class SatelliteService:
             times, events = satellite.find_events(station, t0, t1, altitude_degrees=min_elevation)
 
             passes = []
-            for i in range(0, len(events) - 2, 3):
-                if events[i] == 0 and events[i + 1] == 1 and events[i + 2] == 2:
+            for i in range(0, len(events) - 2, PASS_EVENT_SEQUENCE_LENGTH):
+                if events[i] == SATELLITE_EVENT_RISE and events[i + 1] == SATELLITE_EVENT_CULMINATE and events[i + 2] == SATELLITE_EVENT_SET:
                     rise_time = times[i]
                     culminate_time = times[i + 1]
                     set_time = times[i + 2]
@@ -71,17 +84,16 @@ class SatelliteService:
             self.logger.error(f"Error finding passes: {e}")
             raise
 
-    def find_common_windows(
-        self, passes_station1: list[SatellitePass], passes_station2: list[SatellitePass]
-    ) -> list[dict[str, Any]]:
+    def find_common_windows(self, passes_station1: list[SatellitePass], passes_station2: list[SatellitePass]) -> list[dict[str, Any]]:
         """Find common visibility windows between two stations."""
         common_windows = []
 
         for pass1 in passes_station1:
-            rise_time1 = datetime.strptime(pass1.rise_time_utc, "%Y-%m-%d %H:%M:%S")
-            set_time1 = datetime.strptime(pass1.set_time_utc, "%Y-%m-%d %H:%M:%S")
-
             for pass2 in passes_station2:
+                # Parse times
+                rise_time1 = datetime.strptime(pass1.rise_time_utc, "%Y-%m-%d %H:%M:%S")
+                set_time1 = datetime.strptime(pass1.set_time_utc, "%Y-%m-%d %H:%M:%S")
+
                 rise_time2 = datetime.strptime(pass2.rise_time_utc, "%Y-%m-%d %H:%M:%S")
                 set_time2 = datetime.strptime(pass2.set_time_utc, "%Y-%m-%d %H:%M:%S")
 
@@ -101,16 +113,10 @@ class SatelliteService:
                         "max_elevation_degrees": min_elevation,
                         "duration_seconds": duration_sec,
                         "duration_str": f"{duration_min}m {duration_sec_remainder}s",
-                        "station1_rise": pass1.rise_time_utc,
-                        "station1_set": pass1.set_time_utc,
-                        "station1_max_el": pass1.max_elevation_degrees,
-                        "station2_rise": pass2.rise_time_utc,
-                        "station2_set": pass2.set_time_utc,
-                        "station2_max_el": pass2.max_elevation_degrees,
                     }
                     common_windows.append(common_window)
 
-        return sorted(common_windows, key=lambda x: x["rise_time_utc"])
+        return common_windows
 
     def calculate_position(self, tle_data: TLEData, time: datetime) -> SatellitePosition:
         """Calculate satellite position at given time."""
@@ -134,7 +140,7 @@ class SatelliteService:
             self.logger.error(f"Error calculating position: {e}")
             raise
 
-    def _parse_epoch(self, epoch_str: str) -> Optional[datetime]:
+    def _parse_epoch(self, epoch_str: str) -> datetime | None:
         """Parse epoch with multiple format support."""
         if not epoch_str:
             return None
@@ -155,13 +161,71 @@ class SatelliteService:
         return None
 
     def get_current_tle(self, norad_id: str) -> TLEData:
-        """Get current TLE from CelesTrak."""
-        return self.celestrak.fetch_current_tle(norad_id)
+        """Get current TLE from database or fetch from CelesTrak."""
+
+        norad_id_str = str(norad_id)
+
+        # Try database first
+        tle_data = self.database.get_latest_tle(norad_id_str)
+
+        if tle_data is not None:
+            self.logger.info(f"Retrieved TLE for {norad_id_str} from database")
+            return tle_data
+
+        # Fallback to CelesTrak
+        self.logger.info(f"Fetching TLE for {norad_id_str} from CelesTrak")
+        tle_data = self.celestrak.fetch_current_tle(norad_id_str)
+
+        # Save to database
+        if tle_data is not None:
+            self.database.save_tle_data(tle_data, source="celestrak")
+
+        return tle_data
 
     def get_tle_history(self, norad_id: str, days_back: int = 30) -> list[TLEData]:
-        """Get TLE history from Space-Track."""
-        return self.spacetrack.fetch_tle_history(norad_id, days_back)
+        """Get TLE history - check database first, then fetch missing data from Space-Track."""
+        norad_id_str = str(norad_id)
+
+        self.logger.info(f"Checking database for TLE history: {norad_id_str}")
+        existing_history = self.database.get_tle_history(norad_id_str, days_back)
+
+        if len(existing_history) >= days_back:
+            self.logger.info(f"Found complete TLE history in database: {len(existing_history)} records for {norad_id_str}")
+            return existing_history
+
+        missing_days = days_back - len(existing_history) if existing_history else days_back
+
+        self.logger.info(f"Database has {len(existing_history)} TLE records, missing ~{missing_days} days. Fetching from Space-Track...")
+
+        try:
+            # Download from SpaceTrack with bigger range to catch all missing days
+            fetch_days = max(days_back, 60)  # Download more days to be sure
+            spacetrack_history = self.spacetrack.fetch_tle_history(norad_id_str, fetch_days)
+
+            new_records_count = 0
+            for tle_data in spacetrack_history:
+                if self.database.save_tle_data(tle_data, source="spacetrack"):
+                    new_records_count += 1
+
+            self.logger.info(f"Fetched {len(spacetrack_history)} records from Space-Track, saved {new_records_count} new records")
+
+            updated_history = self.database.get_tle_history(norad_id_str, days_back)
+            self.logger.info(f"Final TLE history count: {len(updated_history)} records for {norad_id_str}")
+
+            return updated_history
+
+        except Exception as e:
+            self.logger.warning(f"Failed to fetch from Space-Track: {e}")
+
+            # Fallback - Return database content, even then they are lacking
+            if existing_history:
+                self.logger.info(f"Using partial history from database: {len(existing_history)} records")
+                return existing_history
+            else:
+                self.logger.warning(f"No TLE history found for {norad_id_str}")
+                return []
 
     def get_tle_age_info(self, norad_id: str) -> dict[str, Any]:
         """Get TLE age information."""
-        return self.spacetrack.get_latest_tle_age(norad_id)
+        norad_id_str = str(norad_id)
+        return self.spacetrack.get_latest_tle_age(norad_id_str)

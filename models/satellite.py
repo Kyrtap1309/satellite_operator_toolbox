@@ -1,5 +1,15 @@
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
+
+
+@dataclass
+class GroundStation:
+    """Ground station model."""
+
+    name: str
+    latitude: float
+    longitude: float
+    elevation: float
 
 
 @dataclass
@@ -10,21 +20,21 @@ class TLEData:
     satellite_name: str
     tle_line1: str
     tle_line2: str
-    epoch: str
-    mean_motion: float
-    eccentricity: float
-    inclination: float
-    ra_of_asc_node: float
-    arg_of_pericenter: float
-    mean_anomaly: float
-    classification: Optional[str] = None
-    intl_designator: Optional[str] = None
-    element_set_no: Optional[int] = None
-    rev_at_epoch: Optional[int] = None
-    bstar: Optional[str] = None
-    mean_motion_dot: Optional[str] = None
-    mean_motion_ddot: Optional[str] = None
-    period_minutes: Optional[float] = None
+    epoch: str = ""
+    mean_motion: float = 0.0
+    eccentricity: float = 0.0
+    inclination: float = 0.0
+    ra_of_asc_node: float = 0.0
+    arg_of_pericenter: float = 0.0
+    mean_anomaly: float = 0.0
+    classification: str | None = None
+    intl_designator: str | None = None
+    element_set_no: int | None = None
+    rev_at_epoch: int | None = None
+    bstar: str | None = None
+    mean_motion_dot: str | None = None
+    mean_motion_ddot: str | None = None
+    period_minutes: float | None = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "TLEData":
@@ -50,16 +60,6 @@ class TLEData:
             mean_motion_ddot=data.get("mean_motion_ddot"),
             period_minutes=data.get("period_minutes"),
         )
-
-
-@dataclass
-class GroundStation:
-    """Ground station model."""
-
-    name: str
-    latitude: float
-    longitude: float
-    elevation: float
 
 
 @dataclass

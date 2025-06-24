@@ -30,9 +30,7 @@ def setup_logging(app: Flask, config: Config) -> None:
     root_logger.setLevel(get_log_level(config.LOG_LEVEL))
 
     # Create formatters
-    detailed_formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s [%(filename)s:%(lineno)d]"
-    )
+    detailed_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s [%(filename)s:%(lineno)d]")
     simple_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
     # Always add console handler for Docker

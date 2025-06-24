@@ -5,8 +5,10 @@ from typing import Any
 from flask import Flask, render_template, request
 
 from config import Config
+from models.database import DatabaseManager
 from models.satellite import GroundStation
 from services.celestrak_service import CelestrakService
+from services.database_service import DatabaseService
 from services.satellite_service import SatelliteService
 from services.spacetrack_service import SpaceTrackService
 from services.tle_input_service import TLEInputService
@@ -18,45 +20,56 @@ from utils.route_decorators import (
     log_route_access,
 )
 
+# Constants
+TIME_FORMAT_PARTS_WITH_SECONDS = 3
+
 
 def create_app() -> Flask:
     """Application factory."""
     app = Flask(__name__)
-
-    # Load configuration
     config = Config()
-
-    app.secret_key = config.SECRET_KEY
 
     # Setup logging
     setup_logging(app, config)
 
+    # Initialize database
+    db_manager = DatabaseManager(config.DATABASE_URL)
+    db_manager.create_tables()
+    db_service = DatabaseService(db_manager)
+
     # Initialize services
     spacetrack_service = SpaceTrackService(config)
     celestrak_service = CelestrakService(config)
-    satellite_service = SatelliteService(spacetrack_service, celestrak_service)
+    satellite_service = SatelliteService(spacetrack_service, celestrak_service, db_service)
+    tle_input_service = TLEInputService(satellite_service)
 
-    # Register routes
-    register_routes(app, config, satellite_service)
+    # Register routes and error handlers
+    register_routes(app, config, satellite_service, tle_input_service)
     register_error_handlers(app)
 
     return app
 
 
-def register_routes(app: Flask, config: Config, satellite_service: SatelliteService) -> None:
+def register_routes(app: Flask, config: Config, satellite_service: SatelliteService, tle_input_service: TLEInputService) -> None:
     """Register application routes."""
+    register_main_routes(app, config)
+    register_satellite_routes(app, config, satellite_service, tle_input_service)
+    register_tle_routes(app, satellite_service)
 
-    # Create TLE input service instance
-    tle_input_service = TLEInputService(satellite_service)
+
+def register_main_routes(app: Flask, config: Config) -> None:
+    """Register main application routes."""
 
     @app.route("/")
     @log_route_access()
-    def index() -> str:
-        """Render the main index page."""
+    @handle_route_errors("index")
+    def index() -> None:
+        """Homepage."""
         return render_template("index.html")
 
     @app.route("/satellite_passes")
     @log_route_access()
+    @handle_route_errors("satellite_passes")
     def satellite_passes() -> str:
         """Render the satellite passes calculator page."""
         return render_template(
@@ -74,6 +87,11 @@ def register_routes(app: Flask, config: Config, satellite_service: SatelliteServ
             gs2_elev=config.STATION2_ELEV,
             min_el=config.MIN_ELEVATION,
         )
+
+
+def register_satellite_routes(app: Flask, config: Config, satellite_service: SatelliteService, tle_input_service: TLEInputService) -> None:
+    """Register satellite calculation routes."""
+    formatter = DataFormatter()
 
     @app.route("/calculate", methods=["POST"])
     @handle_calculation_errors("satellite_passes")
@@ -116,7 +134,6 @@ def register_routes(app: Flask, config: Config, satellite_service: SatelliteServ
         common_windows = satellite_service.find_common_windows(passes_gs1, passes_gs2)
 
         # Format data
-        formatter = DataFormatter()
         formatted_gs1 = formatter.format_passes_for_display(passes_gs1)
         formatted_gs2 = formatter.format_passes_for_display(passes_gs2)
         formatted_common = formatter.format_common_windows(common_windows)
@@ -143,6 +160,7 @@ def register_routes(app: Flask, config: Config, satellite_service: SatelliteServ
 
     @app.route("/satellite_position")
     @log_route_access()
+    @handle_route_errors("satellite_position")
     def satellite_position() -> str:
         """Render the satellite position calculator page."""
         now = datetime.now()
@@ -172,7 +190,7 @@ def register_routes(app: Flask, config: Config, satellite_service: SatelliteServ
         time_str = request.form.get("time", "")
 
         # Parse date and time - handle seconds format
-        if time_str and len(time_str.split(":")) == 3:  # HH:MM:SS format
+        if time_str and len(time_str.split(":")) == TIME_FORMAT_PARTS_WITH_SECONDS:  # HH:MM:SS format
             time_obj = datetime.strptime(time_str, "%H:%M:%S").time()
         elif time_str:  # HH:MM format
             time_obj = datetime.strptime(time_str, "%H:%M").time()
@@ -180,11 +198,7 @@ def register_routes(app: Flask, config: Config, satellite_service: SatelliteServ
             # Use current time if not provided
             time_obj = datetime.now().time()
 
-        if date_str:
-            date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
-        else:
-            # Use current date if not provided
-            date_obj = datetime.now().date()
+        date_obj = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else datetime.now().date()
 
         calculation_time = datetime.combine(date_obj, time_obj)
         app.logger.info(f"Calculating position for {tle_data.satellite_name} at {calculation_time}")
@@ -193,6 +207,7 @@ def register_routes(app: Flask, config: Config, satellite_service: SatelliteServ
         position = satellite_service.calculate_position(tle_data, calculation_time)
 
         input_method = request.form.get("input_method", "norad")
+
         return render_template(
             "satellite_position/position_calculator.html",
             tle_name=tle_data.satellite_name if input_method == "tle" else "",
@@ -204,8 +219,13 @@ def register_routes(app: Flask, config: Config, satellite_service: SatelliteServ
             position_data=position,
         )
 
+
+def register_tle_routes(app: Flask, satellite_service: SatelliteService) -> None:
+    """Register TLE-related routes."""
+
     @app.route("/tle_viewer")
     @log_route_access()
+    @handle_route_errors("tle_viewer")
     def tle_viewer() -> str:
         """Render the TLE viewer page."""
         return render_template("tle/tle_viewer.html")
@@ -285,13 +305,11 @@ def register_error_handlers(app: Flask) -> None:
 
     @app.errorhandler(404)
     def not_found_error(error: Any) -> tuple[str, int]:
-        app.logger.warning(f"404 error: {request.url}")
-        return render_template("404.html"), 404
+        return render_template("error.html", error_code=404, error_message="Page not found"), 404
 
     @app.errorhandler(500)
     def internal_error(error: Any) -> tuple[str, int]:
-        app.logger.error(f"500 error: {error}")
-        return render_template("500.html"), 500
+        return render_template("error.html", error_code=500, error_message="Internal server error"), 500
 
 
 if __name__ == "__main__":
