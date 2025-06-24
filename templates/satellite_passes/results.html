@@ -174,18 +174,29 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
       // DOM element where the Timeline will be attached
       const container = document.getElementById('visualization');
 
+      // Get current UTC time instead of local time
+      const nowUTC = new Date();
+
       // Configuration for the Timeline
       const options = {
           zoomable: true,
           moveable: true,
           stack: false,
-          min: new Date('{{ date }} 00:00:00'),
-          max: new Date('{{ date }} 23:59:59'),
-          timeAxis: {scale: 'minute', step: 30}
+          min: new Date('{{ date }} 00:00:00Z'), // Add Z to specify UTC
+          max: new Date('{{ date }} 23:59:59Z'), // Add Z to specify UTC
+          timeAxis: {scale: 'minute', step: 30},
+          showCurrentTime: true,
+          moment: function(date) {
+              // Force timeline to use UTC time for current time marker
+              return moment.utc(date);
+          }
       };
 
       // Create a Timeline
       const timeline = new vis.Timeline(container, items, groups, options);
+
+      // Manually set current time to UTC
+      timeline.setCurrentTime(nowUTC);
 
       // Initialize the map
       const map = L.map('map').setView([{{ (gs1_lat + gs2_lat) / 2 }}, {{ (gs1_lon + gs2_lon) / 2 }}], 4);
