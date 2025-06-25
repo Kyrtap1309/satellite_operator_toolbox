@@ -551,141 +551,95 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
   });
 
   function initializeTimeline() {
-      const timelineData = {{ timeline_data|safe }};
-      const groups = {{ timeline_groups|safe }};
+    const timelineData = {{ timeline_data|safe }};
+    const groups = {{ timeline_groups|safe }};
 
-      if (timelineData.length === 0) {
-          document.querySelector('#visualization').innerHTML =
-              '<div class="d-flex align-items-center justify-content-center h-100 text-muted">' +
-              '<div class="text-center">' +
-              '<i class="fas fa-calendar-alt fa-3x mb-3"></i>' +
-              '<p>No scheduled subtasks yet</p>' +
-              '</div></div>';
-          return;
-      }
+    if (timelineData.length === 0) {
+        document.querySelector('#visualization').innerHTML =
+            '<div class="d-flex align-items-center justify-content-center h-100 text-muted">' +
+            '<div class="text-center">' +
+            '<i class="fas fa-calendar-alt fa-3x mb-3"></i>' +
+            '<p>No scheduled subtasks yet</p>' +
+            '</div></div>';
+        return;
+    }
 
-      const items = new vis.DataSet(timelineData);
-      const groupsDataSet = new vis.DataSet(groups);
+    const items = new vis.DataSet(timelineData);
+    const groupsDataSet = new vis.DataSet(groups);
 
-      // Calculate time range to determine appropriate scale
-      const dates = timelineData.flatMap(item => [new Date(item.start), new Date(item.end)]);
-      const minDate = new Date(Math.min(...dates));
-      const maxDate = new Date(Math.max(...dates));
-      const timeRange = maxDate - minDate;
+    const options = {
+        editable: false,
+        stack: false,
+        groupOrder: 'content',
+        zoomable: true,
+        moveable: true,
+        margin: {
+            item: 10,
+            axis: 5
+        },
+        // Remove fixed timeAxis configuration
+        format: {
+            minorLabels: function(date, scale, step) {
+                // Dynamic formatting based on current scale
+                if (scale === 'minute') return moment(date).format('HH:mm');
+                if (scale === 'hour') return moment(date).format('HH:mm');
+                if (scale === 'day') return moment(date).format('DD');
+                if (scale === 'month') return moment(date).format('MMM');
+                return moment(date).format('YYYY');
+            },
+            majorLabels: function(date, scale, step) {
+                // Dynamic formatting for major labels
+                if (scale === 'minute' || scale === 'hour') return moment(date).format('ddd DD/MM/YYYY');
+                if (scale === 'day') return moment(date).format('MMMM YYYY');
+                if (scale === 'month') return moment(date).format('YYYY');
+                return '';
+            }
+        },
+        // Allow fine-grained zooming
+        zoomMin: 1000 * 60 * 15, // Minimum zoom: 15 minutes
+        zoomMax: 1000 * 60 * 60 * 24 * 365 * 2, // Maximum zoom: 2 years
+        onLoad: function (item, element) {
+            // Customize item rendering
+            element.style.backgroundColor = item.completed ? 'rgba(40, 167, 69, 0.6)' : 'rgba(0, 123, 255, 0.6)';
+            element.style.borderColor = item.completed ? '#28a745' : '#007bff';
+        },
+        onSelect: function (properties) {
+            // Handle item select
+            const selectedItem = items.get(properties.items[0]);
+            if (selectedItem) {
+                openEditSubtaskModal(selectedItem.id);
+            }
+        },
+        tooltip: {
+            followMouse: true,
+            template: function (item) {
+                return `<div><strong>${item.title}</strong></div>
+                        <div>Start: ${moment(item.start).format('YYYY-MM-DD HH:mm')}</div>
+                        <div>End: ${moment(item.end).format('YYYY-MM-DD HH:mm')}</div>`;
+            }
+        }
+    };
 
-      // Determine scale based on time range
-      let timeAxisOptions = {
-          scale: 'hour',
-          step: 1
-      };
+    const timeline = new vis.Timeline(document.getElementById('visualization'), items, groupsDataSet, options);
 
-      // If range is more than 7 days, use day scale
-      if (timeRange > 7 * 24 * 60 * 60 * 1000) {
-          timeAxisOptions = {
-              scale: 'day',
-              step: 1
-          };
-      }
-      // If range is more than 3 days, use 12-hour steps
-      else if (timeRange > 3 * 24 * 60 * 60 * 1000) {
-          timeAxisOptions = {
-              scale: 'hour',
-              step: 12
-          };
-      }
-      // If range is more than 1 day, use 6-hour steps
-      else if (timeRange > 24 * 60 * 60 * 1000) {
-          timeAxisOptions = {
-              scale: 'hour',
-              step: 6
-          };
-      }
-      // If range is more than 12 hours, use 3-hour steps
-      else if (timeRange > 12 * 60 * 60 * 1000) {
-          timeAxisOptions = {
-              scale: 'hour',
-              step: 3
-          };
-      }
+    // Adjust timeline height based on content
+    const adjustTimelineHeight = () => {
+        const container = document.querySelector('.timeline-container');
+        const items = container.querySelectorAll('.vis-item');
+        if (items.length > 0) {
+            const maxHeight = Array.from(items).reduce((max, item) => {
+                const itemHeight = item.offsetHeight;
+                return Math.max(max, itemHeight);
+            }, 0);
+            container.style.height = `${maxHeight + 50}px`;
+        }
+    };
 
-      const options = {
-          editable: false,
-          stack: false,
-          groupOrder: 'content',
-          margin: {
-              item: 10,
-              axis: 5
-          },
-          onLoad: function (item, element) {
-              // Customize item rendering
-              element.style.backgroundColor = item.completed ? 'rgba(40, 167, 69, 0.6)' : 'rgba(0, 123, 255, 0.6)';
-              element.style.borderColor = item.completed ? '#28a745' : '#007bff';
-          },
-          onSelect: function (properties) {
-              // Handle item select
-              const selectedItem = items.get(properties.items[0]);
-              if (selectedItem) {
-                  openEditSubtaskModal(selectedItem.id);
-              }
-          },
-          onTimeChange: function (item, newStart, newEnd, options) {
-              // Handle item time change
-              updateSubtaskTime(item.id, newStart, newEnd);
-          },
-          onMove: function (item, newStart, newEnd, oldStart, oldEnd, options) {
-              // Handle item move
-              updateSubtaskTime(item.id, newStart, newEnd);
-          },
-          onResize: function (item, newStart, newEnd, oldStart, oldEnd, options) {
-              // Handle item resize
-              updateSubtaskTime(item.id, newStart, newEnd);
-          },
-          tooltip: {
-              followMouse: true,
-              template: function (item) {
-                  return `<div><strong>${item.title}</strong></div>
-                          <div>Start: ${moment(item.start).format('YYYY-MM-DD HH:mm')}</div>
-                          <div>End: ${moment(item.end).format('YYYY-MM-DD HH:mm')}</div>`;
-              }
-          },
-          timeAxis: {
-              scale: timeAxisOptions.scale,
-              step: timeAxisOptions.step,
-              format: {
-                  minor: {
-                      scale: 'hour',
-                      step: 1,
-                      format: 'HH:mm'
-                  },
-                  major: {
-                      scale: 'day',
-                      step: 1,
-                      format: 'MMM D'
-                  }
-              }
-          }
-      };
+    // Initial adjustment
+    adjustTimelineHeight();
 
-      const timeline = new vis.Timeline(document.getElementById('visualization'), items, groupsDataSet, options);
-
-      // Adjust timeline height based on content
-      const adjustTimelineHeight = () => {
-          const container = document.querySelector('.timeline-container');
-          const items = container.querySelectorAll('.vis-item');
-          if (items.length > 0) {
-              const maxHeight = Array.from(items).reduce((max, item) => {
-                  const itemHeight = item.offsetHeight;
-                  return Math.max(max, itemHeight);
-              }, 0);
-              container.style.height = `${maxHeight + 50}px`;
-          }
-      };
-
-      // Initial adjustment
-      adjustTimelineHeight();
-
-      // Re-adjust on window resize
-      window.addEventListener('resize', adjustTimelineHeight);
+    // Re-adjust on window resize
+    window.addEventListener('resize', adjustTimelineHeight);
   }
 
   function toggleSubtask(taskId, subtaskId) {

@@ -514,42 +514,6 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
       const dates = timelineData.flatMap(item => [new Date(item.start), new Date(item.end)]);
       const minDate = new Date(Math.min(...dates));
       const maxDate = new Date(Math.max(...dates));
-      const timeRange = maxDate - minDate;
-
-      // Determine scale based on time range
-      let timeAxisOptions = {
-          scale: 'hour',
-          step: 1
-      };
-
-      // If range is more than 7 days, use day scale
-      if (timeRange > 7 * 24 * 60 * 60 * 1000) {
-          timeAxisOptions = {
-              scale: 'day',
-              step: 1
-          };
-      }
-      // If range is more than 2 days, use 6-hour steps
-      else if (timeRange > 2 * 24 * 60 * 60 * 1000) {
-          timeAxisOptions = {
-              scale: 'hour',
-              step: 6
-          };
-      }
-      // If range is more than 1 day, use 3-hour steps
-      else if (timeRange > 24 * 60 * 60 * 1000) {
-          timeAxisOptions = {
-              scale: 'hour',
-              step: 3
-          };
-      }
-      // If range is more than 12 hours, use 2-hour steps
-      else if (timeRange > 12 * 60 * 60 * 1000) {
-          timeAxisOptions = {
-              scale: 'hour',
-              step: 2
-          };
-      }
 
       const container = document.getElementById('visualization');
       const options = {
@@ -557,19 +521,22 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
           moveable: true,
           stack: true,
           orientation: 'top',
-          timeAxis: timeAxisOptions,
+          // Remove fixed timeAxis configuration to allow dynamic scaling
           format: {
-              minorLabels: {
-                  hour: 'HH:mm',
-                  day: 'DD',
-                  month: 'MMM',
-                  year: 'YYYY'
+              minorLabels: function(date, scale, step) {
+                  // Dynamic formatting based on current scale
+                  if (scale === 'minute') return moment(date).format('HH:mm');
+                  if (scale === 'hour') return moment(date).format('HH:mm');
+                  if (scale === 'day') return moment(date).format('DD');
+                  if (scale === 'month') return moment(date).format('MMM');
+                  return moment(date).format('YYYY');
               },
-              majorLabels: {
-                  hour: 'ddd DD/MM',
-                  day: 'MMMM YYYY',
-                  month: 'YYYY',
-                  year: ''
+              majorLabels: function(date, scale, step) {
+                  // Dynamic formatting for major labels
+                  if (scale === 'minute' || scale === 'hour') return moment(date).format('ddd DD/MM');
+                  if (scale === 'day') return moment(date).format('MMMM YYYY');
+                  if (scale === 'month') return moment(date).format('YYYY');
+                  return '';
               }
           },
           margin: {
@@ -580,41 +547,16 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
           },
           height: '350px',
           min: new Date(minDate.getTime() - 60 * 60 * 1000), // 1 hour before first item
-          max: new Date(maxDate.getTime() + 60 * 60 * 1000)   // 1 hour after last item
+          max: new Date(maxDate.getTime() + 60 * 60 * 1000), // 1 hour after last item
+          // Allow automatic scaling based on zoom level
+          zoomMin: 1000 * 60 * 15, // Minimum zoom: 15 minutes
+          zoomMax: 1000 * 60 * 60 * 24 * 365 * 2 // Maximum zoom: 2 years
       };
 
       const timeline = new vis.Timeline(container, items, groupsDataSet, options);
 
-      // Add zoom controls
-      timeline.on('rangechanged', function() {
-          // Adjust labels based on current zoom level
-          const range = timeline.getWindow();
-          const duration = range.end - range.start;
-
-          // Dynamic label formatting based on zoom level
-          if (duration < 24 * 60 * 60 * 1000) { // Less than 1 day
-              timeline.setOptions({
-                  format: {
-                      minorLabels: { hour: 'HH:mm' },
-                      majorLabels: { hour: 'ddd DD/MM' }
-                  }
-              });
-          } else if (duration < 7 * 24 * 60 * 60 * 1000) { // Less than 1 week
-              timeline.setOptions({
-                  format: {
-                      minorLabels: { day: 'DD' },
-                      majorLabels: { day: 'MMM YYYY' }
-                  }
-              });
-          } else {
-              timeline.setOptions({
-                  format: {
-                      minorLabels: { day: 'DD/MM' },
-                      majorLabels: { month: 'YYYY' }
-                  }
-              });
-          }
-      });
+      // Remove the rangechanged event listener that was forcing specific scales
+      // and let vis-timeline handle automatic scaling
   }
 
   function addSubtask(taskId) {
