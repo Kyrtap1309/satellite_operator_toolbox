@@ -203,14 +203,13 @@ class TodoService:
             if not task:
                 continue
 
-            # Use list.extend with list comprehension for better performance
             timeline_data.extend(
                 [
                     {
                         "id": f"task_{task.id}_subtask_{subtask.id}",
                         "content": f"{subtask.title}",
-                        "start": subtask.start_time.isoformat() + "Z",  # Add Z to indicate UTC
-                        "end": subtask.end_time.isoformat() + "Z",  # Add Z to indicate UTC
+                        "start": subtask.start_time.strftime("%Y-%m-%dT%H:%M:%S.000Z"),  # Force UTC format
+                        "end": subtask.end_time.strftime("%Y-%m-%dT%H:%M:%S.000Z"),  # Force UTC format
                         "group": f"task_{task.id}",
                         "className": "completed" if subtask.completed else "pending",
                         "title": f"{task.title} - {subtask.title}\n{subtask.description}",

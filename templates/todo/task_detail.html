@@ -31,7 +31,8 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
   }
 
   .timeline-container {
-    height: 500px;
+    min-height: 200px;
+    max-height: 600px;
     border: 1px solid #dee2e6;
     border-radius: 4px;
     overflow: hidden;
@@ -248,20 +249,23 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
           <div class="col-md-6">
             <small class="text-muted">
               <i class="fas fa-clock"></i>
-              <strong>Start:</strong> {{ subtask.start_time.strftime('%Y-%m-%d %H:%M') }}
+              <strong>Start:</strong> {{ subtask.start_time.strftime('%Y-%m-%d
+              %H:%M') }}
             </small>
           </div>
           <div class="col-md-6">
             <small class="text-muted">
               <i class="fas fa-clock"></i>
-              <strong>End:</strong> {{ subtask.end_time.strftime('%Y-%m-%d %H:%M') }}
+              <strong>End:</strong> {{ subtask.end_time.strftime('%Y-%m-%d
+              %H:%M') }}
             </small>
           </div>
         </div>
         <div class="mt-2">
           <small class="text-muted">
             <i class="fas fa-hourglass-half"></i>
-            Duration: {{ "%.1f"|format((subtask.end_time - subtask.start_time).total_seconds() / 3600) }} hours
+            Duration: {{ "%.1f"|format((subtask.end_time -
+            subtask.start_time).total_seconds() / 3600) }} hours
           </small>
         </div>
         {% else %}
@@ -328,7 +332,7 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
               rows="2"
             ></textarea>
           </div>
-          
+
           <!-- Schedule Toggle -->
           <div class="mb-3">
             <div class="form-check">
@@ -346,7 +350,7 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
           </div>
 
           <!-- Schedule Fields -->
-          <div id="schedule_fields" style="display: none;">
+          <div id="schedule_fields" style="display: none">
             <div class="row">
               <div class="col-md-6">
                 <label for="subtask_start_date" class="form-label"
@@ -373,7 +377,9 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
             </div>
             <div class="row mt-3">
               <div class="col-md-6">
-                <label for="subtask_end_date" class="form-label">End Date</label>
+                <label for="subtask_end_date" class="form-label"
+                  >End Date</label
+                >
                 <input
                   type="date"
                   class="form-control"
@@ -382,7 +388,9 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
                 />
               </div>
               <div class="col-md-6">
-                <label for="subtask_end_time" class="form-label">End Time</label>
+                <label for="subtask_end_time" class="form-label"
+                  >End Time</label
+                >
                 <input
                   type="time"
                   class="form-control"
@@ -427,14 +435,12 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
           name="task_id"
           value="{{ task.id }}"
         />
-        <input
-          type="hidden"
-          id="edit_subtask_id"
-          name="subtask_id"
-        />
+        <input type="hidden" id="edit_subtask_id" name="subtask_id" />
         <div class="modal-body">
           <div class="mb-3">
-            <label for="edit_subtask_title" class="form-label">Subtask Title</label>
+            <label for="edit_subtask_title" class="form-label"
+              >Subtask Title</label
+            >
             <input
               type="text"
               class="form-control"
@@ -454,7 +460,7 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
               rows="2"
             ></textarea>
           </div>
-          
+
           <!-- Schedule Toggle -->
           <div class="mb-3">
             <div class="form-check">
@@ -472,7 +478,7 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
           </div>
 
           <!-- Schedule Fields -->
-          <div id="edit_schedule_fields" style="display: none;">
+          <div id="edit_schedule_fields" style="display: none">
             <div class="row">
               <div class="col-md-6">
                 <label for="edit_subtask_start_date" class="form-label"
@@ -499,7 +505,9 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
             </div>
             <div class="row mt-3">
               <div class="col-md-6">
-                <label for="edit_subtask_end_date" class="form-label">End Date</label>
+                <label for="edit_subtask_end_date" class="form-label"
+                  >End Date</label
+                >
                 <input
                   type="date"
                   class="form-control"
@@ -508,7 +516,9 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
                 />
               </div>
               <div class="col-md-6">
-                <label for="edit_subtask_end_time" class="form-label">End Time</label>
+                <label for="edit_subtask_end_time" class="form-label"
+                  >End Time</label
+                >
                 <input
                   type="time"
                   class="form-control"
@@ -552,7 +562,6 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
 
   function initializeTimeline() {
     const timelineData = {{ timeline_data|safe }};
-    const groups = {{ timeline_groups|safe }};
 
     if (timelineData.length === 0) {
         document.querySelector('#visualization').innerHTML =
@@ -564,81 +573,83 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
         return;
     }
 
-    const items = new vis.DataSet(timelineData);
+    // Create groups - one for each subtask instead of grouping by task
+    const groups = timelineData.map((item, index) => ({
+        id: item.id,
+        content: item.content,
+        order: index
+    }));
+
+    // Update timeline data to use individual subtask groups
+    const updatedTimelineData = timelineData.map(item => ({
+        ...item,
+        group: item.id // Each subtask uses its own ID as group
+    }));
+
+    const items = new vis.DataSet(updatedTimelineData);
     const groupsDataSet = new vis.DataSet(groups);
 
     const options = {
         editable: false,
         stack: false,
-        groupOrder: 'content',
+        groupOrder: 'order',
         zoomable: true,
         moveable: true,
         margin: {
             item: 10,
             axis: 5
         },
-        // Remove fixed timeAxis configuration
+        // Force UTC time zone
+        moment: function(date) {
+            return moment.utc(date);
+        },
         format: {
             minorLabels: function(date, scale, step) {
-                // Dynamic formatting based on current scale
-                if (scale === 'minute') return moment(date).format('HH:mm');
-                if (scale === 'hour') return moment(date).format('HH:mm');
-                if (scale === 'day') return moment(date).format('DD');
-                if (scale === 'month') return moment(date).format('MMM');
-                return moment(date).format('YYYY');
+                // Use UTC formatting
+                if (scale === 'minute') return moment.utc(date).format('HH:mm');
+                if (scale === 'hour') return moment.utc(date).format('HH:mm');
+                if (scale === 'day') return moment.utc(date).format('DD');
+                if (scale === 'month') return moment.utc(date).format('MMM');
+                return moment.utc(date).format('YYYY');
             },
             majorLabels: function(date, scale, step) {
-                // Dynamic formatting for major labels
-                if (scale === 'minute' || scale === 'hour') return moment(date).format('ddd DD/MM/YYYY');
-                if (scale === 'day') return moment(date).format('MMMM YYYY');
-                if (scale === 'month') return moment(date).format('YYYY');
+                // Use UTC formatting
+                if (scale === 'minute' || scale === 'hour') return moment.utc(date).format('ddd DD/MM/YYYY UTC');
+                if (scale === 'day') return moment.utc(date).format('MMMM YYYY UTC');
+                if (scale === 'month') return moment.utc(date).format('YYYY UTC');
                 return '';
             }
         },
-        // Allow fine-grained zooming
-        zoomMin: 1000 * 60 * 15, // Minimum zoom: 15 minutes
-        zoomMax: 1000 * 60 * 60 * 24 * 365 * 2, // Maximum zoom: 2 years
-        onLoad: function (item, element) {
-            // Customize item rendering
-            element.style.backgroundColor = item.completed ? 'rgba(40, 167, 69, 0.6)' : 'rgba(0, 123, 255, 0.6)';
-            element.style.borderColor = item.completed ? '#28a745' : '#007bff';
-        },
-        onSelect: function (properties) {
-            // Handle item select
-            const selectedItem = items.get(properties.items[0]);
-            if (selectedItem) {
-                openEditSubtaskModal(selectedItem.id);
-            }
-        },
+        zoomMin: 1000 * 60 * 15,
+        zoomMax: 1000 * 60 * 60 * 24 * 365 * 2,
+        showCurrentTime: true,
         tooltip: {
             followMouse: true,
             template: function (item) {
                 return `<div><strong>${item.title}</strong></div>
-                        <div>Start: ${moment(item.start).format('YYYY-MM-DD HH:mm')}</div>
-                        <div>End: ${moment(item.end).format('YYYY-MM-DD HH:mm')}</div>`;
+                        <div>Start: ${moment.utc(item.start).format('YYYY-MM-DD HH:mm')} UTC</div>
+                        <div>End: ${moment.utc(item.end).format('YYYY-MM-DD HH:mm')} UTC</div>`;
             }
         }
     };
 
     const timeline = new vis.Timeline(document.getElementById('visualization'), items, groupsDataSet, options);
+    
+    // Set current time to UTC
+    timeline.setCurrentTime(moment.utc().toDate());
 
-    // Adjust timeline height based on content
+    // Adjust timeline height based on number of subtasks
     const adjustTimelineHeight = () => {
+        const numberOfSubtasks = timelineData.length;
+        const minHeight = 200;
+        const rowHeight = 60;
+        const calculatedHeight = Math.max(minHeight, numberOfSubtasks * rowHeight + 100);
+
         const container = document.querySelector('.timeline-container');
-        const items = container.querySelectorAll('.vis-item');
-        if (items.length > 0) {
-            const maxHeight = Array.from(items).reduce((max, item) => {
-                const itemHeight = item.offsetHeight;
-                return Math.max(max, itemHeight);
-            }, 0);
-            container.style.height = `${maxHeight + 50}px`;
-        }
+        container.style.height = `${calculatedHeight}px`;
     };
 
-    // Initial adjustment
     adjustTimelineHeight();
-
-    // Re-adjust on window resize
     window.addEventListener('resize', adjustTimelineHeight);
   }
 
@@ -758,14 +769,14 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
   function toggleScheduleFields() {
       const checkbox = document.getElementById('subtask_scheduled');
       const fields = document.getElementById('schedule_fields');
-      
+
       if (checkbox.checked) {
           fields.style.display = 'block';
           // Set default values
           const today = new Date();
           const tomorrow = new Date(today);
           tomorrow.setDate(tomorrow.getDate() + 1);
-          
+
           document.getElementById('subtask_start_date').value = today.toISOString().split('T')[0];
           document.getElementById('subtask_end_date').value = tomorrow.toISOString().split('T')[0];
           document.getElementById('subtask_start_time').value = '09:00';
@@ -778,7 +789,7 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
   function toggleEditScheduleFields() {
       const checkbox = document.getElementById('edit_subtask_scheduled');
       const fields = document.getElementById('edit_schedule_fields');
-      
+
       fields.style.display = checkbox.checked ? 'block' : 'none';
   }
 
@@ -787,10 +798,10 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
       document.getElementById('edit_subtask_id').value = subtaskId;
       document.getElementById('edit_subtask_title').value = title;
       document.getElementById('edit_subtask_description').value = description;
-      
+
       const hasSchedule = startDate && startTime && endDate && endTime;
       document.getElementById('edit_subtask_scheduled').checked = hasSchedule;
-      
+
       if (hasSchedule) {
           document.getElementById('edit_subtask_start_date').value = startDate;
           document.getElementById('edit_subtask_start_time').value = startTime;
@@ -800,7 +811,7 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
       } else {
           document.getElementById('edit_schedule_fields').style.display = 'none';
       }
-      
+
       // Show the modal
       const modal = new bootstrap.Modal(document.getElementById('editSubtaskModal'));
       modal.show();
@@ -810,17 +821,17 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
       // Clear the form
       document.getElementById('subtask_title').value = '';
       document.getElementById('subtask_description').value = '';
-      
+
       // Set default dates and times
       const today = new Date();
       const tomorrow = new Date(today);
       tomorrow.setDate(tomorrow.getDate() + 1);
-      
+
       document.getElementById('subtask_start_date').value = today.toISOString().split('T')[0];
       document.getElementById('subtask_end_date').value = tomorrow.toISOString().split('T')[0];
       document.getElementById('subtask_start_time').value = '09:00';
       document.getElementById('subtask_end_time').value = '10:00';
-      
+
       // Show the modal
       const modal = new bootstrap.Modal(document.getElementById('subtaskModal'));
       modal.show();
