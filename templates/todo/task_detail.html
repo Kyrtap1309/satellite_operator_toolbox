@@ -666,5 +666,51 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
           console.error('Error updating stats:', error);
       });
   }
+
+  function deleteTask(taskId) {
+      if (confirm('Are you sure you want to delete this task and all its subtasks?')) {
+          fetch(`{{ url_for('todo.delete_task') }}`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({task_id: taskId})
+          }).then(response => {
+              if (response.ok) {
+                  // Redirect to todo index after successful deletion
+                  window.location.href = "{{ url_for('todo.todo_index') }}";
+              } else {
+                  alert('Failed to delete task. Please try again.');
+              }
+          }).catch(error => {
+              console.error('Error deleting task:', error);
+              alert('Failed to delete task. Please try again.');
+          });
+      }
+  }
+
+  function deleteSubtask(taskId, subtaskId) {
+      if (confirm('Are you sure you want to delete this subtask?')) {
+          fetch(`{{ url_for('todo.delete_subtask') }}`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  task_id: taskId,
+                  subtask_id: subtaskId
+              })
+          }).then(response => {
+              if (response.ok) {
+                  location.reload();
+              } else {
+                  alert('Failed to delete subtask. Please try again.');
+              }
+          }).catch(error => {
+              console.error('Error deleting subtask:', error);
+              alert('Failed to delete subtask. Please try again.');
+          });
+      }
+  }
 </script>
 {% endblock %}
