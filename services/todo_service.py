@@ -35,12 +35,19 @@ class TodoService:
                         logger.info(f"Processing task: {task_data.get('title', 'Unknown')}")
                         subtasks = []
                         for subtask_data in task_data.get("subtasks", []):
+                            start_time = None
+                            end_time = None
+                            if subtask_data.get("start_time"):
+                                start_time = datetime.fromisoformat(subtask_data["start_time"])
+                            if subtask_data.get("end_time"):
+                                end_time = datetime.fromisoformat(subtask_data["end_time"])
+
                             subtask = SubTask(
                                 id=subtask_data["id"],
                                 title=subtask_data["title"],
                                 description=subtask_data["description"],
-                                start_time=datetime.fromisoformat(subtask_data["start_time"]),
-                                end_time=datetime.fromisoformat(subtask_data["end_time"]),
+                                start_time=start_time,
+                                end_time=end_time,
                                 completed=subtask_data.get("completed", False),
                                 created_at=datetime.fromisoformat(subtask_data.get("created_at", datetime.now().isoformat())),
                             )
@@ -75,8 +82,8 @@ class TodoService:
                         "id": subtask.id,
                         "title": subtask.title,
                         "description": subtask.description,
-                        "start_time": subtask.start_time.isoformat(),
-                        "end_time": subtask.end_time.isoformat(),
+                        "start_time": subtask.start_time.isoformat() if subtask.start_time else None,
+                        "end_time": subtask.end_time.isoformat() if subtask.end_time else None,
                         "completed": subtask.completed,
                         "created_at": subtask.created_at.isoformat() if subtask.created_at else datetime.now().isoformat(),
                     }
@@ -116,17 +123,22 @@ class TodoService:
         self.save_tasks()
         return task
 
-    def add_subtask(self, task_id: int, title: str, description: str, start_time: datetime, end_time: datetime) -> SubTask | None:
-        """Add subtask to existing task."""
+    def add_subtask(self, task_id: int, title: str, description: str, start_time: datetime | None, end_time: datetime | None) -> bool:
+        """Add subtask to existing task"""
         task = self.get_task_by_id(task_id)
         if not task:
-            return None
+            return False
 
-        new_id = max([st.id for st in task.subtasks], default=0) + 1
-        subtask = SubTask(id=new_id, title=title, description=description, start_time=start_time, end_time=end_time)
+        max_id = 0
+        for existing_task in self.tasks:
+            for subtask in existing_task.subtasks:
+                max_id = max(max_id, subtask.id)
+
+        subtask = SubTask(id=max_id + 1, title=title, description=description, start_time=start_time, end_time=end_time)
+
         task.subtasks.append(subtask)
         self.save_tasks()
-        return subtask
+        return True
 
     def toggle_subtask_completion(self, task_id: int, subtask_id: int) -> bool:
         """Toggle subtask completion status"""
@@ -175,18 +187,20 @@ class TodoService:
             if not task:
                 continue
 
+            # Use list.extend with list comprehension for better performance
             timeline_data.extend(
                 [
                     {
                         "id": f"task_{task.id}_subtask_{subtask.id}",
                         "content": f"{subtask.title}",
-                        "start": subtask.start_time.isoformat(),
-                        "end": subtask.end_time.isoformat(),
+                        "start": subtask.start_time.isoformat() + "Z",  # Add Z to indicate UTC
+                        "end": subtask.end_time.isoformat() + "Z",  # Add Z to indicate UTC
                         "group": f"task_{task.id}",
                         "className": "completed" if subtask.completed else "pending",
                         "title": f"{task.title} - {subtask.title}\n{subtask.description}",
                     }
                     for subtask in task.subtasks
+                    if subtask.start_time is not None and subtask.end_time is not None
                 ]
             )
 
@@ -204,3 +218,23 @@ class TodoService:
             groups.append({"id": f"task_{task.id}", "content": f"{task.title} ({task.completion_percentage:.0f}%)"})
 
         return groups
+
+    def edit_subtask(
+        self, task_id: int, subtask_id: int, title: str, description: str, start_time: datetime | None, end_time: datetime | None
+    ) -> bool:
+        """Edit existing subtask"""
+        task = self.get_task_by_id(task_id)
+        if not task:
+            return False
+
+        subtask = next((st for st in task.subtasks if st.id == subtask_id), None)
+        if not subtask:
+            return False
+
+        subtask.title = title
+        subtask.description = description
+        subtask.start_time = start_time
+        subtask.end_time = end_time
+
+        self.save_tasks()
+        return True

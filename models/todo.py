@@ -7,8 +7,8 @@ class SubTask:
     id: int
     title: str
     description: str
-    start_time: datetime
-    end_time: datetime
+    start_time: datetime | None
+    end_time: datetime | None
     completed: bool = False
     created_at: datetime | None = None
 
@@ -39,6 +39,8 @@ class Task:
 
     @property
     def total_duration_hours(self) -> float:
-        total_seconds = sum((subtask.end_time - subtask.start_time).total_seconds() for subtask in self.subtasks)
+        total_seconds = sum(
+            (subtask.end_time - subtask.start_time).total_seconds() for subtask in self.subtasks if subtask.start_time and subtask.end_time
+        )
 
         return total_seconds / 3600

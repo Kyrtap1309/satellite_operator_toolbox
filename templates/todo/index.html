@@ -192,10 +192,16 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
                 onchange="toggleSubtask({{ task.id }}, {{ subtask.id }})"
               />
             </div>
+            {% if subtask.start_time and subtask.end_time %}
             <div class="small text-muted">
               {{ subtask.start_time.strftime('%H:%M') }} - {{
               subtask.end_time.strftime('%H:%M') }}
             </div>
+            {% else %}
+            <div class="small text-muted">
+              Not scheduled
+            </div>
+            {% endif %}
           </div>
           {% endfor %} {% if task.subtasks|length > 3 %}
           <small class="text-muted"

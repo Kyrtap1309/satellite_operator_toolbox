@@ -1,1 +1,506 @@
-[]
+[
+  {
+    "id": 1,
+    "title": "USA Imaging",
+    "description": "Obrazowanie West Coast 19 Czerwca",
+    "subtasks": [
+      {
+        "id": 1,
+        "title": "Payload Activation",
+        "description": "Aktywacja payloadu",
+        "start_time": "2025-06-18T19:03:00",
+        "end_time": "2025-06-18T19:13:00",
+        "completed": true,
+        "created_at": "2025-06-25T06:17:00.018175"
+      },
+      {
+        "id": 2,
+        "title": "Tilt Pointing na USA",
+        "description": "",
+        "start_time": "2025-06-18T18:00:00",
+        "end_time": "2025-06-18T20:00:00",
+        "completed": true,
+        "created_at": "2025-06-25T06:17:48.677083"
+      },
+      {
+        "id": 3,
+        "title": "Ground Tracking na Xlink",
+        "description": "",
+        "start_time": "2025-06-25T08:00:00",
+        "end_time": "2025-06-25T14:00:00",
+        "completed": true,
+        "created_at": "2025-06-25T06:19:36.171051"
+      },
+      {
+        "id": 4,
+        "title": "Aktywacja Xlink Sesji",
+        "description": "",
+        "start_time": "2025-06-25T08:34:00",
+        "end_time": "2025-06-25T08:41:00",
+        "completed": true,
+        "created_at": "2025-06-25T06:20:54.302818"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-25T06:16:06.718206"
+  },
+  {
+    "id": 2,
+    "title": "Russa Imaging",
+    "description": "Obrazowanie Rosji 19 Czerwca",
+    "subtasks": [
+      {
+        "id": 1,
+        "title": "Payload Activation",
+        "description": "Aktywacja Payloadu",
+        "start_time": "2025-06-19T06:00:00",
+        "end_time": "2025-06-19T06:10:00",
+        "completed": true,
+        "created_at": "2025-06-25T06:22:41.582328"
+      },
+      {
+        "id": 2,
+        "title": "Tilt Pointing na Rosje",
+        "description": "",
+        "start_time": "2025-06-19T05:00:00",
+        "end_time": "2025-06-19T07:00:00",
+        "completed": true,
+        "created_at": "2025-06-25T06:23:25.612552"
+      },
+      {
+        "id": 5,
+        "title": "Ground Tracking na Xlink",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T06:57:29.770136"
+      },
+      {
+        "id": 6,
+        "title": "Aktywacja Xlink Sesji",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T07:28:25.591058"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-25T06:22:03.981655"
+  },
+  {
+    "id": 3,
+    "title": "Obrazowanie Salar De Uyuni",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 7,
+        "title": "Payload Activation",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": true,
+        "created_at": "2025-06-25T07:32:03.108367"
+      },
+      {
+        "id": 8,
+        "title": "Tilt Pointing na Salar De Uyuni",
+        "description": "Pointing na Salar De Uyuni",
+        "start_time": "2025-06-21T14:00:00",
+        "end_time": "2025-06-21T15:30:00",
+        "completed": true,
+        "created_at": "2025-06-25T07:34:39.712425"
+      },
+      {
+        "id": 9,
+        "title": "Ground Tracking na Xlink",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T07:35:03.435200"
+      },
+      {
+        "id": 10,
+        "title": "Aktywacja Xlink Sesji",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T07:35:12.346744"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-25T07:29:17.453043"
+  },
+  {
+    "id": 4,
+    "title": "GPU 25 czerwca 2025 13:00 UTC",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 11,
+        "title": "Aktywacja GPSa",
+        "description": "",
+        "start_time": "2025-06-25T12:59:00",
+        "end_time": "2025-06-25T13:09:00",
+        "completed": true,
+        "created_at": "2025-06-25T07:36:24.087904"
+      },
+      {
+        "id": 12,
+        "title": "Sciagniecie outputu",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T07:36:35.505469"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-25T07:35:43.891120"
+  },
+  {
+    "id": 5,
+    "title": "GPU 25 czerwca 2025 01:00 UTC",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 13,
+        "title": "Aktywacja GPU",
+        "description": "",
+        "start_time": "2025-06-25T00:59:00",
+        "end_time": "2025-06-25T01:09:00",
+        "completed": true,
+        "created_at": "2025-06-25T07:37:36.289751"
+      },
+      {
+        "id": 14,
+        "title": "Sciagniecie outputu",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T07:37:49.690708"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-25T07:37:07.335554"
+  },
+  {
+    "id": 6,
+    "title": "Puvirnitung Imaging",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 15,
+        "title": "Aktywacja Payloadu",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": true,
+        "created_at": "2025-06-25T07:52:12.017082"
+      },
+      {
+        "id": 16,
+        "title": "Tilt Pointing na Puvirnituq",
+        "description": "",
+        "start_time": "2025-06-24T16:00:00",
+        "end_time": "2025-06-24T17:00:00",
+        "completed": true,
+        "created_at": "2025-06-25T07:52:35.313519"
+      },
+      {
+        "id": 17,
+        "title": "Ground Tracking na Xlink",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T07:56:04.202256"
+      },
+      {
+        "id": 18,
+        "title": "Aktywacja Xlinka",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T07:56:10.944798"
+      },
+      {
+        "id": 35,
+        "title": "Sprawdz czy był pointing ",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:09:54.422910"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-25T07:49:23.671887"
+  },
+  {
+    "id": 7,
+    "title": "Chesapeake Imaging",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 19,
+        "title": "Aktywacja Payloadu",
+        "description": "",
+        "start_time": "2025-06-26T16:15:00",
+        "end_time": "2025-06-26T16:25:00",
+        "completed": false,
+        "created_at": "2025-06-25T07:57:20.625082"
+      },
+      {
+        "id": 20,
+        "title": "Tilt Pointing na Chesapeake",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:03:00.568493"
+      },
+      {
+        "id": 21,
+        "title": "Ground Tracking na Xlink",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:03:07.826133"
+      },
+      {
+        "id": 22,
+        "title": "Aktywacja Xlink Sesji",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:03:18.894791"
+      },
+      {
+        "id": 38,
+        "title": "Zweryfikuj Pointing",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:13:22.004198"
+      },
+      {
+        "id": 39,
+        "title": "Zweryfikuj Pointing",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:14:06.439905"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-25T07:56:27.982337"
+  },
+  {
+    "id": 8,
+    "title": "Apple Park Imaging",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 23,
+        "title": "Aktywacja Payloadu",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:04:37.815807"
+      },
+      {
+        "id": 24,
+        "title": "Tilt Pointing na Apple Park",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:04:55.348378"
+      },
+      {
+        "id": 25,
+        "title": "Ground Tracking na Xlink",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:05:00.735151"
+      },
+      {
+        "id": 26,
+        "title": "Aktywacja Xlink Sesji",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:05:04.317305"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-25T08:04:11.364972"
+  },
+  {
+    "id": 9,
+    "title": "Norilsk Imaging",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 27,
+        "title": "Aktywacja Payloadu",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:06:04.812908"
+      },
+      {
+        "id": 28,
+        "title": "Tilt Pointing na Norilsk",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:06:17.067116"
+      },
+      {
+        "id": 29,
+        "title": "Ground Tracking na Xlink",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:06:28.881256"
+      },
+      {
+        "id": 30,
+        "title": "Aktywacja Xlink Sesji",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:06:37.635569"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-25T08:05:37.168908"
+  },
+  {
+    "id": 10,
+    "title": "Namibia Desert",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 31,
+        "title": "Aktywacja Payloadu",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:08:06.789787"
+      },
+      {
+        "id": 32,
+        "title": "Tilt Pointing na Namibie",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:08:22.179164"
+      },
+      {
+        "id": 33,
+        "title": "Ground Tracking na Xlink",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:08:30.062985"
+      },
+      {
+        "id": 34,
+        "title": "Aktywacja Xlink Sesji",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:08:38.281855"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-25T08:07:37.168074"
+  },
+  {
+    "id": 11,
+    "title": "GPS Update ",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 36,
+        "title": "Zainstaluj gps update 0.2.0",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": true,
+        "created_at": "2025-06-25T08:12:13.403996"
+      },
+      {
+        "id": 37,
+        "title": "Zweryfikuj instalację ",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:12:23.973262"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-25T08:11:38.911500"
+  },
+  {
+    "id": 12,
+    "title": "ADCS Service Update ",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 40,
+        "title": "Zainstaluj adcs service 1.8.4",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": true,
+        "created_at": "2025-06-25T08:30:44.296760"
+      },
+      {
+        "id": 41,
+        "title": "Pusc seda z zmianą zakresu pitchów ",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:31:01.030636"
+      },
+      {
+        "id": 42,
+        "title": "Zweryfikuj Seda i wersję adcsa ",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-25T08:31:17.624899"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-25T08:17:01.750318"
+  }
+]
