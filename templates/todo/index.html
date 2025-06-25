@@ -521,21 +521,24 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
           moveable: true,
           stack: true,
           orientation: 'top',
-          // Remove fixed timeAxis configuration to allow dynamic scaling
+          showCurrentTime: true,
+          // Force UTC time zone
+          moment: function(date) {
+              return moment.utc(date);
+          },
           format: {
               minorLabels: function(date, scale, step) {
-                  // Dynamic formatting based on current scale
-                  if (scale === 'minute') return moment(date).format('HH:mm');
-                  if (scale === 'hour') return moment(date).format('HH:mm');
-                  if (scale === 'day') return moment(date).format('DD');
-                  if (scale === 'month') return moment(date).format('MMM');
-                  return moment(date).format('YYYY');
+                  // Use UTC formatting
+                  if (scale === 'minute' || scale === 'hour') return moment.utc(date).format('HH:mm');
+                  if (scale === 'day') return moment.utc(date).format('DD');
+                  if (scale === 'month') return moment.utc(date).format('MMM');
+                  return moment.utc(date).format('YYYY');
               },
               majorLabels: function(date, scale, step) {
-                  // Dynamic formatting for major labels
-                  if (scale === 'minute' || scale === 'hour') return moment(date).format('ddd DD/MM');
-                  if (scale === 'day') return moment(date).format('MMMM YYYY');
-                  if (scale === 'month') return moment(date).format('YYYY');
+                  // Use UTC formatting with UTC label
+                  if (scale === 'minute' || scale === 'hour') return moment.utc(date).format('ddd DD/MM UTC');
+                  if (scale === 'day') return moment.utc(date).format('MMMM YYYY UTC');
+                  if (scale === 'month') return moment.utc(date).format('YYYY UTC');
                   return '';
               }
           },
@@ -546,17 +549,16 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
               }
           },
           height: '350px',
-          min: new Date(minDate.getTime() - 60 * 60 * 1000), // 1 hour before first item
-          max: new Date(maxDate.getTime() + 60 * 60 * 1000), // 1 hour after last item
-          // Allow automatic scaling based on zoom level
-          zoomMin: 1000 * 60 * 15, // Minimum zoom: 15 minutes
-          zoomMax: 1000 * 60 * 60 * 24 * 365 * 2 // Maximum zoom: 2 years
+          min: new Date(minDate.getTime() - 60 * 60 * 1000),
+          max: new Date(maxDate.getTime() + 60 * 60 * 1000),
+          zoomMin: 1000 * 60 * 15,
+          zoomMax: 1000 * 60 * 60 * 24 * 365 * 2
       };
 
       const timeline = new vis.Timeline(container, items, groupsDataSet, options);
-
-      // Remove the rangechanged event listener that was forcing specific scales
-      // and let vis-timeline handle automatic scaling
+      
+      // Set current time to UTC
+      timeline.setCurrentTime(moment.utc().toDate());
   }
 
   function addSubtask(taskId) {

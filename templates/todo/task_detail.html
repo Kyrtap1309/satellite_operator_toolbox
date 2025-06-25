@@ -599,46 +599,44 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
             item: 10,
             axis: 5
         },
+        // Force UTC time zone
+        moment: function(date) {
+            return moment.utc(date);
+        },
         format: {
             minorLabels: function(date, scale, step) {
-                if (scale === 'minute') return moment(date).format('HH:mm');
-                if (scale === 'hour') return moment(date).format('HH:mm');
-                if (scale === 'day') return moment(date).format('DD');
-                if (scale === 'month') return moment(date).format('MMM');
-                return moment(date).format('YYYY');
+                // Use UTC formatting
+                if (scale === 'minute') return moment.utc(date).format('HH:mm');
+                if (scale === 'hour') return moment.utc(date).format('HH:mm');
+                if (scale === 'day') return moment.utc(date).format('DD');
+                if (scale === 'month') return moment.utc(date).format('MMM');
+                return moment.utc(date).format('YYYY');
             },
             majorLabels: function(date, scale, step) {
-                if (scale === 'minute' || scale === 'hour') return moment(date).format('ddd DD/MM/YYYY');
-                if (scale === 'day') return moment(date).format('MMMM YYYY');
-                if (scale === 'month') return moment(date).format('YYYY');
+                // Use UTC formatting
+                if (scale === 'minute' || scale === 'hour') return moment.utc(date).format('ddd DD/MM/YYYY UTC');
+                if (scale === 'day') return moment.utc(date).format('MMMM YYYY UTC');
+                if (scale === 'month') return moment.utc(date).format('YYYY UTC');
                 return '';
             }
         },
         zoomMin: 1000 * 60 * 15,
         zoomMax: 1000 * 60 * 60 * 24 * 365 * 2,
-        onLoad: function (item, element) {
-            element.style.backgroundColor = item.completed ? 'rgba(40, 167, 69, 0.6)' : 'rgba(0, 123, 255, 0.6)';
-            element.style.borderColor = item.completed ? '#28a745' : '#007bff';
-        },
-        onSelect: function (properties) {
-            const selectedItem = items.get(properties.items[0]);
-            if (selectedItem) {
-                // Extract subtask ID from the item ID (format: "task_X_subtask_Y")
-                const subtaskId = selectedItem.id.split('_subtask_')[1];
-                openEditSubtaskModal(subtaskId);
-            }
-        },
+        showCurrentTime: true,
         tooltip: {
             followMouse: true,
             template: function (item) {
                 return `<div><strong>${item.title}</strong></div>
-                        <div>Start: ${moment(item.start).format('YYYY-MM-DD HH:mm')}</div>
-                        <div>End: ${moment(item.end).format('YYYY-MM-DD HH:mm')}</div>`;
+                        <div>Start: ${moment.utc(item.start).format('YYYY-MM-DD HH:mm')} UTC</div>
+                        <div>End: ${moment.utc(item.end).format('YYYY-MM-DD HH:mm')} UTC</div>`;
             }
         }
     };
 
     const timeline = new vis.Timeline(document.getElementById('visualization'), items, groupsDataSet, options);
+    
+    // Set current time to UTC
+    timeline.setCurrentTime(moment.utc().toDate());
 
     // Adjust timeline height based on number of subtasks
     const adjustTimelineHeight = () => {
