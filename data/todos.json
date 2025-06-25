@@ -42,7 +42,8 @@
       }
     ],
     "completed": false,
-    "created_at": "2025-06-25T06:16:06.718206"
+    "created_at": "2025-06-25T06:16:06.718206",
+    "sort_order": 0
   },
   {
     "id": 2,
@@ -87,7 +88,8 @@
       }
     ],
     "completed": false,
-    "created_at": "2025-06-25T06:22:03.981655"
+    "created_at": "2025-06-25T06:22:03.981655",
+    "sort_order": 1
   },
   {
     "id": 3,
@@ -132,7 +134,8 @@
       }
     ],
     "completed": false,
-    "created_at": "2025-06-25T07:29:17.453043"
+    "created_at": "2025-06-25T07:29:17.453043",
+    "sort_order": 2
   },
   {
     "id": 4,
@@ -159,7 +162,8 @@
       }
     ],
     "completed": false,
-    "created_at": "2025-06-25T07:35:43.891120"
+    "created_at": "2025-06-25T07:35:43.891120",
+    "sort_order": 3
   },
   {
     "id": 5,
@@ -186,7 +190,8 @@
       }
     ],
     "completed": false,
-    "created_at": "2025-06-25T07:37:07.335554"
+    "created_at": "2025-06-25T07:37:07.335554",
+    "sort_order": 4
   },
   {
     "id": 6,
@@ -240,7 +245,8 @@
       }
     ],
     "completed": false,
-    "created_at": "2025-06-25T07:49:23.671887"
+    "created_at": "2025-06-25T07:49:23.671887",
+    "sort_order": 7
   },
   {
     "id": 7,
@@ -303,7 +309,8 @@
       }
     ],
     "completed": false,
-    "created_at": "2025-06-25T07:56:27.982337"
+    "created_at": "2025-06-25T07:56:27.982337",
+    "sort_order": 8
   },
   {
     "id": 8,
@@ -316,7 +323,7 @@
         "description": "",
         "start_time": null,
         "end_time": null,
-        "completed": false,
+        "completed": true,
         "created_at": "2025-06-25T08:04:37.815807"
       },
       {
@@ -348,7 +355,8 @@
       }
     ],
     "completed": false,
-    "created_at": "2025-06-25T08:04:11.364972"
+    "created_at": "2025-06-25T08:04:11.364972",
+    "sort_order": 9
   },
   {
     "id": 9,
@@ -393,7 +401,8 @@
       }
     ],
     "completed": false,
-    "created_at": "2025-06-25T08:05:37.168908"
+    "created_at": "2025-06-25T08:05:37.168908",
+    "sort_order": 10
   },
   {
     "id": 10,
@@ -438,7 +447,8 @@
       }
     ],
     "completed": false,
-    "created_at": "2025-06-25T08:07:37.168074"
+    "created_at": "2025-06-25T08:07:37.168074",
+    "sort_order": 11
   },
   {
     "id": 11,
@@ -465,7 +475,8 @@
       }
     ],
     "completed": false,
-    "created_at": "2025-06-25T08:11:38.911500"
+    "created_at": "2025-06-25T08:11:38.911500",
+    "sort_order": 5
   },
   {
     "id": 12,
@@ -501,6 +512,7 @@
       }
     ],
     "completed": false,
-    "created_at": "2025-06-25T08:17:01.750318"
+    "created_at": "2025-06-25T08:17:01.750318",
+    "sort_order": 6
   }
 ]

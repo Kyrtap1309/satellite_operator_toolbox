@@ -25,6 +25,7 @@ class Task:
     subtasks: list[SubTask] = field(default_factory=list)
     created_at: datetime | None = None
     completed: bool = False
+    sort_order: int = 0
 
     def __post_init__(self) -> None:
         if self.created_at is None:

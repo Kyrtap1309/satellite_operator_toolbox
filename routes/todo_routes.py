@@ -15,13 +15,14 @@ todo_service = TodoService()
 
 @todo_bp.route("/")
 def todo_index() -> str:
-    """Display all tasks with timeline visualization"""
-    logger.info(f"TODO index accessed, found {len(todo_service.tasks)} tasks")
-    tasks = todo_service.get_all_tasks()
+    """Display all todo tasks"""
+    tasks = todo_service.get_all_tasks()  # This now returns sorted tasks
+    logger.info(f"TODO index accessed, found {len(tasks)} tasks")
+    logger.info("Rendering template with %d tasks", len(tasks))
+
     timeline_data = todo_service.get_timeline_data()
     timeline_groups = todo_service.get_timeline_groups()
 
-    logger.info(f"Rendering template with {len(tasks)} tasks")
     return render_template("todo/index.html", tasks=tasks, timeline_data=json.dumps(timeline_data), timeline_groups=json.dumps(timeline_groups))
 
 
@@ -263,3 +264,24 @@ def edit_subtask() -> Response:
         flash(f"Error updating subtask: {str(e)}", "error")
 
     return redirect(url_for("todo.task_details", task_id=task_id))
+
+
+@todo_bp.route("tasks/reorder", methods=["POST"])
+def reorder_tasks() -> tuple[Response, int] | Response:
+    """Reorder tasks"""
+    try:
+        data = request.get_json()
+        task_ids = data.get("task_ids", [])
+
+        if not task_ids:
+            return jsonify({"error": "No task IDs provided"}), 400
+
+        success = todo_service.reorder_tasks(task_ids)
+        if success:
+            return jsonify({"success": True})
+        else:
+            return jsonify({"error": "Failed to reorder tasks"}), 500
+
+    except Exception as e:
+        logger.error(f"Error in reorder_tasks route: {e}")
+        return jsonify({"error": "Internal server error"}), 500

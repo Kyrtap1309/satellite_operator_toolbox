@@ -60,6 +60,7 @@ class TodoService:
                             subtasks=subtasks,
                             completed=task_data.get("completed", False),
                             created_at=datetime.fromisoformat(task_data.get("created_at", datetime.now().isoformat())),
+                            sort_order=task_data.get("sort_order", 0),  # Add this line
                         )
                         self.tasks.append(task)
 
@@ -98,6 +99,7 @@ class TodoService:
                         "subtasks": subtasks_data,
                         "completed": task.completed,
                         "created_at": task.created_at.isoformat() if task.created_at else datetime.now().isoformat(),
+                        "sort_order": task.sort_order,  # Add this line
                     }
                 )
 
@@ -109,7 +111,21 @@ class TodoService:
 
     def get_all_tasks(self) -> list[Task]:
         """Get all tasks"""
-        return self.tasks
+        return sorted(self.tasks, key=lambda task: task.sort_order)
+
+    def reorder_tasks(self, task_ids: list[int]) -> bool:
+        """Reorder tasks based on provided task IDs list."""
+        try:
+            for index, task_id in enumerate(task_ids):
+                task = self.get_task_by_id(task_id)
+                if task:
+                    task.sort_order = index
+
+            self.save_tasks()
+            return True
+        except Exception as e:
+            logger.error(f"Error reordering tasks: {e}")
+            return False
 
     def get_task_by_id(self, task_id: int) -> Task | None:
         """Get task by ID"""
