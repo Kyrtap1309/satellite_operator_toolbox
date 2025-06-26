@@ -34,7 +34,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T06:22:03.981655",
-    "sort_order": 0
+    "sort_order": 1
   },
   {
     "id": 3,
@@ -98,127 +98,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T07:29:17.453043",
-    "sort_order": 1
-  },
-  {
-    "id": 4,
-    "title": "GPU 25 czerwca 2025 13:00 UTC",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 11,
-        "title": "Aktywacja GPSa",
-        "description": "",
-        "start_time": "2025-06-25T12:59:00",
-        "end_time": "2025-06-25T13:09:00",
-        "completed": true,
-        "created_at": "2025-06-25T07:36:24.087904"
-      },
-      {
-        "id": 12,
-        "title": "Ground Tracking na sciagniecie outputu",
-        "description": "",
-        "start_time": "2025-06-25T18:55:00",
-        "end_time": "2025-06-25T22:30:00",
-        "completed": true,
-        "created_at": "2025-06-25T07:36:35.505469"
-      },
-      {
-        "id": 43,
-        "title": "Aktywacja Xlink Sesji",
-        "description": "",
-        "start_time": "2025-06-25T20:33:00",
-        "end_time": "2025-06-25T20:40:00",
-        "completed": true,
-        "created_at": "2025-06-25T12:51:26.418412"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-06-25T07:35:43.891120",
     "sort_order": 2
-  },
-  {
-    "id": 5,
-    "title": "GPU 25 czerwca 2025 01:00 UTC",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 13,
-        "title": "Aktywacja GPU",
-        "description": "",
-        "start_time": "2025-06-25T00:59:00",
-        "end_time": "2025-06-25T01:09:00",
-        "completed": true,
-        "created_at": "2025-06-25T07:37:36.289751"
-      },
-      {
-        "id": 14,
-        "title": "Aktywacja Xlink Sesji",
-        "description": "",
-        "start_time": "2025-06-25T22:07:00",
-        "end_time": "2025-06-25T22:14:00",
-        "completed": true,
-        "created_at": "2025-06-25T07:37:49.690708"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-06-25T07:37:07.335554",
-    "sort_order": 3
-  },
-  {
-    "id": 6,
-    "title": "Puvirnitung Imaging",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 15,
-        "title": "Aktywacja Payloadu",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": true,
-        "created_at": "2025-06-25T07:52:12.017082"
-      },
-      {
-        "id": 16,
-        "title": "Tilt Pointing na Puvirnituq",
-        "description": "",
-        "start_time": "2025-06-24T16:00:00",
-        "end_time": "2025-06-24T17:00:00",
-        "completed": true,
-        "created_at": "2025-06-25T07:52:35.313519"
-      },
-      {
-        "id": 17,
-        "title": "Ground Tracking na Xlink",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": false,
-        "created_at": "2025-06-25T07:56:04.202256"
-      },
-      {
-        "id": 18,
-        "title": "Aktywacja Xlinka",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": false,
-        "created_at": "2025-06-25T07:56:10.944798"
-      },
-      {
-        "id": 35,
-        "title": "Sprawdz czy był pointing ",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": false,
-        "created_at": "2025-06-25T08:09:54.422910"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-06-25T07:49:23.671887",
-    "sort_order": 8
   },
   {
     "id": 7,
@@ -273,7 +153,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T07:56:27.982337",
-    "sort_order": 9
+    "sort_order": 7
   },
   {
     "id": 8,
@@ -294,7 +174,7 @@
         "title": "Tilt Pointing na Apple Park",
         "description": "",
         "start_time": "2025-06-26T17:55:00",
-        "end_time": "2025-06-26T19:30:00",
+        "end_time": "2025-06-26T19:37:00",
         "completed": true,
         "created_at": "2025-06-25T08:04:55.348378"
       },
@@ -319,7 +199,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T08:04:11.364972",
-    "sort_order": 10
+    "sort_order": 8
   },
   {
     "id": 9,
@@ -332,7 +212,7 @@
         "description": "",
         "start_time": "2025-06-27T06:17:00",
         "end_time": "2025-06-27T06:27:00",
-        "completed": false,
+        "completed": true,
         "created_at": "2025-06-25T08:06:04.812908"
       },
       {
@@ -341,7 +221,7 @@
         "description": "",
         "start_time": "2025-06-27T05:16:00",
         "end_time": "2025-06-27T06:30:00",
-        "completed": false,
+        "completed": true,
         "created_at": "2025-06-25T08:06:17.067116"
       },
       {
@@ -365,7 +245,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T08:05:37.168908",
-    "sort_order": 11
+    "sort_order": 9
   },
   {
     "id": 10,
@@ -378,7 +258,7 @@
         "description": "",
         "start_time": "2025-06-27T09:50:00",
         "end_time": "2025-06-27T10:00:00",
-        "completed": false,
+        "completed": true,
         "created_at": "2025-06-25T08:08:06.789787"
       },
       {
@@ -411,7 +291,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T08:07:37.168074",
-    "sort_order": 12
+    "sort_order": 10
   },
   {
     "id": 11,
@@ -476,7 +356,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T08:17:01.750318",
-    "sort_order": 7
+    "sort_order": 6
   },
   {
     "id": 13,
@@ -509,11 +389,38 @@
         "end_time": "2025-06-26T12:26:00",
         "completed": true,
         "created_at": "2025-06-25T15:03:50.471192"
+      },
+      {
+        "id": 53,
+        "title": "Stworzenie nowego dumpu",
+        "description": "",
+        "start_time": "2025-06-27T10:00:00",
+        "end_time": "2025-06-27T10:10:00",
+        "completed": false,
+        "created_at": "2025-06-26T09:33:30.348432"
+      },
+      {
+        "id": 54,
+        "title": "Ground Tracking na Xlink",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-26T09:34:01.866462"
+      },
+      {
+        "id": 55,
+        "title": "Aktywacja Xlink Sesji",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-26T09:34:14.211615"
       }
     ],
     "completed": false,
     "created_at": "2025-06-25T14:42:47.490556",
-    "sort_order": 6
+    "sort_order": 3
   },
   {
     "id": 14,
@@ -542,5 +449,24 @@
     "completed": false,
     "created_at": "2025-06-25T14:52:07.704167",
     "sort_order": 5
+  },
+  {
+    "id": 15,
+    "title": "Zmienic czasówki do CFDP",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 52,
+        "title": "Zmienic czasówki do CFDP",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-26T08:16:54.694512"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-26T08:16:07.686669",
+    "sort_order": 0
   }
 ]
