@@ -237,6 +237,64 @@
   border-color: #ffc107 !important;
 }
 
+/* Timeline item styling in dark mode */
+[data-theme="dark"] .vis-item.completed {
+  background-color: rgba(40, 167, 69, 0.8) !important;
+  border-color: #28a745 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .vis-item.pending {
+  background-color: rgba(0, 123, 255, 0.8) !important;
+  border-color: #007bff !important;
+  color: #ffffff !important;
+}
+
+/* Timeline item content text */
+[data-theme="dark"] .vis-item .vis-item-content {
+  color: #ffffff !important;
+}
+
+/* Timeline vertical grid lines */
+[data-theme="dark"] .vis-grid.vis-vertical {
+  border-left-color: #404040 !important;
+}
+
+[data-theme="dark"] .vis-grid.vis-vertical.vis-minor {
+  border-left-color: #404040 !important;
+}
+
+[data-theme="dark"] .vis-grid.vis-vertical.vis-major {
+  border-left-color: #808080 !important;
+}
+
+/* Timeline background */
+[data-theme="dark"] .vis-timeline {
+  background-color: #1e1e1e !important;
+  border-color: #404040 !important;
+}
+
+/* Timeline panel background */
+[data-theme="dark"] .vis-panel {
+  background-color: #1e1e1e !important;
+}
+
+/* Timeline group panel */
+[data-theme="dark"] .vis-panel.vis-left {
+  background-color: #2d2d2d !important;
+  border-right-color: #404040 !important;
+}
+
+/* Timeline group labels */
+[data-theme="dark"] .vis-label {
+  color: #e0e0e0 !important;
+}
+
+/* Timeline item overflow (for long content) */
+[data-theme="dark"] .vis-item-overflow {
+  color: #ffffff !important;
+}
+
 /* Grid lines - these are the most important for the grid visibility */
 [data-theme="dark"] .vis-grid.vis-vertical {
   border-left: 1px solid #606060 !important;

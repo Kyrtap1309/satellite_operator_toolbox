@@ -65,11 +65,26 @@ body {
 .vis-item.completed {
   background-color: rgba(40, 167, 69, 0.8) !important;
   border-color: #28a745 !important;
+  color: #ffffff !important;
 }
 
 .vis-item.pending {
   background-color: rgba(0, 123, 255, 0.8) !important;
   border-color: #007bff !important;
+  color: #ffffff !important;
+}
+
+/* Timeline grid styling */
+.vis-grid.vis-vertical {
+  border-left: 1px solid #dee2e6;
+}
+
+.vis-grid.vis-vertical.vis-minor {
+  border-left-color: #f8f9fa;
+}
+
+.vis-grid.vis-vertical.vis-major {
+  border-left-color: #dee2e6;
 }
 
 .vis-time-axis .vis-text {
