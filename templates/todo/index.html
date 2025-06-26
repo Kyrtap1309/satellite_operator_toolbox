@@ -238,9 +238,7 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
               subtask.end_time.strftime('%H:%M') }}
             </div>
             {% else %}
-            <div class="small text-muted">
-              Not scheduled
-            </div>
+            <div class="small text-muted">Not scheduled</div>
             {% endif %}
           </div>
           {% endfor %} {% if task.subtasks|length > 3 %}
@@ -455,7 +453,7 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
 
   function initializeSortable() {
       const tasksContainer = document.getElementById('tasks-container');
-      
+
       new Sortable(tasksContainer, {
           animation: 150,
           ghostClass: 'sortable-ghost',
@@ -464,10 +462,10 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
           handle: '.drag-handle',
           onEnd: function(evt) {
               // Get new order of task IDs
-              const taskIds = Array.from(tasksContainer.children).map(el => 
+              const taskIds = Array.from(tasksContainer.children).map(el =>
                   parseInt(el.getAttribute('data-task-id'))
               );
-              
+
               // Send new order to server
               fetch(`{{ url_for('todo.reorder_tasks') }}`, {
                   method: 'POST',
@@ -552,11 +550,29 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
           min: new Date(minDate.getTime() - 60 * 60 * 1000),
           max: new Date(maxDate.getTime() + 60 * 60 * 1000),
           zoomMin: 1000 * 60 * 15,
-          zoomMax: 1000 * 60 * 60 * 24 * 365 * 2
+          zoomMax: 1000 * 60 * 60 * 24 * 365 * 2,
+          tooltip: {
+              followMouse: true,
+              template: function (item) {
+                  const startTime = moment.utc(item.start).format('YYYY-MM-DD HH:mm');
+                  const endTime = moment.utc(item.end).format('YYYY-MM-DD HH:mm');
+                  const duration = moment.utc(item.end).diff(moment.utc(item.start), 'hours', true).toFixed(1);
+
+                  return `<div style="padding: 8px;">
+                              <strong>${item.content}</strong><br/>
+                              ${item.title ? item.title.split(' - ')[1] + '<br/>' : ''}
+                              <div style="margin-top: 5px; font-size: 12px; color: #666;">
+                                  <div><i class="fas fa-clock"></i> Start: ${startTime} UTC</div>
+                                  <div><i class="fas fa-clock"></i> End: ${endTime} UTC</div>
+                                  <div><i class="fas fa-hourglass-half"></i> Duration: ${duration}h</div>
+                              </div>
+                          </div>`;
+              }
+          },
       };
 
       const timeline = new vis.Timeline(container, items, groupsDataSet, options);
-      
+
       // Set current time to UTC
       timeline.setCurrentTime(moment.utc().toDate());
   }

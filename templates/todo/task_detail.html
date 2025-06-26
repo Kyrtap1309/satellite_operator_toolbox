@@ -626,15 +626,25 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
         tooltip: {
             followMouse: true,
             template: function (item) {
-                return `<div><strong>${item.title}</strong></div>
-                        <div>Start: ${moment.utc(item.start).format('YYYY-MM-DD HH:mm')} UTC</div>
-                        <div>End: ${moment.utc(item.end).format('YYYY-MM-DD HH:mm')} UTC</div>`;
+                const startTime = moment.utc(item.start).format('YYYY-MM-DD HH:mm');
+                const endTime = moment.utc(item.end).format('YYYY-MM-DD HH:mm');
+                const duration = moment.utc(item.end).diff(moment.utc(item.start), 'hours', true).toFixed(1);
+
+                return `<div style="padding: 8px;">
+                            <strong>${item.content}</strong><br/>
+                            ${item.title ? item.title.split(' - ')[1] + '<br/>' : ''}
+                            <div style="margin-top: 5px; font-size: 12px; color: #666;">
+                                <div><i class="fas fa-clock"></i> Start: ${startTime} UTC</div>
+                                <div><i class="fas fa-clock"></i> End: ${endTime} UTC</div>
+                                <div><i class="fas fa-hourglass-half"></i> Duration: ${duration}h</div>
+                            </div>
+                        </div>`;
             }
         }
     };
 
     const timeline = new vis.Timeline(document.getElementById('visualization'), items, groupsDataSet, options);
-    
+
     // Set current time to UTC
     timeline.setCurrentTime(moment.utc().toDate());
 
