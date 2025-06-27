@@ -35,9 +35,9 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
   }
 
   .timeline-container {
-    height: auto; /* Changed from fixed 400px */
-    min-height: 200px;
-    max-height: 800px;
+    height: auto; 
+    min-height: 300px; /* Increased minimum height */
+    max-height: none; /* Remove max height limit */
     border: 1px solid #dee2e6;
     border-radius: 4px;
     overflow: hidden;
@@ -524,7 +524,7 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
               '<p>No scheduled subtasks yet</p>' +
               '</div></div>' +
               '<div class="timeline-resize-handle" id="timeline-resize-handle"></div>';
-
+        
           // Re-initialize resizer if timeline is empty
           initializeTimelineResizer();
           return;
@@ -539,21 +539,22 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
       const maxDate = new Date(Math.max(...dates));
 
       const container = document.getElementById('visualization');
-
+      
       // Calculate proper height based on number of groups
       const numberOfGroups = groups.length;
       const minHeight = 200;
-      const groupHeight = 50; // Height per group/row
+      const groupHeight = 60; // Height per group/row
       const calculatedHeight = Math.max(minHeight, numberOfGroups * groupHeight + 100);
-
-      // Set container height
+      
+      // Set container height to accommodate all groups
       const timelineContainer = document.getElementById('timeline-container');
       timelineContainer.style.height = calculatedHeight + 'px';
-
+      
       const options = {
           zoomable: true,
           moveable: true,
-          stack: false, // Important: disable stacking to show all rows
+          stack: true, // Re-enable stacking within groups
+          stackSubgroups: true, // Enable stacking of items in subgroups
           orientation: 'top',
           showCurrentTime: true,
           groupOrder: 'id', // Ensure consistent ordering
@@ -579,8 +580,8 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
           },
           margin: {
               item: {
-                  horizontal: 10,
-                  vertical: 5
+                  horizontal: 5,
+                  vertical: 2
               }
           },
           height: '100%',
@@ -614,10 +615,11 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
 
       // Set current time to UTC
       window.timeline.setCurrentTime(moment.utc().toDate());
-
+      
       // Force redraw to ensure all groups are visible
       setTimeout(() => {
           window.timeline.redraw();
+          window.timeline.fit(); // Fit timeline to show all items
       }, 100);
   }
 
@@ -639,14 +641,14 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
 
       function doResize(e) {
           if (!isResizing) return;
-
+          
           const newHeight = startHeight + (e.clientY - startY);
-          const minHeight = 200;
-          const maxHeight = window.innerHeight - 200; // Max to screen height minus some margin
-
+          const minHeight = 300; // Increased minimum height
+          const maxHeight = window.innerHeight - 100; // Max to screen height minus some margin
+          
           if (newHeight >= minHeight && newHeight <= maxHeight) {
               container.style.height = newHeight + 'px';
-
+              
               // Redraw timeline to fit new container size
               if (window.timeline) {
                   setTimeout(() => {
