@@ -35,7 +35,7 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
   }
 
   .timeline-container {
-    height: auto; 
+    height: auto;
     min-height: 300px; /* Increased minimum height */
     max-height: none; /* Remove max height limit */
     border: 1px solid #dee2e6;
@@ -417,52 +417,73 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
               rows="2"
             ></textarea>
           </div>
-          <div class="row">
-            <div class="col-md-6">
-              <label for="subtask_start_date" class="form-label"
-                >Start Date</label
-              >
+
+          <!-- Schedule Toggle -->
+          <div class="mb-3">
+            <div class="form-check">
               <input
-                type="date"
-                class="form-control"
-                id="subtask_start_date"
-                name="start_date"
-                required
+                class="form-check-input"
+                type="checkbox"
+                id="subtask_scheduled"
+                name="scheduled"
+                onchange="toggleSubtaskScheduleFields()"
+                checked
               />
-            </div>
-            <div class="col-md-6">
-              <label for="subtask_start_time" class="form-label"
-                >Start Time</label
-              >
-              <input
-                type="time"
-                class="form-control"
-                id="subtask_start_time"
-                name="start_time"
-                required
-              />
+              <label class="form-check-label" for="subtask_scheduled">
+                Schedule this subtask
+              </label>
             </div>
           </div>
-          <div class="row mt-3">
-            <div class="col-md-6">
-              <label for="subtask_end_date" class="form-label">End Date</label>
-              <input
-                type="date"
-                class="form-control"
-                id="subtask_end_date"
-                name="end_date"
-                required
-              />
+
+          <!-- Schedule Fields -->
+          <div id="subtask_schedule_fields">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="subtask_start_date" class="form-label"
+                  >Start Date</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="subtask_start_date"
+                  name="start_date"
+                />
+              </div>
+              <div class="col-md-6">
+                <label for="subtask_start_time" class="form-label"
+                  >Start Time</label
+                >
+                <input
+                  type="time"
+                  class="form-control"
+                  id="subtask_start_time"
+                  name="start_time"
+                />
+              </div>
             </div>
-            <div class="col-md-6">
-              <label for="subtask_end_time" class="form-label">End Time</label>
-              <input
-                type="time"
-                class="form-control"
-                id="subtask_end_time"
-                name="end_time"
-                required
-              />
+            <div class="row mt-3">
+              <div class="col-md-6">
+                <label for="subtask_end_date" class="form-label"
+                  >End Date</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="subtask_end_date"
+                  name="end_date"
+                />
+              </div>
+              <div class="col-md-6">
+                <label for="subtask_end_time" class="form-label"
+                  >End Time</label
+                >
+                <input
+                  type="time"
+                  class="form-control"
+                  id="subtask_end_time"
+                  name="end_time"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -500,16 +521,6 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
 
         // Initialize timeline resizer
         initializeTimelineResizer();
-
-        // Set default dates
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-
-        document.getElementById('subtask_start_date').value = today.toISOString().split('T')[0];
-        document.getElementById('subtask_end_date').value = tomorrow.toISOString().split('T')[0];
-        document.getElementById('subtask_start_time').value = '09:00';
-        document.getElementById('subtask_end_time').value = '10:00';
     });
 
     function initializeTimeline() {
@@ -524,7 +535,7 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
               '<p>No scheduled subtasks yet</p>' +
               '</div></div>' +
               '<div class="timeline-resize-handle" id="timeline-resize-handle"></div>';
-        
+
           // Re-initialize resizer if timeline is empty
           initializeTimelineResizer();
           return;
@@ -539,17 +550,17 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
       const maxDate = new Date(Math.max(...dates));
 
       const container = document.getElementById('visualization');
-      
+
       // Calculate proper height based on number of groups
       const numberOfGroups = groups.length;
       const minHeight = 200;
       const groupHeight = 60; // Height per group/row
       const calculatedHeight = Math.max(minHeight, numberOfGroups * groupHeight + 100);
-      
+
       // Set container height to accommodate all groups
       const timelineContainer = document.getElementById('timeline-container');
       timelineContainer.style.height = calculatedHeight + 'px';
-      
+
       const options = {
           zoomable: true,
           moveable: true,
@@ -615,7 +626,7 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
 
       // Set current time to UTC
       window.timeline.setCurrentTime(moment.utc().toDate());
-      
+
       // Force redraw to ensure all groups are visible
       setTimeout(() => {
           window.timeline.redraw();
@@ -641,14 +652,14 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
 
       function doResize(e) {
           if (!isResizing) return;
-          
+
           const newHeight = startHeight + (e.clientY - startY);
           const minHeight = 300; // Increased minimum height
           const maxHeight = window.innerHeight - 100; // Max to screen height minus some margin
-          
+
           if (newHeight >= minHeight && newHeight <= maxHeight) {
               container.style.height = newHeight + 'px';
-              
+
               // Redraw timeline to fit new container size
               if (window.timeline) {
                   setTimeout(() => {
@@ -841,6 +852,24 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
         } else {
             icon.className = 'fas fa-chevron-up';
             text.innerHTML = '<i class="fas fa-chevron-up"></i> Show less';
+        }
+    }
+
+    function toggleSubtaskScheduleFields() {
+        const scheduleFields = document.getElementById('subtask_schedule_fields');
+        const isChecked = document.getElementById('subtask_scheduled').checked;
+
+        if (isChecked) {
+            scheduleFields.style.display = 'block';
+            // Set default times if not already set
+            if (!document.getElementById('subtask_start_time').value) {
+                document.getElementById('subtask_start_time').value = '09:00';
+            }
+            if (!document.getElementById('subtask_end_time').value) {
+                document.getElementById('subtask_end_time').value = '10:00';
+            }
+        } else {
+            scheduleFields.style.display = 'none';
         }
     }
 </script>
