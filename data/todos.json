@@ -39,6 +39,24 @@
         "end_time": "2025-06-27T18:55:00",
         "completed": true,
         "created_at": "2025-06-26T11:16:49.538489"
+      },
+      {
+        "id": 85,
+        "title": "Xlink aktywacja, druga próba bo rbc sie nie wlaczylo",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-27T19:07:38.809816"
+      },
+      {
+        "id": 86,
+        "title": "Ground Tracking Na Xlink",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-27T19:09:51.762564"
       }
     ],
     "completed": false,
@@ -552,7 +570,7 @@
         "description": "",
         "start_time": null,
         "end_time": null,
-        "completed": false,
+        "completed": true,
         "created_at": "2025-06-27T12:50:10.488947"
       }
     ],
