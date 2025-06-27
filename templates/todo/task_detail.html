@@ -1,89 +1,30 @@
-{% extends "base.html" %} {% block title %}Task Details - {{ task.title }}{%
-endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
-{% block col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/vis-timeline@7.7.0/dist/vis-timeline-graph2d.min.css"
-/>
+{% extends "base.html" %} 
+{% block title %}Task Details - {{ task.title }}{% endblock %} 
+{% block page_title %}Task Details: {{ task.title }}{% endblock %}
+{% block col_width %}11{% endblock %} 
+
+{% block extra_css %} 
+{{ super() }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vis-timeline@7.7.0/dist/vis-timeline-graph2d.min.css" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/todo-task-detail.css') }}" />
 <style>
-  .task-header {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: white;
-    padding: 2rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-  }
-
-  .subtask-card {
-    transition: all 0.3s ease;
-    border-left: 4px solid #007bff;
-    margin-bottom: 1rem;
-  }
-
-  .subtask-card.completed {
-    border-left-color: #28a745;
-    opacity: 0.8;
-  }
-
-  .subtask-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-
-  .timeline-container {
-    min-height: 200px;
-    max-height: 600px;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
-  }
-
+  /* Dynamic progress circle - needs to stay inline due to template variable */
   .progress-circle {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
     background: conic-gradient(
       #28a745 0deg,
       #28a745 {{task.completion_percentage * 3.6}}deg,
       #e9ecef {{task.completion_percentage * 3.6}}deg
     );
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-
-  .progress-circle::before {
-    content: "";
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: white;
-    position: absolute;
-  }
-
-  .progress-text {
-    z-index: 1;
-    font-weight: bold;
-    color: #333;
-  }
-
-  .vis-item.completed {
-    background-color: rgba(40, 167, 69, 0.6);
-    border-color: #28a745;
-  }
-
-  .vis-item.pending {
-    background-color: rgba(0, 123, 255, 0.6);
-    border-color: #007bff;
   }
 </style>
-{% endblock %} {% block head_scripts %}
+{% endblock %} 
+
+{% block head_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/vis-timeline@7.7.0/dist/vis-timeline-graph2d.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
-{% endblock %} {% block content %}
+{% endblock %} 
+
+{% block content %}
 <!-- Task Header -->
 <div class="task-header">
   <div class="row align-items-center">
@@ -543,7 +484,9 @@ endblock %} {% block page_title %}Task Details: {{ task.title }}{% endblock %}
     </div>
   </div>
 </div>
-{% endblock %} {% block scripts %}
+{% endblock %} 
+
+{% block scripts %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
       // Initialize timeline
