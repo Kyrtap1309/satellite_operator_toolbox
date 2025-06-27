@@ -43,7 +43,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T06:22:03.981655",
-    "sort_order": 0
+    "sort_order": 1
   },
   {
     "id": 3,
@@ -89,7 +89,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T07:29:17.453043",
-    "sort_order": 1
+    "sort_order": 2
   },
   {
     "id": 7,
@@ -144,7 +144,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T07:56:27.982337",
-    "sort_order": 6
+    "sort_order": 7
   },
   {
     "id": 8,
@@ -190,7 +190,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T08:04:11.364972",
-    "sort_order": 7
+    "sort_order": 8
   },
   {
     "id": 9,
@@ -232,11 +232,20 @@
         "end_time": null,
         "completed": false,
         "created_at": "2025-06-25T08:06:37.635569"
+      },
+      {
+        "id": 60,
+        "title": "Sprawdzic tilt pointing",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-27T06:52:16.645101"
       }
     ],
     "completed": false,
     "created_at": "2025-06-25T08:05:37.168908",
-    "sort_order": 8
+    "sort_order": 9
   },
   {
     "id": 10,
@@ -278,11 +287,20 @@
         "end_time": null,
         "completed": false,
         "created_at": "2025-06-25T08:08:38.281855"
+      },
+      {
+        "id": 59,
+        "title": "Sprawdzic tilt pointing ",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-27T06:52:02.044657"
       }
     ],
     "completed": false,
     "created_at": "2025-06-25T08:07:37.168074",
-    "sort_order": 9
+    "sort_order": 10
   },
   {
     "id": 12,
@@ -319,7 +337,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T08:17:01.750318",
-    "sort_order": 4
+    "sort_order": 5
   },
   {
     "id": 13,
@@ -383,7 +401,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T14:42:47.490556",
-    "sort_order": 2
+    "sort_order": 3
   },
   {
     "id": 14,
@@ -420,7 +438,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T14:52:07.704167",
-    "sort_order": 3
+    "sort_order": 4
   },
   {
     "id": 15,
@@ -429,6 +447,199 @@
     "subtasks": [],
     "completed": false,
     "created_at": "2025-06-26T12:20:04.359644",
-    "sort_order": 5
+    "sort_order": 6
+  },
+  {
+    "id": 16,
+    "title": "Wrzucic mission file na misje 27 czerwca i w przód",
+    "description": "",
+    "subtasks": [],
+    "completed": false,
+    "created_at": "2025-06-27T07:31:13.742292",
+    "sort_order": 0
+  },
+  {
+    "id": 17,
+    "title": "Is fahan nuclear imaging ",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 61,
+        "title": "Payload Activation ",
+        "description": "",
+        "start_time": "2025-06-28T07:41:00",
+        "end_time": "2025-06-28T07:51:00",
+        "completed": false,
+        "created_at": "2025-06-27T08:01:54.959924"
+      },
+      {
+        "id": 62,
+        "title": "Tilt Poinitng na nuclear ",
+        "description": "",
+        "start_time": "2025-06-28T06:46:00",
+        "end_time": "2025-06-28T08:00:00",
+        "completed": false,
+        "created_at": "2025-06-27T08:02:49.840760"
+      },
+      {
+        "id": 63,
+        "title": "Ground Tracking na Xlink",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-27T08:03:18.984336"
+      },
+      {
+        "id": 64,
+        "title": "Aktywacja Xlink Sesji",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-27T08:03:25.083407"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-27T08:01:15.827843",
+    "sort_order": 0
+  },
+  {
+    "id": 18,
+    "title": "longyearbyen imaging",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 65,
+        "title": "Payload Activation",
+        "description": "",
+        "start_time": "2025-06-28T12:12:00",
+        "end_time": "2025-06-28T12:22:00",
+        "completed": false,
+        "created_at": "2025-06-27T08:05:14.591543"
+      },
+      {
+        "id": 66,
+        "title": "Tilt Pointing na longyearbyen",
+        "description": "",
+        "start_time": "2025-06-28T11:26:00",
+        "end_time": "2025-06-28T12:30:00",
+        "completed": false,
+        "created_at": "2025-06-27T08:05:57.743449"
+      },
+      {
+        "id": 67,
+        "title": "Ground Tracking na Xlink",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-27T08:06:10.158648"
+      },
+      {
+        "id": 68,
+        "title": "Aktywacja Xlink Sesji",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-27T08:06:20.022353"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-27T08:03:56.880739",
+    "sort_order": 0
+  },
+  {
+    "id": 19,
+    "title": "Andong Imaging",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 69,
+        "title": "Payload Activation ",
+        "description": "",
+        "start_time": "2025-06-29T02:35:00",
+        "end_time": "2025-06-29T02:45:00",
+        "completed": false,
+        "created_at": "2025-06-27T08:07:32.336208"
+      },
+      {
+        "id": 70,
+        "title": "Tilt Pointing na Andong",
+        "description": "",
+        "start_time": "2025-06-29T01:36:00",
+        "end_time": "2025-06-29T02:50:00",
+        "completed": false,
+        "created_at": "2025-06-27T08:09:50.379642"
+      },
+      {
+        "id": 71,
+        "title": "Ground Tracking na Xlink",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-27T08:10:20.545894"
+      },
+      {
+        "id": 72,
+        "title": "Aktywacja Xlink Sesji",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-27T08:10:28.115204"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-27T08:06:40.129948",
+    "sort_order": 0
+  },
+  {
+    "id": 20,
+    "title": "Seuz Canal Imaging",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 73,
+        "title": "Payload Activation",
+        "description": "",
+        "start_time": "2025-06-29T08:55:00",
+        "end_time": "2025-06-29T09:05:00",
+        "completed": false,
+        "created_at": "2025-06-27T08:12:54.623545"
+      },
+      {
+        "id": 74,
+        "title": "Tilt Pointing na suez canal",
+        "description": "",
+        "start_time": "2025-06-29T08:05:00",
+        "end_time": "2025-06-29T09:10:00",
+        "completed": false,
+        "created_at": "2025-06-27T08:14:15.099373"
+      },
+      {
+        "id": 75,
+        "title": "Aktywacja Xlink Sesji",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-27T08:14:27.397666"
+      },
+      {
+        "id": 76,
+        "title": "Ground Tracking na Xlink",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-27T08:14:33.219550"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-27T08:12:20.276664",
+    "sort_order": 0
   }
 ]
