@@ -1,0 +1,144 @@
+.task-card {
+  transition: all 0.3s ease;
+  border-left: 4px solid #007bff;
+}
+
+.task-card.completed {
+  border-left-color: #28a745;
+  opacity: 0.8;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.subtask-item {
+  border-left: 2px solid #dee2e6;
+  margin-left: 1rem;
+  padding-left: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtask-item.completed {
+  border-left-color: #28a745;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.timeline-container {
+  height: auto;
+  min-height: 300px;
+  max-height: none;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+#visualization {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.timeline-resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(
+    -45deg,
+    transparent 30%,
+    #ccc 30%,
+    #ccc 40%,
+    transparent 40%,
+    transparent 60%,
+    #ccc 60%,
+    #ccc 70%,
+    transparent 70%
+  );
+  cursor: se-resize;
+  z-index: 10;
+}
+
+.timeline-resize-handle:hover {
+  background: linear-gradient(
+    -45deg,
+    transparent 30%,
+    #999 30%,
+    #999 40%,
+    transparent 40%,
+    transparent 60%,
+    #999 60%,
+    #999 70%,
+    transparent 70%
+  );
+}
+
+.progress-bar-container {
+  height: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.add-task-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  z-index: 1000;
+}
+
+.draggable-task {
+  cursor: move;
+  transition: all 0.3s ease;
+}
+
+.draggable-task:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.draggable-task.dragging {
+  opacity: 0.5;
+  transform: rotate(5deg);
+}
+
+.task-column.drag-over {
+  background-color: rgba(0, 123, 255, 0.1);
+  border-radius: 8px;
+}
+
+.drag-handle {
+  cursor: grab;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.sortable-ghost {
+  opacity: 0.4;
+}
+
+.sortable-chosen {
+  transform: scale(1.05);
+}
+
+.toggle-subtasks-btn:hover {
+  text-decoration: underline !important;
+}
+
+.subtasks-list {
+  transition: all 0.3s ease;
+}
+
+.hidden-subtask {
+  transition: opacity 0.3s ease;
+}

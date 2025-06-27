@@ -1,0 +1,73 @@
+.task-header {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.subtask-card {
+  transition: all 0.3s ease;
+  border-left: 4px solid #007bff;
+  margin-bottom: 1rem;
+}
+
+.subtask-card.completed {
+  border-left-color: #28a745;
+  opacity: 0.8;
+}
+
+.subtask-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.timeline-container {
+  min-height: 200px;
+  max-height: 600px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.progress-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #28a745 0deg,
+    #28a745 {{task.completion_percentage * 3.6}}deg,
+    #e9ecef {{task.completion_percentage * 3.6}}deg
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.progress-circle::before {
+  content: "";
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+}
+
+.progress-text {
+  z-index: 1;
+  font-weight: bold;
+  color: #333;
+}
+
+.vis-item.completed {
+  background-color: rgba(40, 167, 69, 0.6);
+  border-color: #28a745;
+}
+
+.vis-item.pending {
+  background-color: rgba(0, 123, 255, 0.6);
+  border-color: #007bff;
+}
