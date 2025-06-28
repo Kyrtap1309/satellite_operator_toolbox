@@ -76,7 +76,25 @@ function initializeTimeline() {
             }
         },
         zoomMin: 1000 * 60 * 15,
-        zoomMax: 1000 * 60 * 60 * 24 * 365 * 2
+        zoomMax: 1000 * 60 * 60 * 24 * 365 * 2,
+        tooltip: {
+            followMouse: true,
+            template: function (item) {
+                const startTime = moment.utc(item.start).format('YYYY-MM-DD HH:mm');
+                const endTime = moment.utc(item.end).format('YYYY-MM-DD HH:mm');
+                const duration = moment.utc(item.end).diff(moment.utc(item.start), 'hours', true).toFixed(1);
+
+                return `<div style="padding: 8px;">
+                            <strong>${item.content}</strong><br/>
+                            ${item.title ? item.title.split(' - ')[1] + '<br/>' : ''}
+                            <div style="margin-top: 5px; font-size: 12px; color: #666;">
+                                <div><i class="fas fa-clock"></i> Start: ${startTime} UTC</div>
+                                <div><i class="fas fa-clock"></i> End: ${endTime} UTC</div>
+                                <div><i class="fas fa-hourglass-half"></i> Duration: ${duration}h</div>
+                            </div>
+                        </div>`;
+            }
+        }
     };
 
     window.timeline = new vis.Timeline(container, items, groupsDataSet, options);
