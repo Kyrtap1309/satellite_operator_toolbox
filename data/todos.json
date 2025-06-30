@@ -48,6 +48,33 @@
         "end_time": "2025-06-29T13:32:00",
         "completed": true,
         "created_at": "2025-06-27T19:07:38.809816"
+      },
+      {
+        "id": 91,
+        "title": "Ground Tracking Na Xlink",
+        "description": "",
+        "start_time": "2025-06-30T11:30:00",
+        "end_time": "2025-06-30T22:30:00",
+        "completed": true,
+        "created_at": "2025-06-30T06:48:27.043683"
+      },
+      {
+        "id": 105,
+        "title": "Aktywacja xlink missing chunkow",
+        "description": "",
+        "start_time": "2025-07-01T21:35:00",
+        "end_time": "2025-07-01T21:40:00",
+        "completed": false,
+        "created_at": "2025-06-30T14:26:05.944177"
+      },
+      {
+        "id": 106,
+        "title": "Ground tracking na pretorię",
+        "description": "",
+        "start_time": "2025-07-01T21:04:00",
+        "end_time": "2025-07-01T21:54:00",
+        "completed": false,
+        "created_at": "2025-06-30T14:26:51.193784"
       }
     ],
     "completed": false,
@@ -112,75 +139,20 @@
         "end_time": "2025-06-28T20:02:00",
         "completed": true,
         "created_at": "2025-06-27T10:38:27.607966"
+      },
+      {
+        "id": 104,
+        "title": "Aktywacja Xlink Sesji (part ab z dwoch wszystkich)",
+        "description": "part aa chyba pobrana w calosci",
+        "start_time": "2025-06-30T20:46:00",
+        "end_time": "2025-06-30T20:54:00",
+        "completed": true,
+        "created_at": "2025-06-30T10:57:04.841211"
       }
     ],
     "completed": false,
     "created_at": "2025-06-25T07:29:17.453043",
     "sort_order": 4
-  },
-  {
-    "id": 7,
-    "title": "Chesapeake Imaging",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 19,
-        "title": "Aktywacja Payloadu",
-        "description": "",
-        "start_time": "2025-06-26T16:15:00",
-        "end_time": "2025-06-26T16:25:00",
-        "completed": true,
-        "created_at": "2025-06-25T07:57:20.625082"
-      },
-      {
-        "id": 20,
-        "title": "Tilt Pointing na Chesapeake",
-        "description": "",
-        "start_time": "2025-06-26T15:16:00",
-        "end_time": "2025-06-26T16:30:00",
-        "completed": true,
-        "created_at": "2025-06-25T08:03:00.568493"
-      },
-      {
-        "id": 22,
-        "title": "Aktywacja Xlink Sesji na part 1 ",
-        "description": "",
-        "start_time": "2025-06-28T21:28:00",
-        "end_time": "2025-06-28T21:35:00",
-        "completed": true,
-        "created_at": "2025-06-25T08:03:18.894791"
-      },
-      {
-        "id": 38,
-        "title": "Zweryfikuj Pointing",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": true,
-        "created_at": "2025-06-25T08:13:22.004198"
-      },
-      {
-        "id": 80,
-        "title": "Podział na dwie czesci outputu chesapeaku",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": true,
-        "created_at": "2025-06-27T12:01:26.818506"
-      },
-      {
-        "id": 88,
-        "title": "Aktywacja xlink sesji drugiej czesci",
-        "description": "",
-        "start_time": "2025-06-29T19:33:00",
-        "end_time": "2025-06-29T19:40:00",
-        "completed": true,
-        "created_at": "2025-06-28T10:26:11.750936"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-06-25T07:56:27.982337",
-    "sort_order": 9
   },
   {
     "id": 9,
@@ -240,66 +212,20 @@
         "end_time": null,
         "completed": true,
         "created_at": "2025-06-27T12:10:39.827026"
+      },
+      {
+        "id": 110,
+        "title": "Aktywacja xlink sesji norilsk part aa z dwoch",
+        "description": "",
+        "start_time": "2025-07-01T17:21:00",
+        "end_time": "2025-07-01T17:27:00",
+        "completed": false,
+        "created_at": "2025-06-30T14:35:19.172706"
       }
     ],
     "completed": false,
     "created_at": "2025-06-25T08:05:37.168908",
     "sort_order": 10
-  },
-  {
-    "id": 10,
-    "title": "Namibia Desert",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 31,
-        "title": "Aktywacja Payloadu",
-        "description": "",
-        "start_time": "2025-06-27T09:50:00",
-        "end_time": "2025-06-27T10:00:00",
-        "completed": true,
-        "created_at": "2025-06-25T08:08:06.789787"
-      },
-      {
-        "id": 32,
-        "title": "Tilt Pointing na Namibie",
-        "description": "",
-        "start_time": "2025-06-27T09:06:00",
-        "end_time": "2025-06-27T10:10:00",
-        "completed": true,
-        "created_at": "2025-06-25T08:08:22.179164"
-      },
-      {
-        "id": 33,
-        "title": "Ground Tracking na Xlink",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": false,
-        "created_at": "2025-06-25T08:08:30.062985"
-      },
-      {
-        "id": 34,
-        "title": "Aktywacja Xlink Sesji",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": false,
-        "created_at": "2025-06-25T08:08:38.281855"
-      },
-      {
-        "id": 59,
-        "title": "Sprawdzic tilt pointing ",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": false,
-        "created_at": "2025-06-27T06:52:02.044657"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-06-25T08:07:37.168074",
-    "sort_order": 11
   },
   {
     "id": 12,
@@ -339,61 +265,6 @@
     "sort_order": 13
   },
   {
-    "id": 17,
-    "title": "Is fahan nuclear imaging ",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 61,
-        "title": "Payload Activation ",
-        "description": "",
-        "start_time": "2025-06-28T07:41:00",
-        "end_time": "2025-06-28T07:51:00",
-        "completed": true,
-        "created_at": "2025-06-27T08:01:54.959924"
-      },
-      {
-        "id": 62,
-        "title": "Tilt Poinitng na nuclear ",
-        "description": "",
-        "start_time": "2025-06-27T20:50:00",
-        "end_time": "2025-06-28T08:00:00",
-        "completed": true,
-        "created_at": "2025-06-27T08:02:49.840760"
-      },
-      {
-        "id": 63,
-        "title": "Ground Tracking na Xlink obu czesci nuclear",
-        "description": "",
-        "start_time": "2025-06-29T09:30:00",
-        "end_time": "2025-06-29T20:45:00",
-        "completed": true,
-        "created_at": "2025-06-27T08:03:18.984336"
-      },
-      {
-        "id": 64,
-        "title": "Aktywacja Xlink Sesji pierwszej czesci",
-        "description": "",
-        "start_time": "2025-06-29T10:17:00",
-        "end_time": "2025-06-29T10:27:00",
-        "completed": true,
-        "created_at": "2025-06-27T08:03:25.083407"
-      },
-      {
-        "id": 87,
-        "title": "Aktywacja xlink sesji drugiej czesci",
-        "description": "",
-        "start_time": "2025-06-29T11:51:00",
-        "end_time": "2025-06-29T12:01:00",
-        "completed": true,
-        "created_at": "2025-06-28T10:23:24.855645"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-06-27T08:01:15.827843",
-    "sort_order": 7
-  },
-  {
     "id": 18,
     "title": "longyearbyen imaging",
     "description": "",
@@ -420,19 +291,28 @@
         "id": 67,
         "title": "Ground Tracking na Xlink",
         "description": "",
-        "start_time": null,
-        "end_time": null,
+        "start_time": "2025-07-01T12:03:00",
+        "end_time": "2025-07-01T21:03:00",
         "completed": false,
         "created_at": "2025-06-27T08:06:10.158648"
       },
       {
         "id": 68,
-        "title": "Aktywacja Xlink Sesji",
+        "title": "Aktywacja Xlink Sesji part aa z dwoch",
         "description": "",
-        "start_time": null,
-        "end_time": null,
+        "start_time": "2025-07-01T12:44:00",
+        "end_time": "2025-07-01T12:50:00",
         "completed": false,
         "created_at": "2025-06-27T08:06:20.022353"
+      },
+      {
+        "id": 109,
+        "title": "Aktywacja Xlink Sesji part ab z dwoch",
+        "description": "",
+        "start_time": "2025-07-01T18:52:00",
+        "end_time": "2025-07-01T18:57:00",
+        "completed": false,
+        "created_at": "2025-06-30T14:32:02.036696"
       }
     ],
     "completed": false,
@@ -468,17 +348,35 @@
         "description": "",
         "start_time": null,
         "end_time": null,
-        "completed": false,
+        "completed": true,
         "created_at": "2025-06-27T08:10:20.545894"
       },
       {
         "id": 72,
-        "title": "Aktywacja Xlink Sesji",
+        "title": "Aktywacja Xlink Sesji (part aa z trzech wszystkich)",
         "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": false,
+        "start_time": "2025-06-30T11:31:00",
+        "end_time": "2025-06-30T11:38:00",
+        "completed": true,
         "created_at": "2025-06-27T08:10:28.115204"
+      },
+      {
+        "id": 102,
+        "title": "Aktywacja Xlink Sesji (part ab z trzech wszystkich)",
+        "description": "",
+        "start_time": "2025-06-30T13:05:00",
+        "end_time": "2025-06-30T13:10:00",
+        "completed": true,
+        "created_at": "2025-06-30T10:51:52.046856"
+      },
+      {
+        "id": 103,
+        "title": "Aktywacja Xlink Sesji (part ac z trzech wszystkich)",
+        "description": "",
+        "start_time": "2025-06-30T17:41:00",
+        "end_time": "2025-06-30T17:48:00",
+        "completed": true,
+        "created_at": "2025-06-30T10:52:33.256594"
       }
     ],
     "completed": false,
@@ -510,21 +408,30 @@
       },
       {
         "id": 75,
-        "title": "Aktywacja Xlink Sesji",
+        "title": "Aktywacja Xlink Sesji part ab z dwoch czesci",
         "description": "",
-        "start_time": null,
-        "end_time": null,
+        "start_time": "2025-07-01T22:00:00",
+        "end_time": "2025-07-01T22:05:00",
         "completed": false,
         "created_at": "2025-06-27T08:14:27.397666"
       },
       {
-        "id": 76,
-        "title": "Ground Tracking na Xlink",
+        "id": 107,
+        "title": "Ground Tracking Na Xlink (Szwecja)",
         "description": "",
-        "start_time": null,
-        "end_time": null,
+        "start_time": "2025-07-01T21:55:00",
+        "end_time": "2025-07-01T22:25:00",
         "completed": false,
-        "created_at": "2025-06-27T08:14:33.219550"
+        "created_at": "2025-06-30T14:27:50.833833"
+      },
+      {
+        "id": 108,
+        "title": "Aktywacja xlink sesji (part aa z dwoch czesci)",
+        "description": "",
+        "start_time": "2025-07-01T20:25:00",
+        "end_time": "2025-07-01T20:30:00",
+        "completed": false,
+        "created_at": "2025-06-30T14:30:29.885181"
       }
     ],
     "completed": false,
@@ -532,59 +439,124 @@
     "sort_order": 2
   },
   {
-    "id": 21,
-    "title": "Zdiagnozowac fail Namibii",
-    "description": "",
-    "subtasks": [],
-    "completed": false,
-    "created_at": "2025-06-27T11:48:44.980293",
-    "sort_order": 5
-  },
-  {
     "id": 22,
     "title": "Naprawić apt",
     "description": "",
-    "subtasks": [
-      {
-        "id": 82,
-        "title": "Spakowac potrzebne rzeczy ",
-        "description": "sudo tar Jc /var/lib/dpkg/status /var/lib/dpkg/status-old /var/backups/dpkg.status.0  | openssl enc -aes-256-cbc -salt -pbkdf2 -pass pass:jQ6dHwXSa0qpGRUnpz5bBVxATqKkfsqRoJ365 -out /housekeeping/dpkg-status.tar.xz.enc",
-        "start_time": null,
-        "end_time": null,
-        "completed": false,
-        "created_at": "2025-06-27T12:20:33.099056"
-      },
-      {
-        "id": 83,
-        "title": "Zxlinkować nad pretorią ",
-        "description": "",
-        "start_time": "2025-06-28T21:04:00",
-        "end_time": "2025-06-28T21:14:00",
-        "completed": true,
-        "created_at": "2025-06-27T12:29:15.251492"
-      }
-    ],
+    "subtasks": [],
     "completed": false,
     "created_at": "2025-06-27T11:48:53.112271",
     "sort_order": 3
   },
   {
-    "id": 23,
-    "title": "Zmiana uprawnień do sudo chown -R ubuntu:ubuntu /housekeeping",
+    "id": 25,
+    "title": "Baghdad Imaging",
     "description": "",
     "subtasks": [
       {
-        "id": 84,
-        "title": "Zmienić uprawnienia sudo chown ",
+        "id": 94,
+        "title": "Payload Activation",
         "description": "",
-        "start_time": null,
-        "end_time": null,
+        "start_time": "2025-07-01T08:12:00",
+        "end_time": "2025-07-01T08:22:00",
         "completed": true,
-        "created_at": "2025-06-27T12:50:10.488947"
+        "created_at": "2025-06-30T09:53:31.320074"
+      },
+      {
+        "id": 95,
+        "title": "Tilt Pointing",
+        "description": "",
+        "start_time": "2025-06-30T23:39:00",
+        "end_time": "2025-07-01T09:01:00",
+        "completed": false,
+        "created_at": "2025-06-30T09:53:50.827572"
       }
     ],
     "completed": false,
-    "created_at": "2025-06-27T12:49:33.486504",
-    "sort_order": 1
+    "created_at": "2025-06-30T09:53:01.974541",
+    "sort_order": 0
+  },
+  {
+    "id": 26,
+    "title": "Bordeaux Imaging",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 96,
+        "title": "Payload Activation",
+        "description": "",
+        "start_time": "2025-07-01T11:19:00",
+        "end_time": "2025-07-01T11:29:00",
+        "completed": true,
+        "created_at": "2025-06-30T09:54:39.184958"
+      },
+      {
+        "id": 97,
+        "title": "Tilt Pointing",
+        "description": "",
+        "start_time": "2025-07-01T09:02:00",
+        "end_time": "2025-07-01T12:02:00",
+        "completed": false,
+        "created_at": "2025-06-30T09:55:00.041654"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-30T09:54:07.022570",
+    "sort_order": 0
+  },
+  {
+    "id": 27,
+    "title": "Libia Imaging",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 98,
+        "title": "Payload Activation",
+        "description": "",
+        "start_time": "2025-07-02T09:29:00",
+        "end_time": "2025-07-02T09:39:00",
+        "completed": false,
+        "created_at": "2025-06-30T09:55:26.889137"
+      },
+      {
+        "id": 99,
+        "title": "Tilt Pointing",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-30T09:55:37.622510"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-30T09:54:49.010581",
+    "sort_order": 0
+  },
+  {
+    "id": 28,
+    "title": "Algeria Imaging",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 100,
+        "title": "Payload Activation",
+        "description": "",
+        "start_time": "2025-07-02T11:01:00",
+        "end_time": "2025-07-02T11:11:00",
+        "completed": false,
+        "created_at": "2025-06-30T09:56:12.339178"
+      },
+      {
+        "id": 101,
+        "title": "Tilt Pointing",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-06-30T09:56:33.254985"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-06-30T09:55:45.284328",
+    "sort_order": 0
   }
 ]
