@@ -79,7 +79,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T06:22:03.981655",
-    "sort_order": 6
+    "sort_order": 8
   },
   {
     "id": 3,
@@ -152,7 +152,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T07:29:17.453043",
-    "sort_order": 4
+    "sort_order": 7
   },
   {
     "id": 9,
@@ -253,7 +253,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-25T08:17:01.750318",
-    "sort_order": 12
+    "sort_order": 11
   },
   {
     "id": 15,
@@ -262,7 +262,7 @@
     "subtasks": [],
     "completed": false,
     "created_at": "2025-06-26T12:20:04.359644",
-    "sort_order": 13
+    "sort_order": 12
   },
   {
     "id": 18,
@@ -293,7 +293,7 @@
         "description": "",
         "start_time": "2025-07-01T12:03:00",
         "end_time": "2025-07-01T21:03:00",
-        "completed": false,
+        "completed": true,
         "created_at": "2025-06-27T08:06:10.158648"
       },
       {
@@ -317,71 +317,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-27T08:03:56.880739",
-    "sort_order": 8
-  },
-  {
-    "id": 19,
-    "title": "Andong Imaging",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 69,
-        "title": "Payload Activation ",
-        "description": "",
-        "start_time": "2025-06-29T02:35:00",
-        "end_time": "2025-06-29T02:45:00",
-        "completed": true,
-        "created_at": "2025-06-27T08:07:32.336208"
-      },
-      {
-        "id": 70,
-        "title": "Tilt Pointing na Andong",
-        "description": "",
-        "start_time": "2025-06-29T00:10:00",
-        "end_time": "2025-06-29T05:00:00",
-        "completed": true,
-        "created_at": "2025-06-27T08:09:50.379642"
-      },
-      {
-        "id": 71,
-        "title": "Ground Tracking na Xlink",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": true,
-        "created_at": "2025-06-27T08:10:20.545894"
-      },
-      {
-        "id": 72,
-        "title": "Aktywacja Xlink Sesji (part aa z trzech wszystkich)",
-        "description": "",
-        "start_time": "2025-06-30T11:31:00",
-        "end_time": "2025-06-30T11:38:00",
-        "completed": true,
-        "created_at": "2025-06-27T08:10:28.115204"
-      },
-      {
-        "id": 102,
-        "title": "Aktywacja Xlink Sesji (part ab z trzech wszystkich)",
-        "description": "",
-        "start_time": "2025-06-30T13:05:00",
-        "end_time": "2025-06-30T13:10:00",
-        "completed": true,
-        "created_at": "2025-06-30T10:51:52.046856"
-      },
-      {
-        "id": 103,
-        "title": "Aktywacja Xlink Sesji (part ac z trzech wszystkich)",
-        "description": "",
-        "start_time": "2025-06-30T17:41:00",
-        "end_time": "2025-06-30T17:48:00",
-        "completed": true,
-        "created_at": "2025-06-30T10:52:33.256594"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-06-27T08:06:40.129948",
-    "sort_order": 0
+    "sort_order": 9
   },
   {
     "id": 20,
@@ -436,7 +372,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-27T08:12:20.276664",
-    "sort_order": 2
+    "sort_order": 5
   },
   {
     "id": 22,
@@ -445,7 +381,7 @@
     "subtasks": [],
     "completed": false,
     "created_at": "2025-06-27T11:48:53.112271",
-    "sort_order": 3
+    "sort_order": 6
   },
   {
     "id": 25,
@@ -467,13 +403,13 @@
         "description": "",
         "start_time": "2025-06-30T23:39:00",
         "end_time": "2025-07-01T09:01:00",
-        "completed": false,
+        "completed": true,
         "created_at": "2025-06-30T09:53:50.827572"
       }
     ],
     "completed": false,
     "created_at": "2025-06-30T09:53:01.974541",
-    "sort_order": 0
+    "sort_order": 1
   },
   {
     "id": 26,
@@ -495,13 +431,13 @@
         "description": "",
         "start_time": "2025-07-01T09:02:00",
         "end_time": "2025-07-01T12:02:00",
-        "completed": false,
+        "completed": true,
         "created_at": "2025-06-30T09:55:00.041654"
       }
     ],
     "completed": false,
     "created_at": "2025-06-30T09:54:07.022570",
-    "sort_order": 0
+    "sort_order": 2
   },
   {
     "id": 27,
@@ -529,7 +465,7 @@
     ],
     "completed": false,
     "created_at": "2025-06-30T09:54:49.010581",
-    "sort_order": 0
+    "sort_order": 3
   },
   {
     "id": 28,
@@ -557,6 +493,6 @@
     ],
     "completed": false,
     "created_at": "2025-06-30T09:55:45.284328",
-    "sort_order": 0
+    "sort_order": 4
   }
 ]
