@@ -202,6 +202,13 @@ class TodoService:
         for task in tasks_to_process:
             if not task:
                 continue
+            # Only process tasks with at least one scheduled subtask
+            has_scheduled_subtask = any(
+                subtask.start_time is not None and subtask.end_time is not None
+                for subtask in task.subtasks
+            )
+            if not has_scheduled_subtask:
+                continue
 
             timeline_data.extend(
                 [
@@ -229,8 +236,13 @@ class TodoService:
         for task in tasks_to_process:
             if not task:
                 continue
-
-            groups.append({"id": f"task_{task.id}", "content": f"{task.title} ({task.completion_percentage:.0f}%)"})
+            # Only add group if at least one subtask is scheduled
+            has_scheduled_subtask = any(
+                subtask.start_time is not None and subtask.end_time is not None
+                for subtask in task.subtasks
+            )
+            if has_scheduled_subtask:
+                groups.append({"id": f"task_{task.id}", "content": f"{task.title} ({task.completion_percentage:.0f}%)"})
 
         return groups
 
