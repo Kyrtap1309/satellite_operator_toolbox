@@ -70,7 +70,7 @@ def register_main_routes(app: Flask, config: Config) -> None:
     @log_route_access()
     @handle_route_errors("index")
     def index() -> str:
-        """Homepage."""
+        """Main page with tool selection."""
         return render_template("index.html")
 
     @app.route("/satellite_passes")
@@ -78,20 +78,18 @@ def register_main_routes(app: Flask, config: Config) -> None:
     @handle_route_errors("satellite_passes")
     def satellite_passes() -> str:
         """Render the satellite passes calculator page."""
+        now = datetime.now()
+        default_date = now.strftime("%Y-%m-%d")
+
         return render_template(
             "satellite_passes/index.html",
             tle_name=config.SATELLITE_NAME,
             tle_line1=config.SATELLITE_TLE_LINE1,
             tle_line2=config.SATELLITE_TLE_LINE2,
-            gs1_name=config.STATION1_NAME,
-            gs1_lat=config.STATION1_LAT,
-            gs1_lon=config.STATION1_LON,
-            gs1_elev=config.STATION1_ELEV,
-            gs2_name=config.STATION2_NAME,
-            gs2_lat=config.STATION2_LAT,
-            gs2_lon=config.STATION2_LON,
-            gs2_elev=config.STATION2_ELEV,
+            norad_id="",
+            default_date=default_date,
             min_el=config.MIN_ELEVATION,
+            default_ground_stations=config.DEFAULT_GROUND_STATIONS,
         )
 
 
@@ -112,18 +110,25 @@ def register_satellite_routes(app: Flask, config: Config, satellite_service: Sat
         # Parse form data
         form_data = request.form
 
+        # Use default values from first two ground stations if not provided
+        if config.DEFAULT_GROUND_STATIONS is None:
+            raise ValueError("DEFAULT_GROUND_STATIONS is not configured")
+
+        default_gs1 = config.DEFAULT_GROUND_STATIONS[0]
+        default_gs2 = config.DEFAULT_GROUND_STATIONS[1]
+
         gs1 = GroundStation(
-            name=form_data.get("gs1_name", config.STATION1_NAME),
-            latitude=float(form_data.get("gs1_lat", config.STATION1_LAT)),
-            longitude=float(form_data.get("gs1_lon", config.STATION1_LON)),
-            elevation=float(form_data.get("gs1_elev", config.STATION1_ELEV)),
+            name=form_data.get("gs1_name", default_gs1["name"]),
+            latitude=float(form_data.get("gs1_lat", default_gs1["latitude"])),
+            longitude=float(form_data.get("gs1_lon", default_gs1["longitude"])),
+            elevation=float(form_data.get("gs1_elev", default_gs1["elevation"])),
         )
 
         gs2 = GroundStation(
-            name=form_data.get("gs2_name", config.STATION2_NAME),
-            latitude=float(form_data.get("gs2_lat", config.STATION2_LAT)),
-            longitude=float(form_data.get("gs2_lon", config.STATION2_LON)),
-            elevation=float(form_data.get("gs2_elev", config.STATION2_ELEV)),
+            name=form_data.get("gs2_name", default_gs2["name"]),
+            latitude=float(form_data.get("gs2_lat", default_gs2["latitude"])),
+            longitude=float(form_data.get("gs2_lon", default_gs2["longitude"])),
+            elevation=float(form_data.get("gs2_elev", default_gs2["elevation"])),
         )
 
         min_el = float(form_data.get("min_el", config.MIN_ELEVATION))
@@ -288,21 +293,36 @@ def register_tle_routes(app: Flask, satellite_service: SatelliteService) -> None
 
         tle_data = satellite_service.get_current_tle(norad_id)
 
+        # Get config instance
+        config = Config()
+
+        # Use default ground stations from config
+        if config.DEFAULT_GROUND_STATIONS is None:
+            raise ValueError("DEFAULT_GROUND_STATIONS is not configured")
+
+        default_gs1 = config.DEFAULT_GROUND_STATIONS[0]
+        default_gs2 = config.DEFAULT_GROUND_STATIONS[1]
+
+        now = datetime.now()
+        default_date = now.strftime("%Y-%m-%d")
+
         return render_template(
             "satellite_passes/index.html",
             tle_name=tle_data.satellite_name,
             tle_line1=tle_data.tle_line1,
             tle_line2=tle_data.tle_line2,
             norad_id=norad_id,
-            gs1_name=config.STATION1_NAME,
-            gs1_lat=config.STATION1_LAT,
-            gs1_lon=config.STATION1_LON,
-            gs1_elev=config.STATION1_ELEV,
-            gs2_name=config.STATION2_NAME,
-            gs2_lat=config.STATION2_LAT,
-            gs2_lon=config.STATION2_LON,
-            gs2_elev=config.STATION2_ELEV,
+            gs1_name=default_gs1["name"],
+            gs1_lat=default_gs1["latitude"],
+            gs1_lon=default_gs1["longitude"],
+            gs1_elev=default_gs1["elevation"],
+            gs2_name=default_gs2["name"],
+            gs2_lat=default_gs2["latitude"],
+            gs2_lon=default_gs2["longitude"],
+            gs2_elev=default_gs2["elevation"],
+            default_date=default_date,
             min_el=config.MIN_ELEVATION,
+            default_ground_stations=config.DEFAULT_GROUND_STATIONS,
         )
 
 
