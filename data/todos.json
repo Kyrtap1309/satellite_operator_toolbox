@@ -1,481 +1,209 @@
 [
   {
-    "id": 2,
-    "title": "Russa Imaging",
-    "description": "Obrazowanie Rosji 19 Czerwca",
+    "id": 1,
+    "title": "Baghdad Imaging",
+    "description": "",
     "subtasks": [
       {
         "id": 1,
-        "title": "Payload Activation",
-        "description": "Aktywacja Payloadu",
-        "start_time": "2025-06-19T06:00:00",
-        "end_time": "2025-06-19T06:10:00",
-        "completed": true,
-        "created_at": "2025-06-25T06:22:41.582328"
-      },
-      {
-        "id": 2,
-        "title": "Tilt Pointing na Rosje",
+        "title": "Xlink missing chunks",
         "description": "",
-        "start_time": "2025-06-19T05:00:00",
-        "end_time": "2025-06-19T07:00:00",
-        "completed": true,
-        "created_at": "2025-06-25T06:23:25.612552"
-      },
-      {
-        "id": 6,
-        "title": "Aktywacja Xlink Sesji",
-        "description": "",
-        "start_time": "2025-06-27T18:41:00",
-        "end_time": "2025-06-27T18:50:00",
-        "completed": true,
-        "created_at": "2025-06-25T07:28:25.591058"
-      },
-      {
-        "id": 56,
-        "title": "Ground Tracking na Xlink missing chunkow",
-        "description": "",
-        "start_time": "2025-06-27T17:25:00",
-        "end_time": "2025-06-27T18:55:00",
-        "completed": true,
-        "created_at": "2025-06-26T11:16:49.538489"
-      },
-      {
-        "id": 85,
-        "title": "Xlink aktywacja, druga próba bo rbc sie nie wlaczylo",
-        "description": "",
-        "start_time": "2025-06-29T13:25:00",
-        "end_time": "2025-06-29T13:32:00",
-        "completed": true,
-        "created_at": "2025-06-27T19:07:38.809816"
-      },
-      {
-        "id": 91,
-        "title": "Ground Tracking Na Xlink",
-        "description": "",
-        "start_time": "2025-06-30T11:30:00",
-        "end_time": "2025-06-30T22:30:00",
-        "completed": true,
-        "created_at": "2025-06-30T06:48:27.043683"
-      },
-      {
-        "id": 105,
-        "title": "Aktywacja xlink missing chunkow",
-        "description": "",
-        "start_time": "2025-07-01T21:35:00",
-        "end_time": "2025-07-01T21:40:00",
-        "completed": true,
-        "created_at": "2025-06-30T14:26:05.944177"
-      },
-      {
-        "id": 106,
-        "title": "Ground tracking na pretorię",
-        "description": "",
-        "start_time": "2025-07-01T21:04:00",
-        "end_time": "2025-07-01T21:54:00",
-        "completed": true,
-        "created_at": "2025-06-30T14:26:51.193784"
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-07-14T07:17:11.581061"
       }
     ],
     "completed": false,
-    "created_at": "2025-06-25T06:22:03.981655",
-    "sort_order": 8
+    "created_at": "2025-07-14T07:16:45.446764",
+    "sort_order": 0
+  },
+  {
+    "id": 2,
+    "title": "Lake Tahoe USA Imaging",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 2,
+        "title": "Xlink missing chunks",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-07-14T07:17:39.640631"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-07-14T07:17:28.155020",
+    "sort_order": 1
   },
   {
     "id": 3,
-    "title": "Obrazowanie Salar De Uyuni",
+    "title": "Hoover Dam Imaging",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 3,
+        "title": "Xlink missing chunks",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-07-14T07:18:09.009737"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-07-14T07:17:59.035496",
+    "sort_order": 2
+  },
+  {
+    "id": 4,
+    "title": "Jamsil Complex Imaging",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 4,
+        "title": "Xlink missing chunks",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-07-14T07:19:05.074362"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-07-14T07:18:55.357896",
+    "sort_order": 3
+  },
+  {
+    "id": 5,
+    "title": "Inuvik Imaging ",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 5,
+        "title": "Payload Activation",
+        "description": "",
+        "start_time": "2025-07-13T21:10:00",
+        "end_time": "2025-07-13T21:20:00",
+        "completed": true,
+        "created_at": "2025-07-14T07:21:37.636534"
+      },
+      {
+        "id": 6,
+        "title": "Schedule Tilt Pointing",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-07-14T07:23:11.893047"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-07-14T07:19:28.885588",
+    "sort_order": 4
+  },
+  {
+    "id": 6,
+    "title": "Mauritania Imaging",
     "description": "",
     "subtasks": [
       {
         "id": 7,
         "title": "Payload Activation",
         "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": true,
-        "created_at": "2025-06-25T07:32:03.108367"
+        "start_time": "2025-07-14T11:34:00",
+        "end_time": "2025-07-14T11:44:00",
+        "completed": false,
+        "created_at": "2025-07-14T07:24:23.555863"
       },
       {
         "id": 8,
-        "title": "Tilt Pointing na Salar De Uyuni",
-        "description": "Pointing na Salar De Uyuni",
-        "start_time": "2025-06-21T14:00:00",
-        "end_time": "2025-06-21T15:30:00",
-        "completed": true,
-        "created_at": "2025-06-25T07:34:39.712425"
-      },
-      {
-        "id": 44,
-        "title": "Ground tracking na pobranie obu czesci",
-        "description": "",
-        "start_time": "2025-06-28T18:00:00",
-        "end_time": "2025-06-28T21:40:00",
-        "completed": true,
-        "created_at": "2025-06-25T14:06:19.210603"
-      },
-      {
-        "id": 45,
-        "title": "Aktywacja Xlink Sesji z pierwsza czescia",
-        "description": "",
-        "start_time": "2025-06-28T18:22:00",
-        "end_time": "2025-06-28T18:28:00",
-        "completed": true,
-        "created_at": "2025-06-25T14:06:54.049169"
-      },
-      {
-        "id": 78,
-        "title": "Podziel wynik obrazowania na dwie części",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": true,
-        "created_at": "2025-06-27T10:33:33.859108"
-      },
-      {
-        "id": 79,
-        "title": "Aktywacja xlink sesji z druga czescia ",
-        "description": "",
-        "start_time": "2025-06-28T19:54:00",
-        "end_time": "2025-06-28T20:02:00",
-        "completed": true,
-        "created_at": "2025-06-27T10:38:27.607966"
-      },
-      {
-        "id": 104,
-        "title": "Aktywacja Xlink Sesji (part ab z dwoch wszystkich)",
-        "description": "part aa chyba pobrana w calosci",
-        "start_time": "2025-06-30T20:46:00",
-        "end_time": "2025-06-30T20:54:00",
-        "completed": true,
-        "created_at": "2025-06-30T10:57:04.841211"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-06-25T07:29:17.453043",
-    "sort_order": 7
-  },
-  {
-    "id": 9,
-    "title": "Norilsk Imaging",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 27,
-        "title": "Aktywacja Payloadu",
-        "description": "",
-        "start_time": "2025-06-27T06:17:00",
-        "end_time": "2025-06-27T06:27:00",
-        "completed": true,
-        "created_at": "2025-06-25T08:06:04.812908"
-      },
-      {
-        "id": 28,
-        "title": "Tilt Pointing na Norilsk",
-        "description": "",
-        "start_time": "2025-06-27T05:16:00",
-        "end_time": "2025-06-27T06:30:00",
-        "completed": true,
-        "created_at": "2025-06-25T08:06:17.067116"
-      },
-      {
-        "id": 60,
-        "title": "Sprawdzic tilt pointing",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": true,
-        "created_at": "2025-06-27T06:52:16.645101"
-      },
-      {
-        "id": 81,
-        "title": "Podzielenie norilska na dwie części",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": true,
-        "created_at": "2025-06-27T12:10:39.827026"
-      },
-      {
-        "id": 110,
-        "title": "Aktywacja xlink sesji norilsk part aa z dwoch",
-        "description": "",
-        "start_time": "2025-07-01T17:21:00",
-        "end_time": "2025-07-01T17:27:00",
-        "completed": true,
-        "created_at": "2025-06-30T14:35:19.172706"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-06-25T08:05:37.168908",
-    "sort_order": 10
-  },
-  {
-    "id": 12,
-    "title": "ADCS Service Update ",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 40,
-        "title": "Zainstaluj adcs service 1.8.4",
+        "title": "Schedule Tilt Pointing",
         "description": "",
         "start_time": null,
         "end_time": null,
         "completed": false,
-        "created_at": "2025-06-25T08:30:44.296760"
-      },
-      {
-        "id": 42,
-        "title": "Zweryfikuj wersję adcsa ",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": false,
-        "created_at": "2025-06-25T08:31:17.624899"
+        "created_at": "2025-07-14T07:25:05.508976"
       }
     ],
     "completed": false,
-    "created_at": "2025-06-25T08:17:01.750318",
-    "sort_order": 11
-  },
-  {
-    "id": 15,
-    "title": "High Power Radio Update ",
-    "description": "",
-    "subtasks": [],
-    "completed": false,
-    "created_at": "2025-06-26T12:20:04.359644",
-    "sort_order": 12
-  },
-  {
-    "id": 18,
-    "title": "longyearbyen imaging",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 65,
-        "title": "Payload Activation",
-        "description": "",
-        "start_time": "2025-06-28T12:12:00",
-        "end_time": "2025-06-28T12:22:00",
-        "completed": true,
-        "created_at": "2025-06-27T08:05:14.591543"
-      },
-      {
-        "id": 66,
-        "title": "Tilt Pointing na longyearbyen",
-        "description": "",
-        "start_time": "2025-06-28T08:50:00",
-        "end_time": "2025-06-28T18:00:00",
-        "completed": true,
-        "created_at": "2025-06-27T08:05:57.743449"
-      },
-      {
-        "id": 67,
-        "title": "Ground Tracking na Xlink",
-        "description": "",
-        "start_time": "2025-07-01T12:03:00",
-        "end_time": "2025-07-01T21:03:00",
-        "completed": true,
-        "created_at": "2025-06-27T08:06:10.158648"
-      },
-      {
-        "id": 68,
-        "title": "Aktywacja Xlink Sesji part aa z dwoch",
-        "description": "",
-        "start_time": "2025-07-01T12:44:00",
-        "end_time": "2025-07-01T12:50:00",
-        "completed": true,
-        "created_at": "2025-06-27T08:06:20.022353"
-      },
-      {
-        "id": 109,
-        "title": "Aktywacja Xlink Sesji part ab z dwoch",
-        "description": "",
-        "start_time": "2025-07-01T18:52:00",
-        "end_time": "2025-07-01T18:57:00",
-        "completed": true,
-        "created_at": "2025-06-30T14:32:02.036696"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-06-27T08:03:56.880739",
-    "sort_order": 9
-  },
-  {
-    "id": 20,
-    "title": "Seuz Canal Imaging",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 73,
-        "title": "Payload Activation",
-        "description": "",
-        "start_time": "2025-06-29T08:55:00",
-        "end_time": "2025-06-29T09:05:00",
-        "completed": true,
-        "created_at": "2025-06-27T08:12:54.623545"
-      },
-      {
-        "id": 74,
-        "title": "Tilt Pointing na suez canal",
-        "description": "",
-        "start_time": "2025-06-29T05:00:00",
-        "end_time": "2025-06-29T10:00:00",
-        "completed": true,
-        "created_at": "2025-06-27T08:14:15.099373"
-      },
-      {
-        "id": 75,
-        "title": "Aktywacja Xlink Sesji part ab z dwoch czesci",
-        "description": "",
-        "start_time": "2025-07-01T22:00:00",
-        "end_time": "2025-07-01T22:05:00",
-        "completed": true,
-        "created_at": "2025-06-27T08:14:27.397666"
-      },
-      {
-        "id": 107,
-        "title": "Ground Tracking Na Xlink (Szwecja)",
-        "description": "",
-        "start_time": "2025-07-01T21:55:00",
-        "end_time": "2025-07-01T22:25:00",
-        "completed": true,
-        "created_at": "2025-06-30T14:27:50.833833"
-      },
-      {
-        "id": 108,
-        "title": "Aktywacja xlink sesji (part aa z dwoch czesci)",
-        "description": "",
-        "start_time": "2025-07-01T20:25:00",
-        "end_time": "2025-07-01T20:30:00",
-        "completed": true,
-        "created_at": "2025-06-30T14:30:29.885181"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-06-27T08:12:20.276664",
+    "created_at": "2025-07-14T07:23:29.311918",
     "sort_order": 5
   },
   {
-    "id": 22,
-    "title": "Naprawić apt",
+    "id": 7,
+    "title": "Edwards Air Force Base Imaging",
     "description": "",
     "subtasks": [
       {
-        "id": 111,
-        "title": "Zeryfikowac czy komenda zadzialala",
+        "id": 9,
+        "title": "Payload Activation",
+        "description": "",
+        "start_time": "2025-07-15T19:02:00",
+        "end_time": "2025-07-15T19:12:00",
+        "completed": false,
+        "created_at": "2025-07-14T07:26:53.871339"
+      },
+      {
+        "id": 10,
+        "title": "Schedule Tilt Pointing",
         "description": "",
         "start_time": null,
         "end_time": null,
         "completed": false,
-        "created_at": "2025-07-01T11:29:19.996291"
+        "created_at": "2025-07-14T07:27:14.892917"
       }
     ],
     "completed": false,
-    "created_at": "2025-06-27T11:48:53.112271",
+    "created_at": "2025-07-14T07:26:03.850585",
     "sort_order": 6
   },
   {
-    "id": 26,
-    "title": "Bordeaux Imaging",
+    "id": 8,
+    "title": "Durrat Al Bahrain Imaging",
     "description": "",
     "subtasks": [
       {
-        "id": 96,
+        "id": 11,
         "title": "Payload Activation",
         "description": "",
-        "start_time": "2025-07-01T11:19:00",
-        "end_time": "2025-07-01T11:29:00",
-        "completed": true,
-        "created_at": "2025-06-30T09:54:39.184958"
-      },
-      {
-        "id": 97,
-        "title": "Tilt Pointing",
-        "description": "",
-        "start_time": "2025-07-01T09:02:00",
-        "end_time": "2025-07-01T12:02:00",
-        "completed": true,
-        "created_at": "2025-06-30T09:55:00.041654"
+        "start_time": "2025-07-16T07:41:00",
+        "end_time": "2025-07-16T07:51:00",
+        "completed": false,
+        "created_at": "2025-07-14T07:28:52.219574"
       }
     ],
     "completed": false,
-    "created_at": "2025-06-30T09:54:07.022570",
-    "sort_order": 2
+    "created_at": "2025-07-14T07:27:40.564960",
+    "sort_order": 0
   },
   {
-    "id": 27,
-    "title": "Libia Imaging",
+    "id": 9,
+    "title": "Hormuz Iran",
     "description": "",
     "subtasks": [
       {
-        "id": 98,
+        "id": 12,
         "title": "Payload Activation",
         "description": "",
-        "start_time": "2025-07-02T09:29:00",
-        "end_time": "2025-07-02T09:39:00",
-        "completed": true,
-        "created_at": "2025-06-30T09:55:26.889137"
+        "start_time": "2025-07-17T07:20:00",
+        "end_time": "2025-07-17T07:30:00",
+        "completed": false,
+        "created_at": "2025-07-14T07:39:24.470499"
       },
       {
-        "id": 99,
-        "title": "Tilt Pointing",
+        "id": 13,
+        "title": "Schedule Tilt Pointing",
         "description": "",
         "start_time": null,
         "end_time": null,
         "completed": false,
-        "created_at": "2025-06-30T09:55:37.622510"
+        "created_at": "2025-07-14T07:39:54.499533"
       }
     ],
     "completed": false,
-    "created_at": "2025-06-30T09:54:49.010581",
-    "sort_order": 3
-  },
-  {
-    "id": 28,
-    "title": "Algeria Imaging",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 100,
-        "title": "Payload Activation",
-        "description": "",
-        "start_time": "2025-07-02T11:01:00",
-        "end_time": "2025-07-02T11:11:00",
-        "completed": true,
-        "created_at": "2025-06-30T09:56:12.339178"
-      },
-      {
-        "id": 101,
-        "title": "Tilt Pointing",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": false,
-        "created_at": "2025-06-30T09:56:33.254985"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-06-30T09:55:45.284328",
-    "sort_order": 4
-  },
-  {
-    "id": 29,
-    "title": "gownotask",
-    "description": "sdasadasd",
-    "subtasks": [
-      {
-        "id": 112,
-        "title": "zrob to",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": false,
-        "created_at": "2025-07-01T11:30:06.092325"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-07-01T11:29:54.639311",
+    "created_at": "2025-07-14T07:38:35.307799",
     "sort_order": 0
   }
 ]
