@@ -203,10 +203,7 @@ class TodoService:
             if not task:
                 continue
             # Only process tasks with at least one scheduled subtask
-            has_scheduled_subtask = any(
-                subtask.start_time is not None and subtask.end_time is not None
-                for subtask in task.subtasks
-            )
+            has_scheduled_subtask = any(subtask.start_time is not None and subtask.end_time is not None for subtask in task.subtasks)
             if not has_scheduled_subtask:
                 continue
 
@@ -237,10 +234,7 @@ class TodoService:
             if not task:
                 continue
             # Only add group if at least one subtask is scheduled
-            has_scheduled_subtask = any(
-                subtask.start_time is not None and subtask.end_time is not None
-                for subtask in task.subtasks
-            )
+            has_scheduled_subtask = any(subtask.start_time is not None and subtask.end_time is not None for subtask in task.subtasks)
             if has_scheduled_subtask:
                 groups.append({"id": f"task_{task.id}", "content": f"{task.title} ({task.completion_percentage:.0f}%)"})
 

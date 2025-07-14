@@ -2,6 +2,7 @@ import os
 from dataclasses import dataclass
 from typing import Any
 
+
 @dataclass
 class Config:
     # Satellite defaults
@@ -9,30 +10,14 @@ class Config:
     SATELLITE_TLE_LINE1: str = ""
     SATELLITE_TLE_LINE2: str = ""
 
-    DEFAULT_GROUND_STATIONS: list[dict[str, Any]] = None
+    DEFAULT_GROUND_STATIONS: list[dict[str, Any]] | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if self.DEFAULT_GROUND_STATIONS is None:
             self.DEFAULT_GROUND_STATIONS = [
-                {
-                    "name": "Sweden",
-                    "latitude": 65.337,
-                    "longitude": 21.425,
-                    "elevation": 21.0
-                },
-                {
-                    "name": "Wroclaw",
-                    "latitude": 51.097,
-                    "longitude": 17.069,
-                    "elevation": 116.0
-                },
-                {
-                    "name": "Pretoria",
-                    "latitude": -25.746,
-                    "longitude": 28.188,
-                    "elevation": 1200.0
-                }
-                
+                {"name": "Sweden", "latitude": 65.337, "longitude": 21.425, "elevation": 21.0},
+                {"name": "Wroclaw", "latitude": 51.097, "longitude": 17.069, "elevation": 116.0},
+                {"name": "Pretoria", "latitude": -25.746, "longitude": 28.188, "elevation": 1200.0},
             ]
 
     # Calculation parameters

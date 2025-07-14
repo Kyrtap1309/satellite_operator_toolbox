@@ -3,7 +3,7 @@ from collections.abc import Callable
 from functools import wraps
 from typing import Any, TypeVar, cast
 
-from flask import current_app, flash, redirect, url_for
+from flask import current_app, flash, redirect, render_template, request, url_for
 
 F = TypeVar("F", bound=Callable[..., Any])
 
@@ -39,12 +39,8 @@ def handle_calculation_errors(redirect_endpoint: str, preserve_form_data: bool =
             except ValueError as e:
                 # Validation errors - preserve form data if requested
                 flash(str(e), "error")
-                if preserve_form_data:
-                    # For position calculator, preserve form data
-                    from flask import request
-
-                    if redirect_endpoint == "satellite_position":
-                        return _handle_position_error(e, request.form)
+                if preserve_form_data and redirect_endpoint == "satellite_position":
+                    return _handle_position_error(e, request.form)
                 return redirect(url_for(redirect_endpoint))
             except Exception as e:
                 # Log unexpected errors
@@ -59,8 +55,6 @@ def handle_calculation_errors(redirect_endpoint: str, preserve_form_data: bool =
 
 def _handle_position_error(error: ValueError, form_data: dict[str, Any]) -> str:
     """Handle errors in position calculation while preserving form data."""
-    from flask import render_template
-
     input_method = form_data.get("input_method", "norad")
     return render_template(
         "satellite_position/position_calculator.html",
@@ -79,8 +73,6 @@ def log_route_access(log_level: int = logging.INFO) -> Callable[[F], F]:
     def decorator(func: F) -> F:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
-            from flask import request
-
             current_app.logger.log(
                 log_level,
                 f"Route accessed: {func.__name__} - {request.method} {request.path}",
