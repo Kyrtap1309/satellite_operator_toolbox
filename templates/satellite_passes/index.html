@@ -15,6 +15,22 @@ content %}
     </div>
     <div class="col-md-3">
       <div class="form-group mb-3">
+        <label for="gs1_preset">Preset Station</label>
+        <select class="form-control" id="gs1_preset" name="gs1_preset">
+          <option value="custom">Custom Station</option>
+          {% for gs in default_ground_stations %}
+          <option value="{{ gs.name }}" 
+                  data-lat="{{ gs.latitude }}" 
+                  data-lon="{{ gs.longitude }}" 
+                  data-elev="{{ gs.elevation }}">
+            {{ gs.name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group mb-3">
         <label for="gs1_name">Station Name</label>
         <input
           type="text"
@@ -27,7 +43,7 @@ content %}
         />
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
       <div class="form-group mb-3">
         <label for="gs1_lat">Latitude</label>
         <input
@@ -44,7 +60,7 @@ content %}
         />
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
       <div class="form-group mb-3">
         <label for="gs1_lon">Longitude</label>
         <input
@@ -61,7 +77,7 @@ content %}
         />
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
       <div class="form-group mb-3">
         <label for="gs1_elev">Elevation (m)</label>
         <input
@@ -86,6 +102,22 @@ content %}
     </div>
     <div class="col-md-3">
       <div class="form-group mb-3">
+        <label for="gs2_preset">Preset Station</label>
+        <select class="form-control" id="gs2_preset" name="gs2_preset">
+          <option value="custom">Custom Station</option>
+          {% for gs in default_ground_stations %}
+          <option value="{{ gs.name }}" 
+                  data-lat="{{ gs.latitude }}" 
+                  data-lon="{{ gs.longitude }}" 
+                  data-elev="{{ gs.elevation }}">
+            {{ gs.name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group mb-3">
         <label for="gs2_name">Station Name</label>
         <input
           type="text"
@@ -98,7 +130,7 @@ content %}
         />
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
       <div class="form-group mb-3">
         <label for="gs2_lat">Latitude</label>
         <input
@@ -115,7 +147,7 @@ content %}
         />
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
       <div class="form-group mb-3">
         <label for="gs2_lon">Longitude</label>
         <input
@@ -132,7 +164,7 @@ content %}
         />
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
       <div class="form-group mb-3">
         <label for="gs2_elev">Elevation (m)</label>
         <input
@@ -196,4 +228,44 @@ content %}
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/shared/satellite_input_handler.js') }}"></script>
-{% endblock %} {% endblock %}
+<script>
+// Ground Station Preset Handler
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize satellite input handler
+    const satelliteHandler = new SatelliteInputHandler();
+    satelliteHandler.init();
+    
+    // Ground station preset handlers
+    function setupGroundStationPreset(presetId, nameId, latId, lonId, elevId) {
+        const preset = document.getElementById(presetId);
+        const name = document.getElementById(nameId);
+        const lat = document.getElementById(latId);
+        const lon = document.getElementById(lonId);
+        const elev = document.getElementById(elevId);
+        
+        preset.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            
+            if (this.value === 'custom') {
+                // Clear fields for custom input
+                name.value = '';
+                lat.value = '';
+                lon.value = '';
+                elev.value = '';
+            } else {
+                // Fill fields with preset data
+                name.value = this.value;
+                lat.value = selectedOption.dataset.lat;
+                lon.value = selectedOption.dataset.lon;
+                elev.value = selectedOption.dataset.elev;
+            }
+        });
+    }
+    
+    // Setup both ground station presets
+    setupGroundStationPreset('gs1_preset', 'gs1_name', 'gs1_lat', 'gs1_lon', 'gs1_elev');
+    setupGroundStationPreset('gs2_preset', 'gs2_name', 'gs2_lat', 'gs2_lon', 'gs2_elev');
+});
+</script>
+{% endblock %}
+{% endblock %}
