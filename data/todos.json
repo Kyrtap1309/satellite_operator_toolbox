@@ -1,33 +1,5 @@
 [
   {
-    "id": 3,
-    "title": "Hoover Dam Imaging",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 3,
-        "title": "Xlink missing chunks",
-        "description": "",
-        "start_time": "2025-07-14T20:12:00",
-        "end_time": "2025-07-14T20:20:00",
-        "completed": true,
-        "created_at": "2025-07-14T07:18:09.009737"
-      },
-      {
-        "id": 17,
-        "title": "Tilt Pointing na missing chunks",
-        "description": "",
-        "start_time": "2025-07-14T19:31:00",
-        "end_time": "2025-07-14T20:25:00",
-        "completed": true,
-        "created_at": "2025-07-14T10:52:29.274977"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-07-14T07:17:59.035496",
-    "sort_order": 4
-  },
-  {
     "id": 6,
     "title": "Mauritania Imaging",
     "description": "",
@@ -72,8 +44,8 @@
         "id": 18,
         "title": "Tilt Pointing na czesc b",
         "description": "",
-        "start_time": "2025-07-14T20:26:00",
-        "end_time": "2025-07-14T21:00:00",
+        "start_time": "2025-07-16T08:16:00",
+        "end_time": "2025-07-16T09:13:00",
         "completed": true,
         "created_at": "2025-07-14T10:53:49.683454"
       },
@@ -81,15 +53,15 @@
         "id": 19,
         "title": "Xlink czesc ab",
         "description": "",
-        "start_time": "2025-07-14T20:34:00",
-        "end_time": "2025-07-14T20:43:00",
+        "start_time": "2025-07-16T09:03:00",
+        "end_time": "2025-07-16T09:11:00",
         "completed": true,
         "created_at": "2025-07-14T10:54:17.127154"
       }
     ],
     "completed": false,
     "created_at": "2025-07-14T07:23:29.311918",
-    "sort_order": 5
+    "sort_order": 7
   },
   {
     "id": 7,
@@ -109,15 +81,51 @@
         "id": 10,
         "title": "Schedule Tilt Pointing",
         "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": false,
+        "start_time": "2025-07-15T13:00:00",
+        "end_time": "2025-07-15T20:07:00",
+        "completed": true,
         "created_at": "2025-07-14T07:27:14.892917"
+      },
+      {
+        "id": 23,
+        "title": "Tilt pointing na pobranie trzech czesci",
+        "description": "",
+        "start_time": "2025-07-16T10:36:00",
+        "end_time": "2025-07-16T20:15:00",
+        "completed": true,
+        "created_at": "2025-07-15T12:26:31.866074"
+      },
+      {
+        "id": 24,
+        "title": "xlink czesci aa",
+        "description": "",
+        "start_time": "2025-07-16T10:36:00",
+        "end_time": "2025-07-16T10:46:00",
+        "completed": true,
+        "created_at": "2025-07-15T12:27:11.423355"
+      },
+      {
+        "id": 25,
+        "title": "xlink czesci ab",
+        "description": "",
+        "start_time": "2025-07-16T12:10:00",
+        "end_time": "2025-07-16T12:18:00",
+        "completed": true,
+        "created_at": "2025-07-15T12:27:32.926523"
+      },
+      {
+        "id": 26,
+        "title": "Xlink czesci ac",
+        "description": "",
+        "start_time": "2025-07-16T18:20:00",
+        "end_time": "2025-07-16T18:27:00",
+        "completed": true,
+        "created_at": "2025-07-15T12:27:59.440184"
       }
     ],
     "completed": false,
     "created_at": "2025-07-14T07:26:03.850585",
-    "sort_order": 6
+    "sort_order": 0
   },
   {
     "id": 8,
@@ -132,11 +140,29 @@
         "end_time": "2025-07-16T07:51:00",
         "completed": true,
         "created_at": "2025-07-14T07:28:52.219574"
+      },
+      {
+        "id": 20,
+        "title": "Schedule Tilt Pointing",
+        "description": "",
+        "start_time": "2025-07-15T23:01:00",
+        "end_time": "2025-07-16T08:15:00",
+        "completed": true,
+        "created_at": "2025-07-15T12:20:17.403065"
+      },
+      {
+        "id": 27,
+        "title": "Xlink czesci aa",
+        "description": "",
+        "start_time": "2025-07-16T19:52:00",
+        "end_time": "2025-07-16T20:01:00",
+        "completed": true,
+        "created_at": "2025-07-15T12:28:52.190551"
       }
     ],
     "completed": false,
     "created_at": "2025-07-14T07:27:40.564960",
-    "sort_order": 0
+    "sort_order": 5
   },
   {
     "id": 9,
@@ -164,61 +190,99 @@
     ],
     "completed": false,
     "created_at": "2025-07-14T07:38:35.307799",
-    "sort_order": 1
+    "sort_order": 6
   },
   {
     "id": 10,
-    "title": "Wgrac plik misji na nowe zdjecia",
-    "description": "",
-    "subtasks": [],
-    "completed": false,
-    "created_at": "2025-07-14T10:55:00.103005",
-    "sort_order": 2
-  },
-  {
-    "id": 11,
-    "title": "Pobranie tele adcsa",
+    "title": "Pobierz Dumpy ADCS",
     "description": "",
     "subtasks": [
       {
-        "id": 20,
+        "id": 21,
         "title": "Tilt pointing na xlink",
         "description": "",
-        "start_time": "2025-07-14T21:01:00",
-        "end_time": "2025-07-14T22:00:00",
+        "start_time": "2025-07-16T09:14:00",
+        "end_time": "2025-07-16T09:35:00",
         "completed": true,
-        "created_at": "2025-07-14T10:55:41.093948"
+        "created_at": "2025-07-15T12:24:03.364559"
       },
       {
-        "id": 21,
-        "title": "Xlink sesja",
+        "id": 22,
+        "title": "Aktywacja Xlink Sesji",
         "description": "",
-        "start_time": "2025-07-14T21:44:00",
-        "end_time": "2025-07-14T21:53:00",
-        "completed": false,
-        "created_at": "2025-07-14T10:56:07.327574"
+        "start_time": "2025-07-16T09:27:00",
+        "end_time": "2025-07-16T09:34:00",
+        "completed": true,
+        "created_at": "2025-07-15T12:24:24.818402"
       }
     ],
     "completed": false,
-    "created_at": "2025-07-14T10:55:17.756852",
+    "created_at": "2025-07-15T12:23:40.011749",
+    "sort_order": 1
+  },
+  {
+    "id": 11,
+    "title": "Baghdad Imaging",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 28,
+        "title": "Aktywacja Payloadu",
+        "description": "",
+        "start_time": "2025-07-19T08:10:00",
+        "end_time": "2025-07-19T08:20:00",
+        "completed": false,
+        "created_at": "2025-07-16T08:36:15.785698"
+      },
+      {
+        "id": 29,
+        "title": "Schedule Tilt Pointing",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-07-16T08:37:30.235097"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-07-16T08:35:42.521247",
     "sort_order": 3
   },
   {
     "id": 12,
-    "title": "Sprawdzic wersje hpr",
+    "title": "Helsinki Imaging ",
     "description": "",
-    "subtasks": [],
+    "subtasks": [
+      {
+        "id": 30,
+        "title": "Aktywacja Payloadu",
+        "description": "",
+        "start_time": "2025-07-18T09:58:00",
+        "end_time": "2025-07-18T10:09:00",
+        "completed": true,
+        "created_at": "2025-07-16T08:40:28.883738"
+      },
+      {
+        "id": 31,
+        "title": "Schedule Tilt Pointing",
+        "description": "",
+        "start_time": null,
+        "end_time": null,
+        "completed": false,
+        "created_at": "2025-07-16T08:40:40.763349"
+      }
+    ],
     "completed": false,
-    "created_at": "2025-07-14T11:04:14.966531",
-    "sort_order": 0
+    "created_at": "2025-07-16T08:39:54.769240",
+    "sort_order": 2
   },
   {
     "id": 13,
-    "title": "Update adcsa do 2.0.0",
+    "title": "Wgrac nowy plik misji na zdjecia od 18 lipca 2025",
     "description": "",
     "subtasks": [],
     "completed": false,
-    "created_at": "2025-07-14T11:19:08.019346",
-    "sort_order": 0
+    "created_at": "2025-07-16T08:41:12.350388",
+    "sort_order": 4
   }
 ]
