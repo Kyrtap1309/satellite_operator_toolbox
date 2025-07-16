@@ -147,7 +147,7 @@ def register_satellite_routes(app: Flask, config: Config, satellite_service: Sat
         # Format data
         formatted_gs1 = formatter.format_passes_for_display(passes_gs1)
         formatted_gs2 = formatter.format_passes_for_display(passes_gs2)
-        formatted_common = formatter.format_common_windows(common_windows)
+        formatted_common = formatter.format_common_windows_for_display(common_windows)
         timeline_data = formatter.prepare_timeline_data(passes_gs1, passes_gs2, common_windows, gs1.name, gs2.name)
 
         app.logger.info(f"Calculation completed. Found {len(formatted_common)} common windows")

@@ -62,6 +62,7 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
         <th>End (UTC)</th>
         <th>Max Elevation</th>
         <th>Duration</th>
+        <th>Duration (s)</th>
       </tr>
     </thead>
     <tbody>
@@ -73,10 +74,11 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
         <td>{{ window['End (UTC)'] }}</td>
         <td>{{ window['Max Elevation'] }}</td>
         <td>{{ window.Duration }}</td>
+        <td>{{ window['Duration (s)'] }}</td>
       </tr>
       {% endfor %} {% else %}
       <tr>
-        <td colspan="6" class="text-center">
+        <td colspan="7" class="text-center">
           No common visibility windows found
         </td>
       </tr>
@@ -97,6 +99,7 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
             <th>Rise (UTC)</th>
             <th>Set (UTC)</th>
             <th>Max Elevation</th>
+            <th>Duration (s)</th>
           </tr>
         </thead>
         <tbody>
@@ -107,10 +110,11 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
             <td>{{ pass['Rise Time (UTC)'] }}</td>
             <td>{{ pass['Set Time (UTC)'] }}</td>
             <td>{{ pass['Max Elevation'] }}</td>
+            <td>{{ pass['Duration (s)'] }}</td>
           </tr>
           {% endfor %} {% else %}
           <tr>
-            <td colspan="5" class="text-center">No passes found</td>
+            <td colspan="6" class="text-center">No passes found</td>
           </tr>
           {% endif %}
         </tbody>
@@ -128,6 +132,7 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
             <th>Rise (UTC)</th>
             <th>Set (UTC)</th>
             <th>Max Elevation</th>
+            <th>Duration (s)</th>
           </tr>
         </thead>
         <tbody>
@@ -138,10 +143,11 @@ col_width %}11{% endblock %} {% block extra_css %} {{ super() }}
             <td>{{ pass['Rise Time (UTC)'] }}</td>
             <td>{{ pass['Set Time (UTC)'] }}</td>
             <td>{{ pass['Max Elevation'] }}</td>
+            <td>{{ pass['Duration (s)'] }}</td>
           </tr>
           {% endfor %} {% else %}
           <tr>
-            <td colspan="5" class="text-center">No passes found</td>
+            <td colspan="6" class="text-center">No passes found</td>
           </tr>
           {% endif %}
         </tbody>
