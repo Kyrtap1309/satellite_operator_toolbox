@@ -142,3 +142,31 @@
 .hidden-subtask {
   transition: opacity 0.3s ease;
 }
+
+.vis-item.pending {
+  background-color: rgba(0, 123, 255, 0.6);
+  border-color: #007bff;
+}
+
+/* Text wrapping for timeline items */
+.vis-item .vis-item-content {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.2 !important;
+  padding: 4px 8px !important;
+}
+
+.vis-item {
+  min-height: 30px !important;
+  height: auto !important;
+}
+
+/* Better text rendering in timeline */
+.vis-timeline .vis-foreground .vis-group .vis-item {
+  overflow: visible !important;
+}
+
+.vis-timeline .vis-item .vis-item-overflow {
+  overflow: visible !important;
+}

@@ -1,389 +1,5 @@
 [
   {
-    "id": 6,
-    "title": "Mauritania Imaging",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 7,
-        "title": "Payload Activation",
-        "description": "",
-        "start_time": "2025-07-14T11:34:00",
-        "end_time": "2025-07-14T11:44:00",
-        "completed": true,
-        "created_at": "2025-07-14T07:24:23.555863"
-      },
-      {
-        "id": 8,
-        "title": "Schedule Tilt Pointing",
-        "description": "",
-        "start_time": "2025-07-14T10:01:00",
-        "end_time": "2025-07-14T18:15:00",
-        "completed": true,
-        "created_at": "2025-07-14T07:25:05.508976"
-      },
-      {
-        "id": 14,
-        "title": "Tilt Pointing na czesc aa",
-        "description": "",
-        "start_time": "2025-07-14T18:16:00",
-        "end_time": "2025-07-14T19:30:00",
-        "completed": true,
-        "created_at": "2025-07-14T10:50:28.440302"
-      },
-      {
-        "id": 15,
-        "title": "Xlink czesci aa",
-        "description": "",
-        "start_time": "2025-07-14T19:01:00",
-        "end_time": "2025-07-14T19:10:00",
-        "completed": true,
-        "created_at": "2025-07-14T10:50:58.681237"
-      },
-      {
-        "id": 18,
-        "title": "Tilt Pointing na czesc b",
-        "description": "",
-        "start_time": "2025-07-16T08:16:00",
-        "end_time": "2025-07-16T09:13:00",
-        "completed": true,
-        "created_at": "2025-07-14T10:53:49.683454"
-      },
-      {
-        "id": 19,
-        "title": "Xlink czesc ab",
-        "description": "",
-        "start_time": "2025-07-16T09:03:00",
-        "end_time": "2025-07-16T09:11:00",
-        "completed": true,
-        "created_at": "2025-07-14T10:54:17.127154"
-      },
-      {
-        "id": 35,
-        "title": "Xlink czesci ab",
-        "description": "",
-        "start_time": "2025-07-17T11:49:00",
-        "end_time": "2025-07-17T11:58:00",
-        "completed": true,
-        "created_at": "2025-07-17T08:12:26.229942"
-      },
-      {
-        "id": 41,
-        "title": "Xlink missing chunks part ab",
-        "description": "",
-        "start_time": "2025-07-18T11:28:00",
-        "end_time": "2025-07-18T11:36:00",
-        "completed": false,
-        "created_at": "2025-07-18T08:57:19.200796"
-      },
-      {
-        "id": 44,
-        "title": "Ground Tracking na Xlink",
-        "description": "",
-        "start_time": "2025-07-18T11:50:00",
-        "end_time": "2025-07-18T22:03:00",
-        "completed": true,
-        "created_at": "2025-07-18T09:00:36.212293"
-      },
-      {
-        "id": 46,
-        "title": "Ground Tracking na Xlink",
-        "description": "",
-        "start_time": "2025-07-18T10:40:00",
-        "end_time": "2025-07-18T11:40:00",
-        "completed": true,
-        "created_at": "2025-07-18T09:03:45.976182"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-07-14T07:23:29.311918",
-    "sort_order": 7
-  },
-  {
-    "id": 7,
-    "title": "Edwards Air Force Base Imaging",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 9,
-        "title": "Payload Activation",
-        "description": "",
-        "start_time": "2025-07-15T19:02:00",
-        "end_time": "2025-07-15T19:12:00",
-        "completed": true,
-        "created_at": "2025-07-14T07:26:53.871339"
-      },
-      {
-        "id": 10,
-        "title": "Schedule Tilt Pointing",
-        "description": "",
-        "start_time": "2025-07-15T13:00:00",
-        "end_time": "2025-07-15T20:07:00",
-        "completed": true,
-        "created_at": "2025-07-14T07:27:14.892917"
-      },
-      {
-        "id": 23,
-        "title": "Tilt pointing na pobranie trzech czesci",
-        "description": "",
-        "start_time": "2025-07-16T10:36:00",
-        "end_time": "2025-07-16T20:15:00",
-        "completed": true,
-        "created_at": "2025-07-15T12:26:31.866074"
-      },
-      {
-        "id": 24,
-        "title": "xlink czesci aa",
-        "description": "",
-        "start_time": "2025-07-16T10:36:00",
-        "end_time": "2025-07-16T10:46:00",
-        "completed": true,
-        "created_at": "2025-07-15T12:27:11.423355"
-      },
-      {
-        "id": 25,
-        "title": "xlink czesci ab",
-        "description": "",
-        "start_time": "2025-07-16T12:10:00",
-        "end_time": "2025-07-16T12:18:00",
-        "completed": true,
-        "created_at": "2025-07-15T12:27:32.926523"
-      },
-      {
-        "id": 26,
-        "title": "Xlink czesci ac",
-        "description": "",
-        "start_time": "2025-07-16T18:20:00",
-        "end_time": "2025-07-16T18:27:00",
-        "completed": true,
-        "created_at": "2025-07-15T12:27:59.440184"
-      },
-      {
-        "id": 36,
-        "title": "xlink czesci aa",
-        "description": "",
-        "start_time": "2025-07-17T13:23:00",
-        "end_time": "2025-07-17T13:30:00",
-        "completed": true,
-        "created_at": "2025-07-17T08:13:00.420412"
-      },
-      {
-        "id": 37,
-        "title": "xlink czesci ab",
-        "description": "",
-        "start_time": "2025-07-17T17:59:00",
-        "end_time": "2025-07-17T18:07:00",
-        "completed": true,
-        "created_at": "2025-07-17T08:13:28.855857"
-      },
-      {
-        "id": 38,
-        "title": "Xlink czesci ac",
-        "description": "",
-        "start_time": "2025-07-17T19:31:00",
-        "end_time": "2025-07-17T19:40:00",
-        "completed": true,
-        "created_at": "2025-07-17T08:14:11.028837"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-07-14T07:26:03.850585",
-    "sort_order": 0
-  },
-  {
-    "id": 8,
-    "title": "Durrat Al Bahrain Imaging",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 11,
-        "title": "Payload Activation",
-        "description": "",
-        "start_time": "2025-07-16T07:41:00",
-        "end_time": "2025-07-16T07:51:00",
-        "completed": true,
-        "created_at": "2025-07-14T07:28:52.219574"
-      },
-      {
-        "id": 20,
-        "title": "Schedule Tilt Pointing",
-        "description": "",
-        "start_time": "2025-07-15T23:01:00",
-        "end_time": "2025-07-16T08:15:00",
-        "completed": true,
-        "created_at": "2025-07-15T12:20:17.403065"
-      },
-      {
-        "id": 27,
-        "title": "Xlink czesci aa",
-        "description": "",
-        "start_time": "2025-07-16T19:52:00",
-        "end_time": "2025-07-16T20:01:00",
-        "completed": true,
-        "created_at": "2025-07-15T12:28:52.190551"
-      },
-      {
-        "id": 32,
-        "title": "Tilt Na xlink",
-        "description": "",
-        "start_time": "2025-07-17T09:31:00",
-        "end_time": "2025-07-17T19:40:00",
-        "completed": true,
-        "created_at": "2025-07-17T07:59:06.485546"
-      },
-      {
-        "id": 33,
-        "title": "xlink czesci ab",
-        "description": "",
-        "start_time": "2025-07-16T21:02:00",
-        "end_time": "2025-07-16T21:10:00",
-        "completed": true,
-        "created_at": "2025-07-17T08:01:32.972042"
-      },
-      {
-        "id": 40,
-        "title": "Xlink czesci ac",
-        "description": "",
-        "start_time": "2025-07-17T10:15:00",
-        "end_time": "2025-07-17T10:25:00",
-        "completed": true,
-        "created_at": "2025-07-17T09:58:31.402457"
-      },
-      {
-        "id": 42,
-        "title": "Xlink missing chunks part ab",
-        "description": "",
-        "start_time": "2025-07-18T19:11:00",
-        "end_time": "2025-07-18T19:20:00",
-        "completed": false,
-        "created_at": "2025-07-18T08:58:00.407119"
-      },
-      {
-        "id": 43,
-        "title": "Xlink missing chunks part ac",
-        "description": "",
-        "start_time": "2025-07-18T20:44:00",
-        "end_time": "2025-07-18T20:50:00",
-        "completed": false,
-        "created_at": "2025-07-18T08:58:37.222532"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-07-14T07:27:40.564960",
-    "sort_order": 5
-  },
-  {
-    "id": 9,
-    "title": "Hormuz Iran",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 12,
-        "title": "Payload Activation",
-        "description": "",
-        "start_time": "2025-07-17T07:20:00",
-        "end_time": "2025-07-17T07:30:00",
-        "completed": true,
-        "created_at": "2025-07-14T07:39:24.470499"
-      },
-      {
-        "id": 13,
-        "title": "Schedule Tilt Pointing",
-        "description": "",
-        "start_time": "2025-07-16T23:00:00",
-        "end_time": "2025-07-17T09:30:00",
-        "completed": true,
-        "created_at": "2025-07-14T07:39:54.499533"
-      },
-      {
-        "id": 34,
-        "title": "Tilt Pointing na xlink (Pretoria",
-        "description": "",
-        "start_time": "2025-07-17T19:41:00",
-        "end_time": "2025-07-17T21:07:00",
-        "completed": true,
-        "created_at": "2025-07-17T08:11:33.156027"
-      },
-      {
-        "id": 39,
-        "title": "Xlink czesci aa",
-        "description": "",
-        "start_time": "2025-07-17T20:41:00",
-        "end_time": "2025-07-17T20:50:00",
-        "completed": false,
-        "created_at": "2025-07-17T08:14:58.173843"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-07-14T07:38:35.307799",
-    "sort_order": 6
-  },
-  {
-    "id": 11,
-    "title": "Baghdad Imaging",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 28,
-        "title": "Aktywacja Payloadu",
-        "description": "",
-        "start_time": "2025-07-19T08:10:00",
-        "end_time": "2025-07-19T08:20:00",
-        "completed": true,
-        "created_at": "2025-07-16T08:36:15.785698"
-      },
-      {
-        "id": 29,
-        "title": "Schedule Tilt Pointing",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": false,
-        "created_at": "2025-07-16T08:37:30.235097"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-07-16T08:35:42.521247",
-    "sort_order": 3
-  },
-  {
-    "id": 12,
-    "title": "Helsinki Imaging ",
-    "description": "",
-    "subtasks": [
-      {
-        "id": 30,
-        "title": "Aktywacja Payloadu",
-        "description": "",
-        "start_time": "2025-07-18T09:58:00",
-        "end_time": "2025-07-18T10:09:00",
-        "completed": true,
-        "created_at": "2025-07-16T08:40:28.883738"
-      },
-      {
-        "id": 31,
-        "title": "Schedule Tilt Pointing",
-        "description": "",
-        "start_time": null,
-        "end_time": null,
-        "completed": true,
-        "created_at": "2025-07-16T08:40:40.763349"
-      },
-      {
-        "id": 45,
-        "title": "Schedule Tilt Pointing",
-        "description": "",
-        "start_time": "2025-07-17T23:00:00",
-        "end_time": "2025-07-18T10:40:00",
-        "completed": true,
-        "created_at": "2025-07-18T09:01:55.000753"
-      }
-    ],
-    "completed": false,
-    "created_at": "2025-07-16T08:39:54.769240",
-    "sort_order": 2
-  },
-  {
     "id": 13,
     "title": "Instalacja ADCS Service 2.0.1",
     "description": "",
@@ -408,6 +24,52 @@
     "subtasks": [],
     "completed": false,
     "created_at": "2025-07-18T08:22:56.019456",
+    "sort_order": 0
+  },
+  {
+    "id": 16,
+    "title": "Test Sbanda",
+    "description": "",
+    "subtasks": [],
+    "completed": false,
+    "created_at": "2025-07-21T09:14:17.517068",
+    "sort_order": 0
+  },
+  {
+    "id": 17,
+    "title": "Deactivation of the ADCS",
+    "description": "",
+    "subtasks": [
+      {
+        "id": 46,
+        "title": "ADCS operating time",
+        "description": "",
+        "start_time": "2025-07-22T07:00:00",
+        "end_time": "2025-07-23T00:00:00",
+        "completed": false,
+        "created_at": "2025-07-21T12:52:03.066044"
+      },
+      {
+        "id": 47,
+        "title": "ADCS operating time",
+        "description": "",
+        "start_time": "2025-07-23T06:00:00",
+        "end_time": "2025-07-24T00:00:00",
+        "completed": false,
+        "created_at": "2025-07-21T12:52:47.244311"
+      },
+      {
+        "id": 48,
+        "title": "Available time for the ADCS to tilt for imaging",
+        "description": "",
+        "start_time": "2025-07-23T00:00:00",
+        "end_time": "2025-07-23T06:00:00",
+        "completed": false,
+        "created_at": "2025-07-21T12:54:35.269539"
+      }
+    ],
+    "completed": false,
+    "created_at": "2025-07-21T12:50:58.736116",
     "sort_order": 0
   }
 ]
